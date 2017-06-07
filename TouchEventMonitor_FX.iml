@@ -6,7 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/common/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/annotations/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/ddmlib/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ddmlib/src/main/java" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
