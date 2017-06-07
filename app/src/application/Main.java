@@ -11,12 +11,12 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			Parent root = FXMLLoader.load(getClass().getResource("Main_layout.fxml"));  
-			Scene scene = new Scene(root,1270,790);
+			Parent root = FXMLLoader.load(getClass().getResource("main_layout.fxml"));
+			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setTitle("TouchEvent Monitor");
 			primaryStage.setScene(scene);
-			primaryStage.setResizable(false);
+//			primaryStage.setResizable(false);
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();

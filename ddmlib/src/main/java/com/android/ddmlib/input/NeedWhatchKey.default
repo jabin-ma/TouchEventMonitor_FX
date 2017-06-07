@@ -1,0 +1,17 @@
+# time type name value 
+#handletype:
+#			case 1:
+#				return EventBegin;
+#			case 2:
+#				return EventPointX;
+#			case 3:
+#				return EventPointY;
+#			case 4:
+#				return EventFinish;
+#			case 5:
+#				return UnKnown;
+ignore EV_KEY       BTN_TOOL_FINGER      DOWN       1         
+ignore EV_ABS       ABS_MT_POSITION_X    ignore     2         
+ignore EV_ABS       ABS_MT_POSITION_Y    ignore     3        
+ignore EV_KEY       BTN_TOOL_FINGER      UP         4
+ignore ignore       SYN_REPORT           ignore     5

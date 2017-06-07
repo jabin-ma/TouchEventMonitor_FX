@@ -3,11 +3,11 @@
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.EventController">
-   <children>
-      <MenuBar fx:id="menubar_main" prefHeight="25.0" prefWidth="1280.0">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.EventController">
+   <top>
+       <VBox>
+      <MenuBar fx:id="menubar_main" >
         <menus>
           <Menu fx:id="menu_file" mnemonicParsing="false" text="文件">
             <items>
@@ -27,14 +27,17 @@
 
         </menus>
       </MenuBar>
-      <ToolBar fx:id="toolbar_main" layoutY="25.0" prefHeight="40.0" prefWidth="1280.0">
+      <ToolBar fx:id="toolbar_main" >
         <items>
           <Button fx:id="toolbtn_first" mnemonicParsing="false" text="Button" />
         </items>
       </ToolBar>
-      <Pane fx:id="panel_table" layoutY="65.0" prefHeight="735.0" prefWidth="1280.0">
-         <children>
-            <TableView fx:id="tableview_events" editable="true" prefHeight="735.0" prefWidth="1280.0">
+       </VBox>
+   </top>
+    <center>
+      <BorderPane fx:id="panel_table">
+         <center>
+            <TableView fx:id="tableview_events" editable="true">
               <columns>
                 <TableColumn prefWidth="75.0" text="事件类型" />
                 <TableColumn prefWidth="75.0" text="事件描述" />
@@ -45,7 +48,8 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-         </children>
-      </Pane>
-   </children>
-</AnchorPane>
+         </center>
+      </BorderPane>
+    </center>
+
+</BorderPane>

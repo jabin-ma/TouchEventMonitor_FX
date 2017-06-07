@@ -3,11 +3,23 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/common/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/annotations/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ddmlib/src" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="library" name="ddmlibs" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/libs" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/libs" recursive="false" />
+      </library>
+    </orderEntry>
   </component>
 </module>
