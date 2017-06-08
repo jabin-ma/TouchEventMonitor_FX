@@ -141,8 +141,8 @@ class PropertyFetcher {
             public void run() {
                 try {
                     GetPropReceiver propReceiver = new GetPropReceiver();
-                    mDevice.executeShellCommand(GETPROP_COMMAND, propReceiver, GETPROP_TIMEOUT_SEC,
-                            TimeUnit.SECONDS);
+                    mDevice.executeShellCommand(propReceiver, GETPROP_TIMEOUT_SEC,
+                            TimeUnit.SECONDS,GETPROP_COMMAND);
                     populateCache(propReceiver.getCollectedProperties());
                 } catch (Exception e) {
                     handleException(e);

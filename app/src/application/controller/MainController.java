@@ -1,6 +1,9 @@
 package application.controller;
 
 import application.EventData;
+import com.android.ddmlib.AndroidDebugBridge;
+import com.android.ddmlib.IDevice;
+import com.android.ddmlib.input.InputDevice;
 import com.android.ddmlib.input.TouchEventObserver;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,9 +16,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
-public class EventController implements Initializable {
+
+public class MainController implements Initializable, AndroidDebugBridge.IDeviceChangeListener {
     @FXML
     MenuBar menubar_main;
     @FXML
@@ -23,31 +28,13 @@ public class EventController implements Initializable {
     @FXML
     MenuItem menuitem_close, menuitem_delete, menuitem_about;
 
-    @FXML
-    ToolBar toolbar_main;
-    @FXML
-    Button toolbtn_start,toolbtn_pause,toolbtn_stop,toolbtn_replay;
-    @FXML
-    Pane panel_table;
-    @FXML
-    TableView tableview_events;
-
     private TouchEventObserver mEventObserver;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ObservableList<TableColumn> observableList = tableview_events.getColumns();
-        observableList.get(0).setCellValueFactory(new PropertyValueFactory("eventType"));
-        observableList.get(1).setCellValueFactory(new PropertyValueFactory("eventDesc"));
-        observableList.get(2).setCellValueFactory(new PropertyValueFactory("eventDur"));
-        observableList.get(3).setCellValueFactory(new PropertyValueFactory("progress"));
-        observableList.get(3).setCellFactory(ProgressBarTableCell.forTableColumn());
-        ObservableList<EventData> data = FXCollections.observableArrayList();
-        for (int i = 0; i < 1000; i++) {
-            data.add(new EventData("type", "desc", "dur", i/1000.00));
-        }
-        tableview_events.setItems(data);
+        AndroidDebugBridge.initIfNeeded(false);
+        AndroidDebugBridge.createBridge();
     }
 
     public void onMenuClick(ActionEvent ev){
@@ -56,5 +43,23 @@ public class EventController implements Initializable {
 
     public void onToolBtnClick(ActionEvent ev){
         System.out.println(ev);
+    }
+
+    @Override
+    public void deviceConnected(IDevice device) {
+
+    }
+
+    @Override
+    public void deviceDisconnected(IDevice device) {
+
+    }
+
+    @Override
+    public void deviceChanged(IDevice device, int changeMask) {
+        List<InputDevice> lists= device.getInputDeviceManager().getDevice();
+        for (InputDevice dev:lists){
+            System.out.println(dev);
+        }
     }
 }

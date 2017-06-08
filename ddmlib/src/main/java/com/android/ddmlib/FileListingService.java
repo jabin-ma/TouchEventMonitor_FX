@@ -613,7 +613,7 @@ public final class FileListingService {
                 final String command = String.format("ls -l -d %s%s", entry.getFullEscapedPath(),
                         FILE_SEPARATOR);
 
-                device.executeShellCommand(command, receiver);
+                device.executeShellCommand(receiver,command);
 
                 if (nLines[0] > 0) {
                     // We saw lines matching the directory pattern, so it's a directory!
@@ -723,7 +723,7 @@ public final class FileListingService {
                     // call pm.
                     String command = PM_FULL_LISTING;
                     try {
-                        mDevice.executeShellCommand(command, new MultiLineReceiver() {
+                        mDevice.executeShellCommand( new MultiLineReceiver() {
                             @Override
                             public void processNewLines(String[] lines) {
                                 for (String line : lines) {
@@ -745,7 +745,7 @@ public final class FileListingService {
                             public boolean isCancelled() {
                                 return false;
                             }
-                        });
+                        },command);
                     } catch (Exception e) {
                         // adb failed somehow, we do nothing.
                     }
@@ -835,7 +835,7 @@ public final class FileListingService {
             LsReceiver receiver = new LsReceiver(entry, entryList, linkList);
 
             // call ls.
-            mDevice.executeShellCommand(command, receiver);
+            mDevice.executeShellCommand(receiver,command);
 
             // finish the process of the receiver to handle links
             receiver.finishLinks(mDevice, entryList);

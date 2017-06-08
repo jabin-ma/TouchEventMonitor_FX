@@ -72,7 +72,7 @@ public class LogCatReceiverTask implements Runnable {
         }
 
         try {
-            mDevice.executeShellCommand(LOGCAT_COMMAND, mReceiver, 0);
+            mDevice.executeShellCommand(mReceiver, 0,LOGCAT_COMMAND);
         } catch (TimeoutException e) {
             notifyListeners(Collections.singletonList(sConnectionTimeoutMsg));
         } catch (AdbCommandRejectedException ignored) {

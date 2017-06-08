@@ -1,6 +1,7 @@
 package application;
 
-public class AdbService {
+public class
+AdbService {
 
          
 	

@@ -85,7 +85,7 @@ public final class EventLogParser {
     public boolean init(IDevice device) {
         // read the event tag map file on the device.
         try {
-            device.executeShellCommand("cat " + EVENT_TAG_MAP_FILE, //$NON-NLS-1$
+            device.executeShellCommand( //$NON-NLS-1$
                     new MultiLineReceiver() {
                 @Override
                 public void processNewLines(String[] lines) {
@@ -97,7 +97,7 @@ public final class EventLogParser {
                 public boolean isCancelled() {
                     return false;
                 }
-            });
+            },"cat " + EVENT_TAG_MAP_FILE);
         } catch (Exception e) {
             // catch all possible exceptions and return false.
             return false;

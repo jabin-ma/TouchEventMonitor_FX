@@ -42,6 +42,8 @@ import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
 import com.android.annotations.VisibleForTesting;
 import com.android.annotations.concurrency.GuardedBy;
+import com.android.ddmlib.input.Command;
+import com.android.ddmlib.input.InputDeviceManager;
 import com.android.ddmlib.log.LogReceiver;
 import com.android.ddmlib.monkey.NetworkMonkey;
 import com.google.common.base.CharMatcher;
@@ -58,19 +60,29 @@ import com.google.common.util.concurrent.Atomics;
  * A Device. It can be a physical device or an emulator.
  */
 final class Device implements IDevice {
-    /** Emulator Serial Number regexp. */
+    /**
+     * Emulator Serial Number regexp.
+     */
     static final String RE_EMULATOR_SN = "emulator-(\\d+)"; //$NON-NLS-1$
 
-    /** Serial number of the device */
+    /**
+     * Serial number of the device
+     */
     private final String mSerialNumber;
 
-    /** Name of the AVD */
+    /**
+     * Name of the AVD
+     */
     private String mAvdName = null;
 
-    /** State of the device. */
+    /**
+     * State of the device.
+     */
     private DeviceState mState = null;
 
-    /** Device properties. */
+    /**
+     * Device properties.
+     */
     private final PropertyFetcher mPropFetcher = new PropertyFetcher(this);
     private final Map<String, String> mMountPoints = new HashMap<String, String>();
 
@@ -79,7 +91,9 @@ final class Device implements IDevice {
     @GuardedBy("mClients")
     private final List<Client> mClients = new ArrayList<Client>();
 
-    /** Maps pid's of clients in {@link #mClients} to their package name. */
+    /**
+     * Maps pid's of clients in {@link #mClients} to their package name.
+     */
     private final Map<Integer, String> mClientInfo = new ConcurrentHashMap<Integer, String>();
 
     private DeviceMonitor mMonitor;
@@ -112,14 +126,20 @@ final class Device implements IDevice {
     private Integer mLastBatteryLevel = null;
     private long mLastBatteryCheckTime = 0;
 
-    /** Path to the screen recorder binary on the device. */
+    /**
+     * Path to the screen recorder binary on the device.
+     */
     private static final String SCREEN_RECORDER_DEVICE_PATH = "/system/bin/screenrecord";
     private static final long LS_TIMEOUT_SEC = 2;
 
-    /** Flag indicating whether the device has the screen recorder binary. */
+    /**
+     * Flag indicating whether the device has the screen recorder binary.
+     */
     private Boolean mHasScreenRecorder;
 
-    /** Cached list of hardware characteristics */
+    /**
+     * Cached list of hardware characteristics
+     */
     private Set<String> mHardwareCharacteristics;
 
     private int mApiLevel;
@@ -414,7 +434,7 @@ final class Device implements IDevice {
         CountDownLatch latch = new CountDownLatch(1);
         CollectingOutputReceiver receiver = new CollectingOutputReceiver(latch);
         try {
-            executeShellCommand("ls " + path, receiver);
+            executeShellCommand(receiver, "ls " + path);
         } catch (Exception e) {
             return false;
         }
@@ -452,7 +472,7 @@ final class Device implements IDevice {
             IOException {
 
         final AtomicReference<String> ref = Atomics.newReference();
-        executeShellCommand("echo $" + name, new MultiLineReceiver() { //$NON-NLS-1$
+        executeShellCommand(new MultiLineReceiver() { //$NON-NLS-1$
             @Override
             public boolean isCancelled() {
                 return false;
@@ -467,13 +487,13 @@ final class Device implements IDevice {
                     }
                 }
             }
-        });
+        }, "echo $" + name);
         return ref.get();
     }
 
     @Override
     public String toString() {
-        return mSerialNumber+"-"+mState;
+        return mSerialNumber + "-" + mState;
     }
 
     /*
@@ -522,7 +542,7 @@ final class Device implements IDevice {
         SyncService syncService = new SyncService(AndroidDebugBridge.getSocketAddress(), this);
         if (syncService.openSync()) {
             return syncService;
-         }
+        }
 
         return null;
     }
@@ -550,14 +570,14 @@ final class Device implements IDevice {
 
     @Override
     public void startScreenRecorder(String remoteFilePath, ScreenRecorderOptions options,
-            IShellOutputReceiver receiver) throws TimeoutException, AdbCommandRejectedException,
+                                    IShellOutputReceiver receiver) throws TimeoutException, AdbCommandRejectedException,
             IOException, ShellCommandUnresponsiveException {
-        executeShellCommand(getScreenRecorderCommand(remoteFilePath, options), receiver, 0, null);
+        executeShellCommand(receiver, 0, null, getScreenRecorderCommand(remoteFilePath, options), null);
     }
 
     @VisibleForTesting(visibility = VisibleForTesting.Visibility.PRIVATE)
     static String getScreenRecorderCommand(@NonNull String remoteFilePath,
-            @NonNull ScreenRecorderOptions options) {
+                                           @NonNull ScreenRecorderOptions options) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("screenrecord");
@@ -593,29 +613,45 @@ final class Device implements IDevice {
     }
 
     @Override
-    public void executeShellCommand(String command, IShellOutputReceiver receiver)
+    public void executeShellCommand(IShellOutputReceiver receiver, String command, String... args)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException {
-        AdbHelper.executeRemoteCommand(AndroidDebugBridge.getSocketAddress(), command, this,
-                receiver, DdmPreferences.getTimeOut());
+        AdbHelper.executeRemoteCommand(AndroidDebugBridge.getSocketAddress(), this,
+                receiver, DdmPreferences.getTimeOut(), command, args);
     }
 
     @Override
-    public void executeShellCommand(String command, IShellOutputReceiver receiver,
-            int maxTimeToOutputResponse)
+    public void executeShellCommand(IShellOutputReceiver receiver, Command command, String... args) throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException, IOException {
+        executeShellCommand(receiver, command.getCmd(), command.getArgs(args));
+    }
+
+
+    @Override
+    public void executeShellCommand(IShellOutputReceiver receiver,
+                                    int maxTimeToOutputResponse, String command, String... args)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException {
-        AdbHelper.executeRemoteCommand(AndroidDebugBridge.getSocketAddress(), command, this,
-                receiver, maxTimeToOutputResponse);
+        AdbHelper.executeRemoteCommand(AndroidDebugBridge.getSocketAddress(), this,
+                receiver, maxTimeToOutputResponse, command);
     }
 
     @Override
-    public void executeShellCommand(String command, IShellOutputReceiver receiver,
-            long maxTimeToOutputResponse, TimeUnit maxTimeUnits)
+    public void executeShellCommand(IShellOutputReceiver receiver, int maxTimeToOutputResponse, Command command, String... args) throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException, IOException {
+        executeShellCommand(receiver, maxTimeToOutputResponse, command.getCmd(), command.getArgs(args));
+    }
+
+    @Override
+    public void executeShellCommand(IShellOutputReceiver receiver,
+                                    long maxTimeToOutputResponse, TimeUnit maxTimeUnits, String command, String... args)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException {
-        AdbHelper.executeRemoteCommand(AndroidDebugBridge.getSocketAddress(), command, this,
-                receiver, maxTimeToOutputResponse, maxTimeUnits);
+        AdbHelper.executeRemoteCommand(AndroidDebugBridge.getSocketAddress(), this,
+                receiver, maxTimeToOutputResponse, maxTimeUnits, command, args);
+    }
+
+    @Override
+    public void executeShellCommand(IShellOutputReceiver receiver, long maxTimeToOutputResponse, TimeUnit maxTimeUnits, Command command, String... args) throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException, IOException {
+        executeShellCommand(receiver,maxTimeToOutputResponse,maxTimeUnits,command.getCmd(),command.getArgs(args));
     }
 
     @Override
@@ -640,7 +676,7 @@ final class Device implements IDevice {
 
     @Override
     public void createForward(int localPort, String remoteSocketName,
-            DeviceUnixSocketNamespace namespace) throws TimeoutException,
+                              DeviceUnixSocketNamespace namespace) throws TimeoutException,
             AdbCommandRejectedException, IOException {
         AdbHelper.createForward(AndroidDebugBridge.getSocketAddress(), this,
                 String.format("tcp:%d", localPort),     //$NON-NLS-1$
@@ -657,7 +693,7 @@ final class Device implements IDevice {
 
     @Override
     public void removeForward(int localPort, String remoteSocketName,
-            DeviceUnixSocketNamespace namespace) throws TimeoutException,
+                              DeviceUnixSocketNamespace namespace) throws TimeoutException,
             AdbCommandRejectedException, IOException {
         AdbHelper.removeForward(AndroidDebugBridge.getSocketAddress(), this,
                 String.format("tcp:%d", localPort),     //$NON-NLS-1$
@@ -723,6 +759,7 @@ final class Device implements IDevice {
 
     /**
      * Removes a {@link Client} from the list.
+     *
      * @param client the client to remove.
      * @param notify Whether or not to notify the listeners of a change.
      */
@@ -738,7 +775,9 @@ final class Device implements IDevice {
         removeClientInfo(client);
     }
 
-    /** Sets the socket channel on which a track-jdwp command for this device has been sent. */
+    /**
+     * Sets the socket channel on which a track-jdwp command for this device has been sent.
+     */
     void setClientMonitoringSocket(@NonNull SocketChannel socketChannel) {
         mSocketChannel = socketChannel;
     }
@@ -878,7 +917,7 @@ final class Device implements IDevice {
 
     @Override
     public String installPackage(String packageFilePath, boolean reinstall,
-            String... extraArgs)
+                                 String... extraArgs)
             throws InstallException {
         try {
             String remoteFilePath = syncPackageToDevice(packageFilePath);
@@ -898,9 +937,9 @@ final class Device implements IDevice {
 
     @Override
     public void installPackages(List<String> apkFilePaths, int timeOutInMs, boolean reinstall,
-            String... extraArgs) throws InstallException {
+                                String... extraArgs) throws InstallException {
 
-        assert(!apkFilePaths.isEmpty());
+        assert (!apkFilePaths.isEmpty());
         if (getApiLevel() < 21) {
             Log.w("Internal error : installPackages invoked with device < 21 for %s",
                     Joiner.on(",").join(apkFilePaths));
@@ -947,7 +986,7 @@ final class Device implements IDevice {
                     ? "pm install-commit " + sessionId
                     : "pm install-abandon " + sessionId;
             InstallReceiver receiver = new InstallReceiver();
-            executeShellCommand(command, receiver, timeOutInMs, TimeUnit.MILLISECONDS);
+            executeShellCommand(receiver, timeOutInMs, TimeUnit.MILLISECONDS, command);
             String errorMessage = receiver.getErrorMessage();
             if (errorMessage != null) {
                 String message = String.format("Failed to finalize session : %1$s", errorMessage);
@@ -983,7 +1022,8 @@ final class Device implements IDevice {
 
         private static final Pattern successPattern = Pattern.compile("Success: .*\\[(\\d*)\\]");
 
-        @Nullable String sessionId = null;
+        @Nullable
+        String sessionId = null;
 
         @Override
         public boolean isCancelled() {
@@ -1009,7 +1049,7 @@ final class Device implements IDevice {
 
     @Nullable
     private String createMultiInstallSession(List<String> apkFileNames,
-            @NonNull Collection<String> extraArgs, boolean reinstall)
+                                             @NonNull Collection<String> extraArgs, boolean reinstall)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException {
 
@@ -1037,12 +1077,12 @@ final class Device implements IDevice {
         String cmd = String.format("pm install-create %1$s -S %2$d",
                 parameters.toString(),
                 totalFileSize);
-        executeShellCommand(cmd, receiver, DdmPreferences.getTimeOut());
+        executeShellCommand(receiver, DdmPreferences.getTimeOut(), cmd);
         return receiver.getSessionId();
     }
 
     private static final CharMatcher UNSAFE_PM_INSTALL_SESSION_SPLIT_NAME_CHARS =
-            CharMatcher.inRange('a','z').or(CharMatcher.inRange('A','Z'))
+            CharMatcher.inRange('a', 'z').or(CharMatcher.inRange('A', 'Z'))
                     .or(CharMatcher.anyOf("_-")).negate();
 
     private boolean uploadAPK(final String sessionId, String apkFilePath, int uniqueId) {
@@ -1071,8 +1111,8 @@ final class Device implements IDevice {
             inputStream = new BufferedInputStream(new FileInputStream(fileToUpload));
             InstallReceiver receiver = new InstallReceiver();
             AdbHelper.executeRemoteCommand(AndroidDebugBridge.getSocketAddress(),
-                    AdbHelper.AdbService.EXEC, command, this,
-                    receiver, DdmPreferences.getTimeOut(), TimeUnit.MILLISECONDS, inputStream);
+                    AdbHelper.AdbService.EXEC, this,
+                    receiver, DdmPreferences.getTimeOut(), TimeUnit.MILLISECONDS, inputStream, command);
             if (receiver.getErrorMessage() != null) {
                 Log.e(sessionId, String.format("Error while uploading %1$s : %2$s", fileToUpload.getName(),
                         receiver.getErrorMessage()));
@@ -1137,6 +1177,7 @@ final class Device implements IDevice {
 
     /**
      * Helper method to retrieve the file name given a local file path
+     *
      * @param filePath full directory path to file
      * @return {@link String} file name
      */
@@ -1146,7 +1187,7 @@ final class Device implements IDevice {
 
     @Override
     public String installRemotePackage(String remoteFilePath, boolean reinstall,
-            String... extraArgs) throws InstallException {
+                                       String... extraArgs) throws InstallException {
         try {
             InstallReceiver receiver = new InstallReceiver();
             StringBuilder optionString = new StringBuilder();
@@ -1158,7 +1199,7 @@ final class Device implements IDevice {
             }
             String cmd = String.format("pm install %1$s \"%2$s\"", optionString.toString(),
                     remoteFilePath);
-            executeShellCommand(cmd, receiver, INSTALL_TIMEOUT_MINUTES, TimeUnit.MINUTES);
+            executeShellCommand(receiver, INSTALL_TIMEOUT_MINUTES, TimeUnit.MINUTES, cmd);
             return receiver.getErrorMessage();
         } catch (TimeoutException e) {
             throw new InstallException(e);
@@ -1174,8 +1215,8 @@ final class Device implements IDevice {
     @Override
     public void removeRemotePackage(String remoteFilePath) throws InstallException {
         try {
-            executeShellCommand(String.format("rm \"%1$s\"", remoteFilePath),
-                    new NullOutputReceiver(), INSTALL_TIMEOUT_MINUTES, TimeUnit.MINUTES);
+            executeShellCommand(
+                    new NullOutputReceiver(), INSTALL_TIMEOUT_MINUTES, TimeUnit.MINUTES, String.format("rm \"%1$s\"", remoteFilePath));
         } catch (IOException e) {
             throw new InstallException(e);
         } catch (TimeoutException e) {
@@ -1191,8 +1232,8 @@ final class Device implements IDevice {
     public String uninstallPackage(String packageName) throws InstallException {
         try {
             InstallReceiver receiver = new InstallReceiver();
-            executeShellCommand("pm uninstall " + packageName, receiver, INSTALL_TIMEOUT_MINUTES,
-                    TimeUnit.MINUTES);
+            executeShellCommand(receiver, INSTALL_TIMEOUT_MINUTES,
+                    TimeUnit.MINUTES, "pm uninstall " + packageName);
             return receiver.getErrorMessage();
         } catch (TimeoutException e) {
             throw new InstallException(e);
@@ -1252,7 +1293,7 @@ final class Device implements IDevice {
     public List<String> getAbis() {
         /* Try abiList (implemented in L onwards) otherwise fall back to abi and abi2. */
         String abiList = getProperty(IDevice.PROP_DEVICE_CPU_ABI_LIST);
-        if(abiList != null) {
+        if (abiList != null) {
             return Lists.newArrayList(abiList.split(","));
         } else {
             List<String> abis = Lists.newArrayListWithExpectedSize(2);
@@ -1293,10 +1334,14 @@ final class Device implements IDevice {
     public String getRegion() {
         return getProperty(IDevice.PROP_DEVICE_REGION);
     }
-    
-    
+
+
     @Override
-	public NetworkMonkey getMonkey() throws IOException{
-    	return NetworkMonkey.create(this);
+    public NetworkMonkey getMonkey() throws IOException {
+        return NetworkMonkey.create(this);
+    }
+
+    public InputDeviceManager getInputDeviceManager(){
+        return new InputDeviceManager(this);
     }
 }

@@ -257,8 +257,8 @@ public class RemoteAndroidTestRunner implements IRemoteAndroidTestRunner  {
         mParser = new InstrumentationResultParser(runName, listeners);
 
         try {
-            mRemoteDevice.executeShellCommand(runCaseCommandStr, mParser, mMaxTimeToOutputResponse,
-                    mMaxTimeUnits);
+            mRemoteDevice.executeShellCommand( mParser, mMaxTimeToOutputResponse,
+                    mMaxTimeUnits,runCaseCommandStr);
         } catch (IOException e) {
             Log.w(LOG_TAG, String.format("IOException %1$s when running tests %2$s on %3$s",
                     e.toString(), getPackageName(), mRemoteDevice.getName()));

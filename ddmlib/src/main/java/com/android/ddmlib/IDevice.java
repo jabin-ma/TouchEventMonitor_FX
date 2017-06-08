@@ -25,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
+import com.android.ddmlib.input.Command;
+import com.android.ddmlib.input.InputDeviceManager;
 import com.android.ddmlib.log.LogReceiver;
 import com.android.ddmlib.monkey.NetworkMonkey;
 
@@ -334,11 +336,15 @@ public interface IDevice extends IShellEnabledDevice {
      * @deprecated Use {@link #executeShellCommand(String, IShellOutputReceiver, long, java.util.concurrent.TimeUnit)}.
      */
     @Deprecated
-    void executeShellCommand(String command, IShellOutputReceiver receiver,
-            int maxTimeToOutputResponse)
+    void executeShellCommand(IShellOutputReceiver receiver,
+            int maxTimeToOutputResponse,String command, String... args)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException;
 
+    void executeShellCommand(IShellOutputReceiver receiver,
+                             int maxTimeToOutputResponse, Command command, String... args)
+            throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
+            IOException;
     /**
      * Executes a shell command on the device, and sends the result to a <var>receiver</var>
      * <p/>This is similar to calling
@@ -353,13 +359,15 @@ public interface IDevice extends IShellEnabledDevice {
      *            for a given time.
      * @throws IOException in case of I/O error on the connection.
      *
-     * @see #executeShellCommand(String, IShellOutputReceiver, int)
+     * @see #executeShellCommand(IShellOutputReceiver, int,String,String...)
      * @see DdmPreferences#getTimeOut()
      */
-    void executeShellCommand(String command, IShellOutputReceiver receiver)
+    void executeShellCommand(IShellOutputReceiver receiver,String command, String... args)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException;
-
+    void executeShellCommand(IShellOutputReceiver receiver,Command command, String... args)
+            throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
+            IOException;
     /**
      * Runs the event log service and outputs the event log to the {@link LogReceiver}.
      * <p/>This call is blocking until {@link LogReceiver#isCancelled()} returns true.
@@ -641,4 +649,8 @@ public interface IDevice extends IShellEnabledDevice {
     
     
     NetworkMonkey getMonkey() throws IOException;
+
+
+    public InputDeviceManager getInputDeviceManager();
+
 }

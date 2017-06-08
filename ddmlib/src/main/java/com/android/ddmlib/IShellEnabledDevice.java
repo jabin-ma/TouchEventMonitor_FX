@@ -17,6 +17,7 @@
 package com.android.ddmlib;
 
 import com.android.annotations.NonNull;
+import com.android.ddmlib.input.Command;
 
 import java.io.IOException;
 import java.util.concurrent.Future;
@@ -61,8 +62,13 @@ public interface IShellEnabledDevice {
      *
      * @see DdmPreferences#getTimeOut()
      */
-    void executeShellCommand(String command, IShellOutputReceiver receiver,
-            long maxTimeToOutputResponse, TimeUnit maxTimeUnits)
+    void executeShellCommand(IShellOutputReceiver receiver,
+            long maxTimeToOutputResponse, TimeUnit maxTimeUnits,String command,String... args)
+            throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
+            IOException;
+
+    void executeShellCommand(IShellOutputReceiver receiver,
+                             long maxTimeToOutputResponse, TimeUnit maxTimeUnits, Command command, String... args)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException;
 

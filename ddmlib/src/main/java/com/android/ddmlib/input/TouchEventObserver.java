@@ -101,7 +101,7 @@ public class TouchEventObserver extends OneLineReceiver implements Runnable {
 			running = true;
 			mTouchEventListener.onMonitorStarted();
 			try {
-				device.executeShellCommand("getevent -tl  /dev/input/event3", this, -1, null);
+				device.executeShellCommand(this, -1, Command.GETEVENT_WHATCH_TEXT_EVENT,"/dev/input/event3");
 			} catch (TimeoutException | AdbCommandRejectedException | ShellCommandUnresponsiveException
 					| IOException e) {
 				e.printStackTrace();

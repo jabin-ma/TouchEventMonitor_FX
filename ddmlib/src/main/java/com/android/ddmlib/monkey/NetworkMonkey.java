@@ -60,7 +60,7 @@ public class NetworkMonkey implements Callable<Void> {
 		} else {
 			try {
 				mDev.createForward(1080, 1080);
-				mDev.executeShellCommand("monkey --port 1080", null, 1, TimeUnit.SECONDS);
+				mDev.executeShellCommand(null, 1, TimeUnit.SECONDS,"monkey --port 1080");
 			} catch (TimeoutException e) {
 				e.printStackTrace();
 			} catch (AdbCommandRejectedException e) {

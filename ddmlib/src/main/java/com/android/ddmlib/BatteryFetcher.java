@@ -180,13 +180,13 @@ class BatteryFetcher {
                 try {
                     // first try to get it from sysfs
                     SysFsBatteryLevelReceiver sysBattReceiver = new SysFsBatteryLevelReceiver();
-                    mDevice.executeShellCommand("cat /sys/class/power_supply/*/capacity",
-                            sysBattReceiver, BATTERY_TIMEOUT, TimeUnit.MILLISECONDS);
+                    mDevice.executeShellCommand(
+                            sysBattReceiver, BATTERY_TIMEOUT, TimeUnit.MILLISECONDS,"cat /sys/class/power_supply/*/capacity");
                     if (!setBatteryLevel(sysBattReceiver.getBatteryLevel())) {
                         // failed! try dumpsys
                         BatteryReceiver receiver = new BatteryReceiver();
-                        mDevice.executeShellCommand("dumpsys battery", receiver, BATTERY_TIMEOUT,
-                                TimeUnit.MILLISECONDS);
+                        mDevice.executeShellCommand( receiver, BATTERY_TIMEOUT,
+                                TimeUnit.MILLISECONDS,"dumpsys battery");
                         if (setBatteryLevel(receiver.getBatteryLevel())) {
                             return;
                         }
