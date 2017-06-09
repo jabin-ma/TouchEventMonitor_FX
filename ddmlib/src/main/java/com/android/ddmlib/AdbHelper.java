@@ -421,7 +421,7 @@ public final class AdbHelper {
      * @param args    the list of arguments.
      * @return the command line.
      */
-    private StringBuilder buildCmdLine(String command, String... args) {
+    private static StringBuilder buildCmdLine(String command, String... args) {
         StringBuilder shellLine = new StringBuilder(command);
         for (String arg : args) {
             shellLine.append(" ");
@@ -481,7 +481,7 @@ public final class AdbHelper {
             // to a specific device
             setDevice(adbChan, device);
 
-            byte[] request = formAdbRequest(adbService.name().toLowerCase() + ":" + command); //$NON-NLS-1$
+            byte[] request = formAdbRequest(adbService.name().toLowerCase() + ":" + buildCmdLine(command,args)); //$NON-NLS-1$
             write(adbChan, request);
             AdbResponse resp = readAdbResponse(adbChan, false /* readDiagString */);
             if (!resp.okay) {
