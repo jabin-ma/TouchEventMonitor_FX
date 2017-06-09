@@ -25,17 +25,14 @@
 
 package application
 
+import com.android.ddmlib.input.EventData
 import javafx.beans.NamedArg
-import javafx.beans.property.Property
 import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.beans.value.ObservableValue
-import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableColumn.CellDataFeatures
-import javafx.scene.control.TableView
 import javafx.util.Callback
 
-import sun.util.logging.PlatformLogger
 import sun.util.logging.PlatformLogger.Level
 import com.sun.javafx.property.PropertyReference
 import com.sun.javafx.scene.control.Logging

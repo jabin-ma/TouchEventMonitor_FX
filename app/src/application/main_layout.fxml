@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -10,24 +11,26 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="application.controller.MainController">
     <top>
         <VBox>
             <MenuBar fx:id="menubar_main" nodeOrientation="LEFT_TO_RIGHT">
                 <menus>
                     <Menu fx:id="menu_file" mnemonicParsing="false" text="文件">
                         <items>
-                            <MenuItem fx:id="menuitem_close" mnemonicParsing="false" onAction="#onMenuClick" text="关闭" />
+                            <MenuItem fx:id="menuitem_close" mnemonicParsing="false" onAction="#onMenuClick" text="关闭"/>
                         </items>
                     </Menu>
                     <Menu fx:id="menu_edit" mnemonicParsing="false" text="编辑">
                         <items>
-                            <MenuItem fx:id="menuitem_delete" mnemonicParsing="false" text="删除" />
+                            <MenuItem fx:id="menuitem_delete" mnemonicParsing="false" text="删除"/>
                         </items>
                     </Menu>
                     <Menu fx:id="menu_help" mnemonicParsing="false" text="帮助">
                         <items>
-                            <MenuItem fx:id="menuitem_about" mnemonicParsing="false" text="关于" />
+                            <MenuItem fx:id="menuitem_about" mnemonicParsing="false" text="关于"/>
                         </items>
                     </Menu>
 
@@ -38,13 +41,15 @@
     <center>
         <TabPane>
             <Tab closable="false" text="Monitor">
-                <fx:include source="monitor_layout.fxml" />
+                <fx:include source="monitor_layout.fxml"/>
             </Tab>
         </TabPane>
     </center>
     <bottom>
-        <HBox prefHeight="20">
-            <ProgressIndicator prefWidth="20" />
+        <HBox prefHeight="20" fx:id="pane_statusbar">
+            <ProgressIndicator prefWidth="20"/>
+            <Label text="Label" fx:id="statusbar_text"/>
+
         </HBox>
     </bottom>
 </BorderPane>

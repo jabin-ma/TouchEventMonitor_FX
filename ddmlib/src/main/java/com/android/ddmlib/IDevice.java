@@ -333,7 +333,7 @@ public interface IDevice extends IShellEnabledDevice {
             ShellCommandUnresponsiveException;
 
     /**
-     * @deprecated Use {@link #executeShellCommand(String, IShellOutputReceiver, long, java.util.concurrent.TimeUnit)}.
+     * @deprecated Use {@link #executeShellCommand(IShellOutputReceiver, long, java.util.concurrent.TimeUnit,String,String...)}.
      */
     @Deprecated
     void executeShellCommand(IShellOutputReceiver receiver,

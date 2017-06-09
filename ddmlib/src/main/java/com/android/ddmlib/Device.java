@@ -632,7 +632,7 @@ final class Device implements IDevice {
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException {
         AdbHelper.executeRemoteCommand(AndroidDebugBridge.getSocketAddress(), this,
-                receiver, maxTimeToOutputResponse, command);
+                receiver, maxTimeToOutputResponse, command,args);
     }
 
     @Override

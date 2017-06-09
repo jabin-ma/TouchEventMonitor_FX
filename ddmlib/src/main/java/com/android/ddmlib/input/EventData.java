@@ -1,23 +1,13 @@
-package application;
+package com.android.ddmlib.input;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public final class EventData {
+public  class EventData {
 	private final SimpleStringProperty eventType = new SimpleStringProperty();
 	private final SimpleStringProperty eventDesc = new SimpleStringProperty();
 	private final SimpleStringProperty eventDur = new SimpleStringProperty();
 	private final SimpleDoubleProperty progress = new SimpleDoubleProperty();
-
-	public EventData(String filename, double progress) {
-	}
-
-	public EventData(String eventtype, String eventDesc, String eventDur, double progress) {
-		setEventType(eventtype);
-		setEventDesc(eventDesc);
-		setEventDur(eventDur);
-		setProgress(progress);
-	}
 
 	/**
 	 * @return the progress

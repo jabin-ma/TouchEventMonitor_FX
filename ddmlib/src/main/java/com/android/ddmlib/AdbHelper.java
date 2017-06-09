@@ -199,6 +199,7 @@ public final class AdbHelper {
      * matter).
      */
     public static byte[] formAdbRequest(String req) {
+        Log.d("AdbHelper","create request:"+req);
         String resultStr = String.format("%04X%s", req.length(), req); //$NON-NLS-1$
         byte[] result;
         try {
