@@ -1,6 +1,6 @@
 package com.android.ddmlib.input;
 
-import com.android.ddmlib.input.NeedWhatchKey.HandleType;
+import com.android.ddmlib.input.KnownEventList.HandleType;
 
 public class AndroidEventItem implements IEvent {
 

@@ -10,11 +10,11 @@ import java.util.List;
 
 import com.android.ddmlib.Log;
 
-public class NeedWhatchKey {
+public class KnownEventList {
 
 	public List<TextEventItem> needwhatch = new ArrayList<TextEventItem>();
 
-	public NeedWhatchKey(String file) {
+	public KnownEventList(String file) {
 		InputStream in = null;
 		try {
 			in = new FileInputStream(file);
@@ -48,9 +48,9 @@ public class NeedWhatchKey {
 		ins.close();
 	}
 
-	NeedWhatchKey() {
+	KnownEventList() {
 		try {
-			read(getClass().getResourceAsStream("NeedWhatchKey.default"));
+			read(getClass().getResourceAsStream("KnownEventList.default"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -5,12 +5,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.android.ddmlib.AdbCommandRejectedException;
-import com.android.ddmlib.IDevice;
 import com.android.ddmlib.Log;
 import com.android.ddmlib.OneLineReceiver;
 import com.android.ddmlib.ShellCommandUnresponsiveException;
 import com.android.ddmlib.TimeoutException;
-import com.android.ddmlib.input.NeedWhatchKey.HandleType;
+import com.android.ddmlib.input.KnownEventList.HandleType;
 
 public class TouchEventObserver extends OneLineReceiver implements Runnable {
 
@@ -18,7 +17,7 @@ public class TouchEventObserver extends OneLineReceiver implements Runnable {
 
     private static final String TAG = "TouchEventObserver";
 
-    private NeedWhatchKey whatchKeys = new NeedWhatchKey();
+    private KnownEventList whatchKeys = new KnownEventList();
     private onTouchEventListener mTouchEventListener;
 
     public TouchEventObserver(InputDevice device) {
