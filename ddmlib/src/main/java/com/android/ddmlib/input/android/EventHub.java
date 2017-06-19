@@ -8,5 +8,19 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class EventHub  {
+class EventHub {
+
+
+    boolean addMonitorDevice() {
+        return false;
+    }
+
+    boolean removeMonitorDevice() {
+        return false;
+    }
+
+    AndroidEventItem getEvent() {
+
+        return null;
+    }
 }
