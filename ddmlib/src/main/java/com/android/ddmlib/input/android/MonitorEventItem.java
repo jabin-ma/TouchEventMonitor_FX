@@ -1,16 +1,18 @@
-package com.android.ddmlib.input;
+package com.android.ddmlib.input.android;
+
+import com.android.ddmlib.SetGetble;
+import com.android.ddmlib.input.EventData;
+import com.android.ddmlib.input.Field;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import com.android.ddmlib.SetGetble;
-
-public class TouchEvent extends EventData implements SetGetble<Field, String> {
+public class MonitorEventItem extends EventData implements SetGetble<Field, String> {
     private boolean close = false;
     private LinkedList<TouchPoint> mTouchEventPath = new LinkedList<TouchPoint>();
     private long closeTime;
 
-    TouchEvent(TextEventItem down) {
+    MonitorEventItem(RawEvent down) {
         super();
     }
 

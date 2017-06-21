@@ -16,34 +16,12 @@
 
 package com.android.ddmlib;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
 import com.android.annotations.VisibleForTesting;
 import com.android.annotations.concurrency.GuardedBy;
-import com.android.ddmlib.input.Command;
-import com.android.ddmlib.input.InputDeviceManager;
+import com.android.ddmlib.input.android.Command;
+import com.android.ddmlib.input.android.InputManager;
 import com.android.ddmlib.log.LogReceiver;
 import com.android.ddmlib.monkey.NetworkMonkey;
 import com.google.common.base.CharMatcher;
@@ -54,6 +32,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.Atomics;
+
+import java.io.*;
+import java.nio.channels.SocketChannel;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -1340,8 +1326,11 @@ final class Device implements IDevice {
     public NetworkMonkey getMonkey() throws IOException {
         return NetworkMonkey.create(this);
     }
-
-    public InputDeviceManager getInputDeviceManager(){
-        return new InputDeviceManager(this);
+    InputManager inputManager;
+    public InputManager getInputManager(){
+        if(inputManager==null){
+            inputManager=new InputManager(this);
+        }
+        return inputManager;
     }
 }

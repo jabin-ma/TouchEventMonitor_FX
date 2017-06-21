@@ -9,10 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.android.ddmlib.Log;
+import com.android.ddmlib.input.android.RawEvent;
 
 public class KnownEventList {
 
-	public List<TextEventItem> needwhatch = new ArrayList<TextEventItem>();
+	public List<RawEvent> needwhatch = new ArrayList<RawEvent>();
 
 	public KnownEventList(String file) {
 		InputStream in = null;
@@ -42,7 +43,7 @@ public class KnownEventList {
 		while ((line = read.readLine()) != null) {
 			if (line.startsWith("#"))
 				continue;
-			needwhatch.add(new TextEventItem(line));
+			needwhatch.add(new RawEvent(line,null));
 		}
 		read.close();
 		ins.close();
@@ -56,12 +57,12 @@ public class KnownEventList {
 		}
 	}
 
-	public boolean need(TextEventItem e) {
+	public boolean need(RawEvent e) {
 		return false;
 	}
 
-	public HandleType queryHandleType(TextEventItem in) {
-		for (TextEventItem def : needwhatch) {
+	public HandleType queryHandleType(RawEvent in) {
+		for (RawEvent def : needwhatch) {
 			if (def.equals(in)) {
 				return def.getHandleType();
 			}

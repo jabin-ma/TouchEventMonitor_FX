@@ -1,4 +1,4 @@
-package com.android.ddmlib.input;
+package com.android.ddmlib.input.android;
 
 public class TouchPoint {
 	

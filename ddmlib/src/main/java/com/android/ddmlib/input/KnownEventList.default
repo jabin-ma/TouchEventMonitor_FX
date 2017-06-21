@@ -10,7 +10,7 @@
 #				return EventFinish;
 #			case 5:
 #				return UnKnown;
-ignore EV_KEY       BTN_TOOL_FINGER      DOWN       1         
+ignore EV_KEY       BTN_TOOL_FINGER      DOWN       1 MonitorEvent
 ignore EV_ABS       ABS_MT_POSITION_X    ignore     2         
 ignore EV_ABS       ABS_MT_POSITION_Y    ignore     3        
 ignore EV_KEY       BTN_TOOL_FINGER      UP         4

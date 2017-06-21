@@ -16,6 +16,13 @@
 
 package com.android.ddmlib;
 
+import com.android.annotations.NonNull;
+import com.android.annotations.Nullable;
+import com.android.ddmlib.input.android.Command;
+import com.android.ddmlib.input.android.InputManager;
+import com.android.ddmlib.log.LogReceiver;
+import com.android.ddmlib.monkey.NetworkMonkey;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -23,15 +30,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import com.android.annotations.NonNull;
-import com.android.annotations.Nullable;
-import com.android.ddmlib.input.Command;
-import com.android.ddmlib.input.InputDeviceManager;
-import com.android.ddmlib.log.LogReceiver;
-import com.android.ddmlib.monkey.NetworkMonkey;
-
 /**
- *  A Device. It can be a physical device or an emulator.
+ * A Device. It can be a physical device or an emulator.
  */
 public interface IDevice extends IShellEnabledDevice {
 
@@ -52,22 +52,34 @@ public interface IDevice extends IShellEnabledDevice {
 
     String PROP_DEBUGGABLE = "ro.debuggable";
 
-    /** Serial number of the first connected emulator. */
+    /**
+     * Serial number of the first connected emulator.
+     */
     String FIRST_EMULATOR_SN = "emulator-5554"; //$NON-NLS-1$
-    /** Device change bit mask: {@link DeviceState} change. */
+    /**
+     * Device change bit mask: {@link DeviceState} change.
+     */
     int CHANGE_STATE = 0x0001;
-    /** Device change bit mask: {@link Client} list change. */
+    /**
+     * Device change bit mask: {@link Client} list change.
+     */
     int CHANGE_CLIENT_LIST = 0x0002;
-    /** Device change bit mask: build info change. */
+    /**
+     * Device change bit mask: build info change.
+     */
     int CHANGE_BUILD_INFO = 0x0004;
 
-    /** Device level software features. */
+    /**
+     * Device level software features.
+     */
     enum Feature {
         SCREEN_RECORD,      // screen recorder available?
         PROCSTATS,          // procstats service (dumpsys procstats) available
     }
 
-    /** Device level hardware features. */
+    /**
+     * Device level hardware features.
+     */
     enum HardwareFeature {
         WATCH("watch"),
         TV("tv");
@@ -83,7 +95,9 @@ public interface IDevice extends IShellEnabledDevice {
         }
     }
 
-    /** @deprecated Use {@link #PROP_BUILD_API_LEVEL}. */
+    /**
+     * @deprecated Use {@link #PROP_BUILD_API_LEVEL}.
+     */
     @Deprecated
     String PROP_BUILD_VERSION_NUMBER = PROP_BUILD_API_LEVEL;
 
@@ -143,7 +157,9 @@ public interface IDevice extends IShellEnabledDevice {
         }
     }
 
-    /** Returns the serial number of the device. */
+    /**
+     * Returns the serial number of the device.
+     */
     @NonNull
     String getSerialNumber();
 
@@ -201,11 +217,11 @@ public interface IDevice extends IShellEnabledDevice {
      *
      * @param name the name of the value to return.
      * @return the value or <code>null</code> if the property does not exist
-     * @throws TimeoutException in case of timeout on the connection.
-     * @throws AdbCommandRejectedException if adb rejects the command
+     * @throws TimeoutException                  in case of timeout on the connection.
+     * @throws AdbCommandRejectedException       if adb rejects the command
      * @throws ShellCommandUnresponsiveException in case the shell command doesn't send output for a
-     *             given time.
-     * @throws IOException in case of I/O error on the connection.
+     *                                           given time.
+     * @throws IOException                       in case of I/O error on the connection.
      * @deprecated use {@link #getSystemProperty(String)}
      */
     @Deprecated
@@ -219,28 +235,31 @@ public interface IDevice extends IShellEnabledDevice {
      *
      * @param name the name of the value to return.
      * @return the value or <code>null</code> if the property does not exist
-     * @throws TimeoutException in case of timeout on the connection.
-     * @throws AdbCommandRejectedException if adb rejects the command
+     * @throws TimeoutException                  in case of timeout on the connection.
+     * @throws AdbCommandRejectedException       if adb rejects the command
      * @throws ShellCommandUnresponsiveException in case the shell command doesn't send output for a
-     *             given time.
-     * @throws IOException in case of I/O error on the connection.
+     *                                           given time.
+     * @throws IOException                       in case of I/O error on the connection.
      * @deprecated use {@link #getSystemProperty(String)} instead
      */
     @Deprecated
     String getPropertyCacheOrSync(String name) throws TimeoutException,
             AdbCommandRejectedException, ShellCommandUnresponsiveException, IOException;
 
-    /** Returns whether this device supports the given software feature. */
+    /**
+     * Returns whether this device supports the given software feature.
+     */
     boolean supportsFeature(@NonNull Feature feature);
 
-    /** Returns whether this device supports the given hardware feature. */
+    /**
+     * Returns whether this device supports the given hardware feature.
+     */
     boolean supportsFeature(@NonNull HardwareFeature feature);
 
     /**
      * Returns a mount point.
      *
      * @param name the name of the mount point to return
-     *
      * @see #MNT_EXTERNAL_STORAGE
      * @see #MNT_ROOT
      * @see #MNT_DATA
@@ -296,11 +315,11 @@ public interface IDevice extends IShellEnabledDevice {
      * Returns a {@link SyncService} object to push / pull files to and from the device.
      *
      * @return <code>null</code> if the SyncService couldn't be created. This can happen if adb
-     *            refuse to open the connection because the {@link IDevice} is invalid
-     *            (or got disconnected).
-     * @throws TimeoutException in case of timeout on the connection.
+     * refuse to open the connection because the {@link IDevice} is invalid
+     * (or got disconnected).
+     * @throws TimeoutException            in case of timeout on the connection.
      * @throws AdbCommandRejectedException if adb rejects the command
-     * @throws IOException if the connection with adb failed.
+     * @throws IOException                 if the connection with adb failed.
      */
     SyncService getSyncService()
             throws TimeoutException, AdbCommandRejectedException, IOException;
@@ -314,10 +333,10 @@ public interface IDevice extends IShellEnabledDevice {
      * Takes a screen shot of the device and returns it as a {@link RawImage}.
      *
      * @return the screenshot as a <code>RawImage</code> or <code>null</code> if something
-     *            went wrong.
-     * @throws TimeoutException in case of timeout on the connection.
+     * went wrong.
+     * @throws TimeoutException            in case of timeout on the connection.
      * @throws AdbCommandRejectedException if adb rejects the command
-     * @throws IOException in case of I/O error on the connection.
+     * @throws IOException                 in case of I/O error on the connection.
      */
     RawImage getScreenshot() throws TimeoutException, AdbCommandRejectedException, IOException;
 
@@ -328,16 +347,16 @@ public interface IDevice extends IShellEnabledDevice {
      * Initiates screen recording on the device if the device supports {@link Feature#SCREEN_RECORD}.
      */
     void startScreenRecorder(@NonNull String remoteFilePath,
-            @NonNull ScreenRecorderOptions options, @NonNull IShellOutputReceiver receiver) throws
+                             @NonNull ScreenRecorderOptions options, @NonNull IShellOutputReceiver receiver) throws
             TimeoutException, AdbCommandRejectedException, IOException,
             ShellCommandUnresponsiveException;
 
     /**
-     * @deprecated Use {@link #executeShellCommand(IShellOutputReceiver, long, java.util.concurrent.TimeUnit,String,String...)}.
+     * @deprecated Use {@link #executeShellCommand(IShellOutputReceiver, long, java.util.concurrent.TimeUnit, String, String...)}.
      */
     @Deprecated
     void executeShellCommand(IShellOutputReceiver receiver,
-            int maxTimeToOutputResponse,String command, String... args)
+                             int maxTimeToOutputResponse, String command, String... args)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException;
 
@@ -345,38 +364,41 @@ public interface IDevice extends IShellEnabledDevice {
                              int maxTimeToOutputResponse, Command command, String... args)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException;
+
     /**
      * Executes a shell command on the device, and sends the result to a <var>receiver</var>
      * <p/>This is similar to calling
      * <code>executeShellCommand(command, receiver, DdmPreferences.getTimeOut())</code>.
      *
-     * @param command the shell command to execute
+     * @param command  the shell command to execute
      * @param receiver the {@link IShellOutputReceiver} that will receives the output of the shell
-     *            command
-     * @throws TimeoutException in case of timeout on the connection.
-     * @throws AdbCommandRejectedException if adb rejects the command
+     *                 command
+     * @throws TimeoutException                  in case of timeout on the connection.
+     * @throws AdbCommandRejectedException       if adb rejects the command
      * @throws ShellCommandUnresponsiveException in case the shell command doesn't send output
-     *            for a given time.
-     * @throws IOException in case of I/O error on the connection.
-     *
-     * @see #executeShellCommand(IShellOutputReceiver, int,String,String...)
+     *                                           for a given time.
+     * @throws IOException                       in case of I/O error on the connection.
+     * @see #executeShellCommand(IShellOutputReceiver, int, String, String...)
      * @see DdmPreferences#getTimeOut()
      */
-    void executeShellCommand(IShellOutputReceiver receiver,String command, String... args)
+    void executeShellCommand(IShellOutputReceiver receiver, String command, String... args)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException;
-    void executeShellCommand(IShellOutputReceiver receiver,Command command, String... args)
+
+    void executeShellCommand(IShellOutputReceiver receiver, Command command, String... args)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException;
+
     /**
      * Runs the event log service and outputs the event log to the {@link LogReceiver}.
      * <p/>This call is blocking until {@link LogReceiver#isCancelled()} returns true.
+     *
      * @param receiver the receiver to receive the event log entries.
-     * @throws TimeoutException in case of timeout on the connection. This can only be thrown if the
-     * timeout happens during setup. Once logs start being received, no timeout will occur as it's
-     * not possible to detect a difference between no log and timeout.
+     * @throws TimeoutException            in case of timeout on the connection. This can only be thrown if the
+     *                                     timeout happens during setup. Once logs start being received, no timeout will occur as it's
+     *                                     not possible to detect a difference between no log and timeout.
      * @throws AdbCommandRejectedException if adb rejects the command
-     * @throws IOException in case of I/O error on the connection.
+     * @throws IOException                 in case of I/O error on the connection.
      */
     void runEventLogService(LogReceiver receiver)
             throws TimeoutException, AdbCommandRejectedException, IOException;
@@ -385,13 +407,13 @@ public interface IDevice extends IShellEnabledDevice {
      * Runs the log service for the given log and outputs the log to the {@link LogReceiver}.
      * <p/>This call is blocking until {@link LogReceiver#isCancelled()} returns true.
      *
-     * @param logname the logname of the log to read from.
+     * @param logname  the logname of the log to read from.
      * @param receiver the receiver to receive the event log entries.
-     * @throws TimeoutException in case of timeout on the connection. This can only be thrown if the
-     *            timeout happens during setup. Once logs start being received, no timeout will
-     *            occur as it's not possible to detect a difference between no log and timeout.
+     * @throws TimeoutException            in case of timeout on the connection. This can only be thrown if the
+     *                                     timeout happens during setup. Once logs start being received, no timeout will
+     *                                     occur as it's not possible to detect a difference between no log and timeout.
      * @throws AdbCommandRejectedException if adb rejects the command
-     * @throws IOException in case of I/O error on the connection.
+     * @throws IOException                 in case of I/O error on the connection.
      */
     void runLogService(String logname, LogReceiver receiver)
             throws TimeoutException, AdbCommandRejectedException, IOException;
@@ -399,11 +421,11 @@ public interface IDevice extends IShellEnabledDevice {
     /**
      * Creates a port forwarding between a local and a remote port.
      *
-     * @param localPort the local port to forward
+     * @param localPort  the local port to forward
      * @param remotePort the remote port.
-     * @throws TimeoutException in case of timeout on the connection.
+     * @throws TimeoutException            in case of timeout on the connection.
      * @throws AdbCommandRejectedException if adb rejects the command
-     * @throws IOException in case of I/O error on the connection.
+     * @throws IOException                 in case of I/O error on the connection.
      */
     void createForward(int localPort, int remotePort)
             throws TimeoutException, AdbCommandRejectedException, IOException;
@@ -411,25 +433,25 @@ public interface IDevice extends IShellEnabledDevice {
     /**
      * Creates a port forwarding between a local TCP port and a remote Unix Domain Socket.
      *
-     * @param localPort the local port to forward
+     * @param localPort        the local port to forward
      * @param remoteSocketName name of the unix domain socket created on the device
-     * @param namespace namespace in which the unix domain socket was created
-     * @throws TimeoutException in case of timeout on the connection.
+     * @param namespace        namespace in which the unix domain socket was created
+     * @throws TimeoutException            in case of timeout on the connection.
      * @throws AdbCommandRejectedException if adb rejects the command
-     * @throws IOException in case of I/O error on the connection.
+     * @throws IOException                 in case of I/O error on the connection.
      */
     void createForward(int localPort, String remoteSocketName,
-            DeviceUnixSocketNamespace namespace)
+                       DeviceUnixSocketNamespace namespace)
             throws TimeoutException, AdbCommandRejectedException, IOException;
 
     /**
      * Removes a port forwarding between a local and a remote port.
      *
-     * @param localPort the local port to forward
+     * @param localPort  the local port to forward
      * @param remotePort the remote port.
-     * @throws TimeoutException in case of timeout on the connection.
+     * @throws TimeoutException            in case of timeout on the connection.
      * @throws AdbCommandRejectedException if adb rejects the command
-     * @throws IOException in case of I/O error on the connection.
+     * @throws IOException                 in case of I/O error on the connection.
      */
     void removeForward(int localPort, int remotePort)
             throws TimeoutException, AdbCommandRejectedException, IOException;
@@ -437,32 +459,33 @@ public interface IDevice extends IShellEnabledDevice {
     /**
      * Removes an existing port forwarding between a local and a remote port.
      *
-     * @param localPort the local port to forward
+     * @param localPort        the local port to forward
      * @param remoteSocketName the remote unix domain socket name.
-     * @param namespace namespace in which the unix domain socket was created
-     * @throws TimeoutException in case of timeout on the connection.
+     * @param namespace        namespace in which the unix domain socket was created
+     * @throws TimeoutException            in case of timeout on the connection.
      * @throws AdbCommandRejectedException if adb rejects the command
-     * @throws IOException in case of I/O error on the connection.
+     * @throws IOException                 in case of I/O error on the connection.
      */
     void removeForward(int localPort, String remoteSocketName,
-            DeviceUnixSocketNamespace namespace)
+                       DeviceUnixSocketNamespace namespace)
             throws TimeoutException, AdbCommandRejectedException, IOException;
 
     /**
      * Returns the name of the client by pid or <code>null</code> if pid is unknown
+     *
      * @param pid the pid of the client.
      */
     String getClientName(int pid);
 
     /**
      * Push a single file.
-     * @param local the local filepath.
-     * @param remote The remote filepath.
      *
-     * @throws IOException in case of I/O error on the connection.
+     * @param local  the local filepath.
+     * @param remote The remote filepath.
+     * @throws IOException                 in case of I/O error on the connection.
      * @throws AdbCommandRejectedException if adb rejects the command
-     * @throws TimeoutException in case of a timeout reading responses from the device.
-     * @throws SyncException if file could not be pushed
+     * @throws TimeoutException            in case of a timeout reading responses from the device.
+     * @throws SyncException               if file could not be pushed
      */
     void pushFile(String local, String remote)
             throws IOException, AdbCommandRejectedException, TimeoutException, SyncException;
@@ -471,12 +494,11 @@ public interface IDevice extends IShellEnabledDevice {
      * Pulls a single file.
      *
      * @param remote the full path to the remote file
-     * @param local The local destination.
-     *
-     * @throws IOException in case of an IO exception.
+     * @param local  The local destination.
+     * @throws IOException                 in case of an IO exception.
      * @throws AdbCommandRejectedException if adb rejects the command
-     * @throws TimeoutException in case of a timeout reading responses from the device.
-     * @throws SyncException in case of a sync exception.
+     * @throws TimeoutException            in case of a timeout reading responses from the device.
+     * @throws SyncException               in case of a sync exception.
      */
     void pullFile(String remote, String local)
             throws IOException, AdbCommandRejectedException, TimeoutException, SyncException;
@@ -486,9 +508,9 @@ public interface IDevice extends IShellEnabledDevice {
      * syncPackageToDevice, installRemotePackage, and removePackage steps
      *
      * @param packageFilePath the absolute file system path to file on local host to install
-     * @param reinstall set to <code>true</code> if re-install of app should be performed
-     * @param extraArgs optional extra arguments to pass. See 'adb shell pm install --help' for
-     *            available options.
+     * @param reinstall       set to <code>true</code> if re-install of app should be performed
+     * @param extraArgs       optional extra arguments to pass. See 'adb shell pm install --help' for
+     *                        available options.
      * @return a {@link String} with an error code, or <code>null</code> if success.
      * @throws InstallException if the installation fails.
      */
@@ -500,23 +522,24 @@ public interface IDevice extends IShellEnabledDevice {
      *
      * @param apkFilePaths list of absolute file system path to files on local host to install
      * @param timeOutInMs
-     * @param reinstall set to <code>true</code> if re-install of app should be performed
-     * @param extraArgs optional extra arguments to pass. See 'adb shell pm install --help' for
-     *            available options.
+     * @param reinstall    set to <code>true</code> if re-install of app should be performed
+     * @param extraArgs    optional extra arguments to pass. See 'adb shell pm install --help' for
+     *                     available options.
      * @throws InstallException if the installation fails.
      */
 
     void installPackages(List<String> apkFilePaths, int timeOutInMs,
-            boolean reinstall, String... extraArgs) throws InstallException;
+                         boolean reinstall, String... extraArgs) throws InstallException;
+
     /**
      * Pushes a file to device
      *
      * @param localFilePath the absolute path to file on local host
      * @return {@link String} destination path on device for file
-     * @throws TimeoutException in case of timeout on the connection.
+     * @throws TimeoutException            in case of timeout on the connection.
      * @throws AdbCommandRejectedException if adb rejects the command
-     * @throws IOException in case of I/O error on the connection.
-     * @throws SyncException if an error happens during the push of the package on the device.
+     * @throws IOException                 in case of I/O error on the connection.
+     * @throws SyncException               if an error happens during the push of the package on the device.
      */
     String syncPackageToDevice(String localFilePath)
             throws TimeoutException, AdbCommandRejectedException, IOException, SyncException;
@@ -525,13 +548,13 @@ public interface IDevice extends IShellEnabledDevice {
      * Installs the application package that was pushed to a temporary location on the device.
      *
      * @param remoteFilePath absolute file path to package file on device
-     * @param reinstall set to <code>true</code> if re-install of app should be performed
-     * @param extraArgs optional extra arguments to pass. See 'adb shell pm install --help' for
-     *            available options.
+     * @param reinstall      set to <code>true</code> if re-install of app should be performed
+     * @param extraArgs      optional extra arguments to pass. See 'adb shell pm install --help' for
+     *                       available options.
      * @throws InstallException if the installation fails.
      */
     String installRemotePackage(String remoteFilePath, boolean reinstall,
-            String... extraArgs) throws InstallException;
+                                String... extraArgs) throws InstallException;
 
     /**
      * Removes a file from device.
@@ -554,7 +577,7 @@ public interface IDevice extends IShellEnabledDevice {
      * Reboot the device.
      *
      * @param into the bootloader name to reboot into, or null to just reboot the device.
-     * @throws TimeoutException in case of timeout on the connection.
+     * @throws TimeoutException            in case of timeout on the connection.
      * @throws AdbCommandRejectedException if adb rejects the command
      * @throws IOException
      */
@@ -608,7 +631,7 @@ public interface IDevice extends IShellEnabledDevice {
      * battery level if <code>freshnessTime</code> has expired since the last successful query.
      *
      * @param freshnessTime the desired recency of battery level
-     * @param timeUnit the {@link TimeUnit} of freshnessTime
+     * @param timeUnit      the {@link TimeUnit} of freshnessTime
      * @return a {@link Future} that can be used to query the battery level. The Future will return
      * a {@link ExecutionException} if battery level could not be retrieved.
      */
@@ -619,6 +642,7 @@ public interface IDevice extends IShellEnabledDevice {
     /**
      * Returns the ABIs supported by this device. The ABIs are sorted in preferred order, with the
      * first ABI being the most preferred.
+     *
      * @return the list of ABIs.
      */
     @NonNull
@@ -645,12 +669,11 @@ public interface IDevice extends IShellEnabledDevice {
      * @return the user's region, or null if it's unknown
      */
     String getRegion();
-    
-    
-    
+
+
     NetworkMonkey getMonkey() throws IOException;
 
 
-    public InputDeviceManager getInputDeviceManager();
+    public InputManager getInputManager();
 
 }

@@ -1,18 +1,21 @@
-package com.android.ddmlib.input;
+package com.android.ddmlib.input.android;
 
 import com.android.ddmlib.input.KnownEventList.HandleType;
 
-public class AndroidEventItem implements IEvent {
+public class RawEvent implements IEvent {
 
 	private Time time = null;
-	private String type = null, code = null, value = null;
+	private String type = null, code = null, value = null,devFile;
 	private HandleType handleType;
 
-	public AndroidEventItem(String str) {
+
+
+	public RawEvent(String str,String devFile) {
 		String[] args = str.replaceAll("[\\[\\]]", "").replaceAll(" +", " ").trim().split(" ");
 		for (int i = 0; i < args.length; i++) {
 			set(i, args[i]);
 		}
+		setDevFile(devFile);
 	}
 
 	public void set(int index, String v) {
@@ -38,9 +41,17 @@ public class AndroidEventItem implements IEvent {
 		}
 	}
 
-	@Override
+    public String getDevFile() {
+        return devFile;
+    }
+
+    public void setDevFile(String devFile) {
+        this.devFile = devFile;
+    }
+
+    @Override
 	public String toString() {
-		return "========EventItem========\ntime=" + time + "\ntype=" + type + "\ncode=" + code + "\nvalue=" + value;
+		return "devfile="+devFile+" time=" + time + " type=" + type + " code=" + code + " value=" + value;
 	}
 
 	static boolean ignore(String str) {
@@ -55,7 +66,7 @@ public class AndroidEventItem implements IEvent {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AndroidEventItem other = (AndroidEventItem) obj;
+		RawEvent other = (RawEvent) obj;
 		// // time
 		// if (!ignore(time.toString()) && !ignore(other.time.toString())) {
 		// if (!time.equals(other.time))

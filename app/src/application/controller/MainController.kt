@@ -1,15 +1,16 @@
 package application.controller
 
 import com.android.ddmlib.AndroidDebugBridge
-import com.android.ddmlib.input.TouchEventObserver
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
-import javafx.scene.control.*
+import javafx.scene.control.Label
+import javafx.scene.control.Menu
+import javafx.scene.control.MenuBar
+import javafx.scene.control.MenuItem
 import javafx.scene.layout.HBox
-
 import java.net.URL
-import java.util.ResourceBundle
+import java.util.*
 
 
 class MainController : Initializable {
@@ -36,7 +37,6 @@ class MainController : Initializable {
     internal var pane_statusbar: HBox? = null
     @FXML
     internal var statusbar_text: Label? = null
-    private val mEventObserver: TouchEventObserver? = null
 
     override fun initialize(url: URL?, rb: ResourceBundle?) {
         AndroidDebugBridge.initIfNeeded(false)

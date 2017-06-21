@@ -1,4 +1,6 @@
-package com.android.ddmlib.input;
+package com.android.ddmlib.input.android;
+
+import com.android.ddmlib.input.android.Time;
 
 public interface IEvent {
 	

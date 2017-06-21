@@ -1,6 +1,4 @@
-package com.android.ddmlib.input;
-
-import com.android.ddmlib.IDevice;
+package com.android.ddmlib.input.android;
 
 import java.util.List;
 
@@ -10,11 +8,7 @@ public class InputDevice {
 
     private String devFile, name;
 
-    private IDevice mAndroidDevice;
-
-    private TouchEventObserver touchEventObserver;
-
-    InputDevice(List<String> str, IDevice dev) {
+    InputDevice(List<String> str) {
         super();
         for (int i = 0; i < str.size(); i++) {
             String s = str.get(i);
@@ -34,21 +28,8 @@ public class InputDevice {
                 }
             }
         }
-        mAndroidDevice = dev;
     }
 
-
-    public TouchEventObserver getTouchEventObserver() {
-        if (touchEventObserver==null){
-            touchEventObserver=new TouchEventObserver(this);
-        }
-        return touchEventObserver;
-    }
-
-
-    public IDevice getAndroidDevice() {
-        return mAndroidDevice;
-    }
 
     @Override
     public String toString() {

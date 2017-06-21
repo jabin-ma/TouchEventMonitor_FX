@@ -1,12 +1,9 @@
 package application.controller;
 
-import com.android.ddmlib.input.EventData;
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
-import com.android.ddmlib.input.InputDevice;
-import com.android.ddmlib.input.TouchEvent;
-import com.android.ddmlib.input.TouchEventObserver;
-import javafx.application.Platform;
+import com.android.ddmlib.input.EventData;
+import com.android.ddmlib.input.android.InputDevice;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,7 +18,7 @@ import javafx.util.StringConverter;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MonitorController implements Initializable, AndroidDebugBridge.IDeviceChangeListener, TouchEventObserver.onTouchEventListener {
+public class MonitorController implements Initializable, AndroidDebugBridge.IDeviceChangeListener {
     @FXML
     ChoiceBox<InputDevice> choicebox_device;
     @FXML
@@ -35,7 +32,7 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
     @FXML
     Pane root;
 
-    private TouchEventObserver mEventObserver;
+//    private TouchEventObserver mEventObserver;
 
 
     private StringConverter inputDevConverter = new StringConverter<InputDevice>() {
@@ -69,8 +66,8 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
 
     public void doStartMonitor(ActionEvent ev) {
         InputDevice inputDev=choicebox_device.getSelectionModel().getSelectedItem();
-        inputDev.getTouchEventObserver().setTouchEventListener(this);
-        inputDev.getTouchEventObserver().monitor();
+//        inputDev.getTouchEventObserver().setTouchEventListener(this);
+//        inputDev.getTouchEventObserver().monitor();
     }
     public void doPauseMonitor(ActionEvent ev) {
 
@@ -103,7 +100,7 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
         updateInputDeviceList(device);
     }
 
-    private void updateInputDeviceList(IDevice device) {
+    private void updateInputDeviceList(IDevice device) {/*
         choicebox_device.getItems().addAll(device.getInputDeviceManager().getDevice(false));
         Platform.runLater(new Runnable() {
             @Override
@@ -112,23 +109,27 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
                 choicebox_device.getSelectionModel().select(0);
             }
         });
-        MainController.Companion.getCurrent().setStatus("请选择输入设备");
+        MainController.Companion.getCurrent().setStatus("请选择输入设备");*/
+
+        device.getInputManager();
+
+
     }
 
 
-    @Override
-    public void onMonitorStarted() {
-
-    }
-
-    @Override
-    public void onMonitorStoped() {
-
-    }
-
-    @Override
-    public void onTouchEvent(TouchEvent event) {
-           System.out.println("onTouchEvent");
-           tableview_events.getItems().add(event);
-    }
+//    @Override
+//    public void onMonitorStarted() {
+//
+//    }
+//
+//    @Override
+//    public void onMonitorStoped() {
+//
+//    }
+//
+//    @Override
+//    public void onTouchEvent(TouchEvent event) {
+//           System.out.println("onTouchEvent");
+//           tableview_events.getItems().add(event);
+//    }
 }
