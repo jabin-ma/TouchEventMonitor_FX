@@ -37,6 +37,13 @@ public class MonitorEventItem implements MonitorEvent {
                 if (DEBUG) Log.d(TAG, "onSync-->ARG");
                 touchPoint.setTimestamp(rawEvent.getTime().ms);
                 Log.d(TAG,"close? "+touchPoint.isClose());
+                if(!touchPoint.isClose())
+                {
+                    touchPoint.close(mTouchEventPath.getLast());
+                }
+                mTouchEventPath.add(touchPoint);
+                Log.d(TAG,"close2? "+touchPoint.isClose());
+                touchPoint=null;
                 break;
             case STATE_CREATE:
                 if (DEBUG) Log.d(TAG, "onSync-->CREATE");
