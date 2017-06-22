@@ -1,7 +1,6 @@
 package com.android.ddmlib.input.android;
 
-import com.android.ddmlib.Log;
-import com.android.ddmlib.input.KnownEventList;
+import java.util.HashMap;
 
 /**
  * Created by majipeng on 2017/6/19.
@@ -9,13 +8,21 @@ import com.android.ddmlib.input.KnownEventList;
 public class InputReader {
 
 
+    HashMap<String,EventMapper> mappers=new HashMap<>();
+
+
+    KnownEventList knownEventList=new KnownEventList();
+
     public InputReader(EventHub eventHub) {
         while (true) {
             try {
                 RawEvent rawEvent = eventHub.getEvent();
-                Log.d("inputread", rawEvent.toString());
-//                rawEvent.
-                KnownEventList l;
+                EventMapper mapper=mappers.get(rawEvent.getDevFile());
+                if(mapper==null){
+                    mapper=new EventMapperImpl(knownEventList);
+                    mappers.put(rawEvent.getDevFile(),mapper);
+                }
+                mapper.processEvent(rawEvent);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

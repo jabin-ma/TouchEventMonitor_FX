@@ -14,6 +14,7 @@ class EventHub {
 
 //    private IDevice mAndroidDevice;
 
+    private static final String TAG="EventHub";
     private static final boolean DEBUG = false;
 
     private static final int TIMEOUT_SEC = 2;

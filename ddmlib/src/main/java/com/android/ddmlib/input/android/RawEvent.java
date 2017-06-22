@@ -1,6 +1,6 @@
 package com.android.ddmlib.input.android;
 
-import com.android.ddmlib.input.KnownEventList.HandleType;
+import com.android.ddmlib.input.android.KnownEventList.HandleType;
 
 public class RawEvent implements IEvent {
 

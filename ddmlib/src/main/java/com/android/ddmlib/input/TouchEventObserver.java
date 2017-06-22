@@ -72,10 +72,10 @@
 //            case TOUCH_X:
 //                tempTouchEvent.moveX(event.getValue());
 //                break;
-//            case TOUCH_Y:
+//            case EVENT_ARG_Y:
 //                tempTouchEvent.moveY(event.getValue());
 //                break;
-//            case TOUCH_SYNC:
+//            case EVENT_SYNC:
 //                tempTouchEvent.sync(event.getTime());
 //                if (tempTouchEvent.isClose()) {// 事件结束,set null
 //                    if (mTouchEventListener != null)
@@ -83,7 +83,7 @@
 //                    tempTouchEvent = null;
 //                }
 //                break;
-//            case TOUCH_UP:
+//            case EVENT_PUBLISH:
 //                tempTouchEvent.close();
 //                break;
 //            default:

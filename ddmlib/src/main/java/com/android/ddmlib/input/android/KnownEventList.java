@@ -1,4 +1,4 @@
-package com.android.ddmlib.input;
+package com.android.ddmlib.input.android;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.android.ddmlib.Log;
-import com.android.ddmlib.input.android.RawEvent;
 
 public class KnownEventList {
 
@@ -71,20 +70,20 @@ public class KnownEventList {
 	}
 
 	public enum HandleType {
-		TOUCH_DOWN, TOUCH_X, TOUCH_Y, TOUCH_UP, TOUCH_SYNC, UNKNOWN;
+		EVENT_CREATE, EVENT_ARG_X, EVENT_ARG_Y, EVENT_PUBLISH, EVENT_SYNC, UNKNOWN;
 
 		public static HandleType get(int type) {
 			switch (type) {
 			case 1:
-				return TOUCH_DOWN;
+				return EVENT_CREATE;
 			case 2:
-				return TOUCH_X;
+				return EVENT_ARG_X;
 			case 3:
-				return TOUCH_Y;
+				return EVENT_ARG_Y;
 			case 4:
-				return TOUCH_UP;
+				return EVENT_PUBLISH;
 			case 5:
-				return HandleType.TOUCH_SYNC;
+				return HandleType.EVENT_SYNC;
 			default:
 				Log.d("HandleType", "UnKnown HandleType:" + type);
 				return UNKNOWN;
