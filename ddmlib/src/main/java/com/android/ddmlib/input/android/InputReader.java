@@ -1,5 +1,7 @@
 package com.android.ddmlib.input.android;
 
+import com.android.ddmlib.Log;
+
 import java.util.HashMap;
 
 /**
@@ -7,25 +9,33 @@ import java.util.HashMap;
  */
 public class InputReader {
 
+    HashMap<String, EventMapper> mappers = new HashMap<>();
 
-    HashMap<String,EventMapper> mappers=new HashMap<>();
+    KnownEventList knownEventList = new KnownEventList();
+    private EventHub eventHub;
 
-
-    KnownEventList knownEventList=new KnownEventList();
 
     public InputReader(EventHub eventHub) {
-        while (true) {
-            try {
-                RawEvent rawEvent = eventHub.getEvent();
-                EventMapper mapper=mappers.get(rawEvent.getDevFile());
-                if(mapper==null){
-                    mapper=new EventMapperImpl(knownEventList);
-                    mappers.put(rawEvent.getDevFile(),mapper);
-                }
-                mapper.processEvent(rawEvent);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        this.eventHub = eventHub;
     }
+
+    /**
+     * 非异步
+     */
+    public MonitorEvent readBySync() {
+        try {
+            RawEvent rawEvent = eventHub.getEvent();
+            EventMapper mapper = mappers.get(rawEvent.getDevFile());
+            if (mapper == null) {
+                mapper = new EventMapperImpl(knownEventList);
+                mappers.put(rawEvent.getDevFile(), mapper);
+            }
+            return mapper.processEvent(rawEvent);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }
