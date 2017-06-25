@@ -28,7 +28,7 @@ public class TestIdentifier {
      * Creates a test identifier.
      *
      * @param className fully qualified class name of the test. Cannot be null.
-     * @param testName name of the test. Cannot be null.
+     * @param testName  name of the test. Cannot be null.
      */
     public TestIdentifier(String className, String testName) {
         if (className == null || testName == null) {

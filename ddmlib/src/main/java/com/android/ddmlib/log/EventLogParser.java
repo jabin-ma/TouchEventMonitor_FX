@@ -25,17 +25,9 @@ import com.android.ddmlib.log.LogReceiver.LogEntry;
 import com.android.ddmlib.utils.ArrayHelper;
 import com.google.common.base.Charsets;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,20 +36,22 @@ import java.util.regex.Pattern;
  */
 public final class EventLogParser {
 
-    /** Location of the tag map file on the device */
+    /**
+     * Location of the tag map file on the device
+     */
     private static final String EVENT_TAG_MAP_FILE = "/system/etc/event-log-tags"; //$NON-NLS-1$
 
     /**
      * Event log entry types.  These must match up with the declarations in
      * java/android/android/util/EventLog.java.
      */
-    private static final int EVENT_TYPE_INT      = 0;
-    private static final int EVENT_TYPE_LONG     = 1;
-    private static final int EVENT_TYPE_STRING   = 2;
-    private static final int EVENT_TYPE_LIST     = 3;
+    private static final int EVENT_TYPE_INT = 0;
+    private static final int EVENT_TYPE_LONG = 1;
+    private static final int EVENT_TYPE_STRING = 2;
+    private static final int EVENT_TYPE_LIST = 3;
 
     private static final Pattern PATTERN_SIMPLE_TAG = Pattern.compile(
-    "^(\\d+)\\s+([A-Za-z0-9_]+)\\s*$"); //$NON-NLS-1$
+            "^(\\d+)\\s+([A-Za-z0-9_]+)\\s*$"); //$NON-NLS-1$
     private static final Pattern PATTERN_TAG_WITH_DESC = Pattern.compile(
             "^(\\d+)\\s+([A-Za-z0-9_]+)\\s*(.*)\\s*$"); //$NON-NLS-1$
     private static final Pattern PATTERN_DESCRIPTION = Pattern.compile(
@@ -69,7 +63,7 @@ public final class EventLogParser {
     private final TreeMap<Integer, String> mTagMap = new TreeMap<Integer, String>();
 
     private final TreeMap<Integer, EventValueDescription[]> mValueDescriptionMap =
-        new TreeMap<Integer, EventValueDescription[]>();
+            new TreeMap<Integer, EventValueDescription[]>();
 
     public EventLogParser() {
     }
@@ -79,6 +73,7 @@ public final class EventLogParser {
      * <p/>
      * This methods reads the event-log-tags located on the device to find out
      * what tags are being written to the event log and what their format is.
+     *
      * @param device The device.
      * @return <code>true</code> if success, <code>false</code> if failure or cancellation.
      */
@@ -87,17 +82,18 @@ public final class EventLogParser {
         try {
             device.executeShellCommand( //$NON-NLS-1$
                     new MultiLineReceiver() {
-                @Override
-                public void processNewLines(String[] lines) {
-                    for (String line : lines) {
-                        processTagLine(line);
-                    }
-                }
-                @Override
-                public boolean isCancelled() {
-                    return false;
-                }
-            },"cat " + EVENT_TAG_MAP_FILE);
+                        @Override
+                        public void processNewLines(String[] lines) {
+                            for (String line : lines) {
+                                processTagLine(line);
+                            }
+                        }
+
+                        @Override
+                        public boolean isCancelled() {
+                            return false;
+                        }
+                    }, "cat " + EVENT_TAG_MAP_FILE);
         } catch (Exception e) {
             // catch all possible exceptions and return false.
             return false;
@@ -108,6 +104,7 @@ public final class EventLogParser {
 
     /**
      * Inits the parser with the content of a tag file.
+     *
      * @param tagFileContent the lines of a tag file.
      * @return <code>true</code> if success, <code>false</code> if failure.
      */
@@ -120,10 +117,11 @@ public final class EventLogParser {
 
     /**
      * Inits the parser with a specified event-log-tags file.
+     *
      * @param filePath
      * @return <code>true</code> if success, <code>false</code> if failure.
      */
-    public boolean init(String filePath)  {
+    public boolean init(String filePath) {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(filePath));
@@ -152,6 +150,7 @@ public final class EventLogParser {
 
     /**
      * Processes a line from the event-log-tags file.
+     *
      * @param line the line to process
      */
     private void processTagLine(String line) {
@@ -172,13 +171,13 @@ public final class EventLogParser {
                     // @see GcEventContainer
                     if (value == GcEventContainer.GC_EVENT_TAG) {
                         mValueDescriptionMap.put(value,
-                            GcEventContainer.getValueDescriptions());
+                                GcEventContainer.getValueDescriptions());
                     } else {
 
                         String description = m.group(3);
                         if (description != null && !description.isEmpty()) {
                             EventValueDescription[] desc =
-                                processDescription(description);
+                                    processDescription(description);
 
                             if (desc != null) {
                                 mValueDescriptionMap.put(value, desc);
@@ -241,7 +240,7 @@ public final class EventLogParser {
                 }
             } else {
                 Log.e("EventLogParser",  //$NON-NLS-1$
-                    String.format("Can't parse %1$s", description));  //$NON-NLS-1$
+                        String.format("Can't parse %1$s", description));  //$NON-NLS-1$
             }
         }
 
@@ -276,7 +275,7 @@ public final class EventLogParser {
         Object data;
         if (list.size() == 1) {
             data = list.get(0);
-        } else{
+        } else {
             data = list.toArray();
         }
 
@@ -314,8 +313,8 @@ public final class EventLogParser {
 
                 // convert into seconds since epoch and nano-seconds.
                 Calendar cal = Calendar.getInstance();
-                cal.set(cal.get(Calendar.YEAR), month-1, day, hours, minutes, seconds);
-                int sec = (int)Math.floor(cal.getTimeInMillis()/1000);
+                cal.set(cal.get(Calendar.YEAR), month - 1, day, hours, minutes, seconds);
+                int sec = (int) Math.floor(cal.getTimeInMillis() / 1000);
                 int nsec = milliseconds * 1000000;
 
                 String tag = m.group(7);
@@ -368,13 +367,13 @@ public final class EventLogParser {
 
     /**
      * Recursively convert binary log data to printable form.
-     *
+     * <p>
      * This needs to be recursive because you can have lists of lists.
-     *
+     * <p>
      * If we run out of room, we stop processing immediately.  It's important
      * for us to check for space on every output element to avoid producing
      * garbled output.
-     *
+     * <p>
      * Returns the amount read on success, -1 on failure.
      */
     private static int parseBinaryEvent(byte[] eventData, int dataOffset, ArrayList<Object> list) {
@@ -389,7 +388,7 @@ public final class EventLogParser {
         //fprintf(stderr, "--- type=%d (rem len=%d)\n", type, eventDataLen);
 
         switch (type) {
-        case EVENT_TYPE_INT: { /* 32-bit signed int */
+            case EVENT_TYPE_INT: { /* 32-bit signed int */
                 int ival;
 
                 if (eventData.length - offset < 4)
@@ -400,7 +399,7 @@ public final class EventLogParser {
                 list.add(ival);
             }
             break;
-        case EVENT_TYPE_LONG: { /* 64-bit signed long */
+            case EVENT_TYPE_LONG: { /* 64-bit signed long */
                 long lval;
 
                 if (eventData.length - offset < 8)
@@ -411,7 +410,7 @@ public final class EventLogParser {
                 list.add(lval);
             }
             break;
-        case EVENT_TYPE_STRING: { /* UTF-8 chars, not NULL-terminated */
+            case EVENT_TYPE_STRING: { /* UTF-8 chars, not NULL-terminated */
                 int strLen;
 
                 if (eventData.length - offset < 4)
@@ -428,7 +427,7 @@ public final class EventLogParser {
                 offset += strLen;
                 break;
             }
-        case EVENT_TYPE_LIST: { /* N items, all different types */
+            case EVENT_TYPE_LIST: { /* N items, all different types */
 
                 if (eventData.length - offset < 1)
                     return -1;
@@ -449,10 +448,10 @@ public final class EventLogParser {
                 list.add(subList.toArray());
             }
             break;
-        default:
-            Log.e("EventLogParser",  //$NON-NLS-1$
-                    String.format("Unknown binary event type %1$d", type));  //$NON-NLS-1$
-            return -1;
+            default:
+                Log.e("EventLogParser",  //$NON-NLS-1$
+                        String.format("Unknown binary event type %1$d", type));  //$NON-NLS-1$
+                return -1;
         }
 
         return offset - dataOffset;
@@ -491,7 +490,7 @@ public final class EventLogParser {
 
                 Object[] objects = new Object[values.length];
 
-                for (int i = 0 ; i < desc.length ; i++) {
+                for (int i = 0; i < desc.length; i++) {
                     Object obj = getObjectFromString(values[i], desc[i].getEventValueType());
                     if (obj == null) {
                         return null;
@@ -526,6 +525,7 @@ public final class EventLogParser {
 
     /**
      * Recreates the event-log-tags at the specified file path.
+     *
      * @param filePath the file path to write the file.
      * @throws IOException
      */

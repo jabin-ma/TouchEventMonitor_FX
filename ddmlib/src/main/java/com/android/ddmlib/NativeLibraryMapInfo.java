@@ -19,7 +19,7 @@ package com.android.ddmlib;
 /**
  * Memory address to library mapping for native libraries.
  * <p/>
- * Each instance represents a single native library and its start and end memory addresses. 
+ * Each instance represents a single native library and its start and end memory addresses.
  */
 public final class NativeLibraryMapInfo {
     private long mStartAddr;
@@ -29,30 +29,31 @@ public final class NativeLibraryMapInfo {
 
     /**
      * Constructs a new native library map info.
+     *
      * @param startAddr The start address of the library.
-     * @param endAddr The end address of the library.
-     * @param library The name of the library.
+     * @param endAddr   The end address of the library.
+     * @param library   The name of the library.
      */
     NativeLibraryMapInfo(long startAddr, long endAddr, String library) {
         this.mStartAddr = startAddr;
         this.mEndAddr = endAddr;
         this.mLibrary = library;
     }
-    
+
     /**
      * Returns the name of the library.
      */
     public String getLibraryName() {
         return mLibrary;
     }
-    
+
     /**
      * Returns the start address of the library.
      */
     public long getStartAddress() {
         return mStartAddr;
     }
-    
+
     /**
      * Returns the end address of the library.
      */
@@ -62,6 +63,7 @@ public final class NativeLibraryMapInfo {
 
     /**
      * Returns whether the specified address is inside the library.
+     *
      * @param address The address to test.
      * @return <code>true</code> if the address is between the start and end address of the library.
      * @see #getStartAddress()

@@ -44,15 +44,15 @@ public final class Message {
      * Create a new message, which has a {@link Kind}, a String which will be shown to the user and
      * at least one {@link SourceFilePosition}.
      *
-     * @param kind the message type.
-     * @param text the text of the message.
-     * @param sourceFilePosition the first source file position the message .
+     * @param kind                the message type.
+     * @param text                the text of the message.
+     * @param sourceFilePosition  the first source file position the message .
      * @param sourceFilePositions any additional source file positions, may be empty.
      */
     public Message(@NonNull Kind kind,
-            @NonNull String text,
-            @NonNull SourceFilePosition sourceFilePosition,
-            @NonNull SourceFilePosition... sourceFilePositions) {
+                   @NonNull String text,
+                   @NonNull SourceFilePosition sourceFilePosition,
+                   @NonNull SourceFilePosition... sourceFilePositions) {
         mKind = kind;
         mText = text;
         mRawMessage = text;
@@ -63,21 +63,21 @@ public final class Message {
     /**
      * Create a new message, which has a {@link Kind}, a String which will be shown to the user and
      * at least one {@link SourceFilePosition}.
-     *
+     * <p>
      * It also has a rawMessage, to store the original string for cases when the message is
      * constructed by parsing the output from another tool.
      *
-     * @param kind the message kind.
-     * @param text a human-readable string explaining the issue.
-     * @param rawMessage the original text of the message, usually from an external tool.
-     * @param sourceFilePosition the first source file position.
+     * @param kind                the message kind.
+     * @param text                a human-readable string explaining the issue.
+     * @param rawMessage          the original text of the message, usually from an external tool.
+     * @param sourceFilePosition  the first source file position.
      * @param sourceFilePositions any additional source file positions, may be empty.
      */
     public Message(@NonNull Kind kind,
-            @NonNull String text,
-            @NonNull String rawMessage,
-            @NonNull SourceFilePosition sourceFilePosition,
-            @NonNull SourceFilePosition... sourceFilePositions) {
+                   @NonNull String text,
+                   @NonNull String rawMessage,
+                   @NonNull SourceFilePosition sourceFilePosition,
+                   @NonNull SourceFilePosition... sourceFilePositions) {
         mKind = kind;
         mText = text;
         mRawMessage = rawMessage;
@@ -86,9 +86,9 @@ public final class Message {
     }
 
     public Message(@NonNull Kind kind,
-            @NonNull String text,
-            @NonNull String rawMessage,
-            @NonNull ImmutableList<SourceFilePosition> positions) {
+                   @NonNull String text,
+                   @NonNull String rawMessage,
+                   @NonNull ImmutableList<SourceFilePosition> positions) {
         mKind = kind;
         mText = text;
         mRawMessage = rawMessage;

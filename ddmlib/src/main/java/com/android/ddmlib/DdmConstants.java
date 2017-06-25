@@ -35,11 +35,15 @@ public final class DdmConstants {
      */
     public static final String DOT_TRACE = "." + EXTENSION;
 
-    /** hprof-conv executable (with extension for the current OS)  */
+    /**
+     * hprof-conv executable (with extension for the current OS)
+     */
     public static final String FN_HPROF_CONVERTER = (CURRENT_PLATFORM == PLATFORM_WINDOWS) ?
             "hprof-conv.exe" : "hprof-conv"; //$NON-NLS-1$ //$NON-NLS-2$
 
-    /** traceview executable (with extension for the current OS)  */
+    /**
+     * traceview executable (with extension for the current OS)
+     */
     public static final String FN_TRACEVIEW = (CURRENT_PLATFORM == PLATFORM_WINDOWS) ?
             "traceview.bat" : "traceview"; //$NON-NLS-1$ //$NON-NLS-2$
 

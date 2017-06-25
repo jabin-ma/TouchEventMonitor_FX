@@ -20,7 +20,6 @@ package com.android.ddmlib;
  * Abstract exception for exception that can be thrown when a user input cancels the action.
  * <p/>
  * {@link #wasCanceled()} returns whether the action was canceled because of user input.
- *
  */
 public abstract class CanceledException extends Exception {
     private static final long serialVersionUID = 1L;

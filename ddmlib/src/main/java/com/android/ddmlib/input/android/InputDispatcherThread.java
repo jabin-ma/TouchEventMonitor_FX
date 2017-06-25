@@ -12,6 +12,7 @@ public class InputDispatcherThread extends Thread {
         setName("InputDispatcher-Thread");
         this.mContext = mContext;
     }
+
     @Override
     public void run() {
         while (true) {

@@ -1,7 +1,6 @@
 package com.android.ddmlib.input.android;
 
 import com.android.ddmlib.IDevice;
-import com.android.ddmlib.Log;
 
 /**
  * Created by majipeng on 2017/6/19.
@@ -21,7 +20,7 @@ public class InputManager {
         inputReader = new InputReader(eventHub);
         inputReaderThread = new InputReaderThread(this);
         inputDispatcher = new InputDispatcher(this);
-        inputDispatcherThread=new InputDispatcherThread(this);
+        inputDispatcherThread = new InputDispatcherThread(this);
 
         inputReaderThread.start();
         inputDispatcherThread.start();

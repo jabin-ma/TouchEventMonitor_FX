@@ -30,7 +30,8 @@ final class HandleAppName extends ChunkHandler {
     private static final HandleAppName mInst = new HandleAppName();
 
 
-    private HandleAppName() {}
+    private HandleAppName() {
+    }
 
     /**
      * Register for the packets we expect to get from the client.
@@ -43,20 +44,22 @@ final class HandleAppName extends ChunkHandler {
      * Client is ready.
      */
     @Override
-    public void clientReady(Client client) throws IOException {}
+    public void clientReady(Client client) throws IOException {
+    }
 
     /**
      * Client went away.
      */
     @Override
-    public void clientDisconnected(Client client) {}
+    public void clientDisconnected(Client client) {
+    }
 
     /**
      * Chunk handler entry point.
      */
     @Override
     public void handleChunk(Client client, int type, ByteBuffer data,
-            boolean isReply, int msgId) {
+                            boolean isReply, int msgId) {
 
         Log.d("ddm-appname", "handling " + ChunkHandler.name(type));
 
@@ -112,5 +115,5 @@ final class HandleAppName extends ChunkHandler {
             client.update(Client.CHANGE_NAME);
         }
     }
- }
+}
 

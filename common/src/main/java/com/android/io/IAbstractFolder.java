@@ -19,7 +19,7 @@ package com.android.io;
 import java.io.File;
 
 /**
- *  A folder.
+ * A folder.
  */
 public interface IAbstractFolder extends IAbstractResource {
     /**
@@ -30,9 +30,9 @@ public interface IAbstractFolder extends IAbstractResource {
         /**
          * Tests if a specified file should be included in a file list.
          *
-         * @param   dir    the directory in which the file was found.
-         * @param   name   the name of the file.
-         * @return  <code>true</code> if and only if the name should be
+         * @param dir  the directory in which the file was found.
+         * @param name the name of the file.
+         * @return <code>true</code> if and only if the name should be
          * included in the file list; <code>false</code> otherwise.
          */
         boolean accept(IAbstractFolder dir, String name);
@@ -40,14 +40,16 @@ public interface IAbstractFolder extends IAbstractResource {
 
     /**
      * Returns true if the receiver contains a file with a given name
+     *
      * @param name the name of the file. This is the name without the path leading to the
-     * parent folder.
+     *             parent folder.
      */
     boolean hasFile(String name);
 
     /**
      * Returns an {@link IAbstractFile} representing a child of the current folder with the
      * given name. The file may not actually exist.
+     *
      * @param name the name of the file.
      */
     IAbstractFile getFile(String name);
@@ -55,6 +57,7 @@ public interface IAbstractFolder extends IAbstractResource {
     /**
      * Returns an {@link IAbstractFolder} representing a child of the current folder with the
      * given name. The folder may not actually exist.
+     *
      * @param name the name of the folder.
      */
     IAbstractFolder getFolder(String name);
@@ -71,7 +74,7 @@ public interface IAbstractFolder extends IAbstractResource {
      *
      * @param filter A filename filter instance. Must not be null.
      * @return An array of file names (generated using {@link File#getName()}).
-     *         The array can be empty but is never null.
+     * The array can be empty but is never null.
      */
     String[] list(FilenameFilter filter);
 }

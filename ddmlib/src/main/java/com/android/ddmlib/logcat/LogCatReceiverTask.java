@@ -18,13 +18,8 @@ package com.android.ddmlib.logcat;
 
 import com.android.annotations.NonNull;
 import com.android.annotations.concurrency.GuardedBy;
-import com.android.ddmlib.AdbCommandRejectedException;
-import com.android.ddmlib.IDevice;
-import com.android.ddmlib.IShellOutputReceiver;
+import com.android.ddmlib.*;
 import com.android.ddmlib.Log.LogLevel;
-import com.android.ddmlib.MultiLineReceiver;
-import com.android.ddmlib.ShellCommandUnresponsiveException;
-import com.android.ddmlib.TimeoutException;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -72,7 +67,7 @@ public class LogCatReceiverTask implements Runnable {
         }
 
         try {
-            mDevice.executeShellCommand(mReceiver, 0,LOGCAT_COMMAND);
+            mDevice.executeShellCommand(mReceiver, 0, LOGCAT_COMMAND);
         } catch (TimeoutException e) {
             notifyListeners(Collections.singletonList(sConnectionTimeoutMsg));
         } catch (AdbCommandRejectedException ignored) {
@@ -95,7 +90,9 @@ public class LogCatReceiverTask implements Runnable {
             setTrimLine(false);
         }
 
-        /** Implements {@link IShellOutputReceiver#isCancelled() }. */
+        /**
+         * Implements {@link IShellOutputReceiver#isCancelled() }.
+         */
         @Override
         public boolean isCancelled() {
             return mCancelled.get();
@@ -125,7 +122,7 @@ public class LogCatReceiverTask implements Runnable {
     }
 
     private synchronized void notifyListeners(List<LogCatMessage> messages) {
-        for (LogCatListener l: mListeners) {
+        for (LogCatListener l : mListeners) {
             l.log(messages);
         }
     }

@@ -19,7 +19,6 @@ package com.android.ddmlib;
 
 /**
  * Exception thrown when a connection to Adb failed with a timeout.
- *
  */
 public class TimeoutException extends Exception {
     private static final long serialVersionUID = 1L;

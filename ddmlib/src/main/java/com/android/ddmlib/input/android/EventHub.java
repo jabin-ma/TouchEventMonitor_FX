@@ -4,7 +4,9 @@ import com.android.ddmlib.*;
 import com.android.ddmlib.TimeoutException;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.*;
 
 class EventHub {
@@ -14,7 +16,7 @@ class EventHub {
 
 //    private IDevice mAndroidDevice;
 
-    private static final String TAG="EventHub";
+    private static final String TAG = "EventHub";
     private static final boolean DEBUG = false;
 
     private static final int TIMEOUT_SEC = 2;

@@ -28,31 +28,57 @@ public class SyncException extends CanceledException {
     private static final long serialVersionUID = 1L;
 
     public enum SyncError {
-        /** canceled transfer */
+        /**
+         * canceled transfer
+         */
         CANCELED("Operation was canceled by the user."),
-        /** Transfer error */
+        /**
+         * Transfer error
+         */
         TRANSFER_PROTOCOL_ERROR("Adb Transfer Protocol Error."),
-        /** unknown remote object during a pull */
+        /**
+         * unknown remote object during a pull
+         */
         NO_REMOTE_OBJECT("Remote object doesn't exist!"),
-        /** Result code when attempting to pull multiple files into a file */
+        /**
+         * Result code when attempting to pull multiple files into a file
+         */
         TARGET_IS_FILE("Target object is a file."),
-        /** Result code when attempting to pull multiple into a directory that does not exist. */
+        /**
+         * Result code when attempting to pull multiple into a directory that does not exist.
+         */
         NO_DIR_TARGET("Target directory doesn't exist."),
-        /** wrong encoding on the remote path. */
+        /**
+         * wrong encoding on the remote path.
+         */
         REMOTE_PATH_ENCODING("Remote Path encoding is not supported."),
-        /** remote path that is too long. */
+        /**
+         * remote path that is too long.
+         */
         REMOTE_PATH_LENGTH("Remote path is too long."),
-        /** error while reading local file. */
+        /**
+         * error while reading local file.
+         */
         FILE_READ_ERROR("Reading local file failed!"),
-        /** error while writing local file. */
+        /**
+         * error while writing local file.
+         */
         FILE_WRITE_ERROR("Writing local file failed!"),
-        /** attempting to push a directory. */
+        /**
+         * attempting to push a directory.
+         */
         LOCAL_IS_DIRECTORY("Local path is a directory."),
-        /** attempting to push a non-existent file. */
+        /**
+         * attempting to push a non-existent file.
+         */
         NO_LOCAL_FILE("Local path doesn't exist."),
-        /** when the target path of a multi file push is a file. */
+        /**
+         * when the target path of a multi file push is a file.
+         */
         REMOTE_IS_FILE("Remote path is a file."),
-        /** receiving too much data from the remove device at once */
+        /**
+         * receiving too much data from the remove device at once
+         */
         BUFFER_OVERRUN("Receiving too much data.");
 
         private final String mMessage;
@@ -90,8 +116,8 @@ public class SyncException extends CanceledException {
     /**
      * Returns true if the sync was canceled by user input.
      */
-   @Override
-   public boolean wasCanceled() {
+    @Override
+    public boolean wasCanceled() {
         return mError == SyncError.CANCELED;
     }
 }

@@ -35,17 +35,29 @@ public final class LogReceiver {
         /*
          * See //device/include/utils/logger.h
          */
-        /** 16bit unsigned: length of the payload. */
-        public int  len; /* This is normally followed by a 16 bit padding */
-        /** pid of the process that generated this {@link LogEntry} */
-        public int   pid;
-        /** tid of the process that generated this {@link LogEntry} */
-        public int   tid;
-        /** Seconds since epoch. */
-        public int   sec;
-        /** nanoseconds. */
-        public int   nsec;
-        /** The entry's raw data. */
+        /**
+         * 16bit unsigned: length of the payload.
+         */
+        public int len; /* This is normally followed by a 16 bit padding */
+        /**
+         * pid of the process that generated this {@link LogEntry}
+         */
+        public int pid;
+        /**
+         * tid of the process that generated this {@link LogEntry}
+         */
+        public int tid;
+        /**
+         * Seconds since epoch.
+         */
+        public int sec;
+        /**
+         * nanoseconds.
+         */
+        public int nsec;
+        /**
+         * The entry's raw data.
+         */
         public byte[] data;
     }
 
@@ -63,49 +75,63 @@ public final class LogReceiver {
     public interface ILogListener {
         /**
          * Sent when a new {@link LogEntry} has been parsed by the {@link LogReceiver}.
+         *
          * @param entry the new log entry.
          */
         void newEntry(LogEntry entry);
-        
+
         /**
          * Sent when new raw data is coming from the log service.
-         * @param data the raw data buffer.
+         *
+         * @param data   the raw data buffer.
          * @param offset the offset into the buffer signaling the beginning of the new data.
          * @param length the length of the new data.
          */
         void newData(byte[] data, int offset, int length);
     }
 
-    /** Current {@link LogEntry} being read, before sending it to the listener. */
+    /**
+     * Current {@link LogEntry} being read, before sending it to the listener.
+     */
     private LogEntry mCurrentEntry;
 
-    /** Temp buffer to store partial entry headers. */
+    /**
+     * Temp buffer to store partial entry headers.
+     */
     private byte[] mEntryHeaderBuffer = new byte[ENTRY_HEADER_SIZE];
-    /** Offset in the partial header buffer */
+    /**
+     * Offset in the partial header buffer
+     */
     private int mEntryHeaderOffset = 0;
-    /** Offset in the partial entry data */
+    /**
+     * Offset in the partial entry data
+     */
     private int mEntryDataOffset = 0;
-    
-    /** Listener waiting for receive fully read {@link LogEntry} objects */
+
+    /**
+     * Listener waiting for receive fully read {@link LogEntry} objects
+     */
     private ILogListener mListener;
 
     private boolean mIsCancelled = false;
-    
+
     /**
      * Creates a {@link LogReceiver} with an {@link ILogListener}.
      * <p/>
-     * The {@link ILogListener} will receive new log entries as they are parsed, in the form 
+     * The {@link ILogListener} will receive new log entries as they are parsed, in the form
      * of {@link LogEntry} objects.
+     *
      * @param listener the listener to receive new log entries.
      */
     public LogReceiver(ILogListener listener) {
         mListener = listener;
     }
-    
+
 
     /**
      * Parses new data coming from the log service.
-     * @param data the data buffer
+     *
+     * @param data   the data buffer
      * @param offset the offset into the buffer signaling the beginning of the new data.
      * @param length the length of the new data.
      */
@@ -130,16 +156,16 @@ public final class LogReceiver {
                     // did we store some part at the beginning of the header?
                     if (mEntryHeaderOffset != 0) {
                         // copy the rest of the entry header into the header buffer
-                        int size = ENTRY_HEADER_SIZE - mEntryHeaderOffset; 
+                        int size = ENTRY_HEADER_SIZE - mEntryHeaderOffset;
                         System.arraycopy(data, offset, mEntryHeaderBuffer, mEntryHeaderOffset,
                                 size);
-                        
+
                         // create the entry from the header buffer
                         mCurrentEntry = createEntry(mEntryHeaderBuffer, 0);
-    
+
                         // since we used the whole entry header buffer, we reset  the offset
                         mEntryHeaderOffset = 0;
-                        
+
                         // adjust current offset and remaining length to the beginning
                         // of the entry data
                         offset += size;
@@ -147,7 +173,7 @@ public final class LogReceiver {
                     } else {
                         // create the entry directly from the data array
                         mCurrentEntry = createEntry(data, offset);
-                        
+
                         // adjust current offset and remaining length to the beginning
                         // of the entry data
                         offset += ENTRY_HEADER_SIZE;
@@ -155,29 +181,29 @@ public final class LogReceiver {
                     }
                 }
             }
-            
+
             // at this point, we have an entry, and offset/length have been updated to skip
             // the entry header.
-    
+
             // if we have enough data for this entry or more, we'll need to end this entry
             if (length >= mCurrentEntry.len - mEntryDataOffset) {
                 // compute and save the size of the data that we have to read for this entry,
                 // based on how much we may already have read.
-                int dataSize = mCurrentEntry.len - mEntryDataOffset;  
-    
+                int dataSize = mCurrentEntry.len - mEntryDataOffset;
+
                 // we only read what we need, and put it in the entry buffer.
                 System.arraycopy(data, offset, mCurrentEntry.data, mEntryDataOffset, dataSize);
-                
+
                 // notify the listener of a new entry
                 if (mListener != null) {
                     mListener.newEntry(mCurrentEntry);
                 }
-    
+
                 // reset some flags: we have read 0 data of the current entry.
                 // and we have no current entry being read.
                 mEntryDataOffset = 0;
                 mCurrentEntry = null;
-                
+
                 // and update the data buffer info to the end of the current entry / start
                 // of the next one.
                 offset += dataSize;
@@ -186,7 +212,7 @@ public final class LogReceiver {
                 // we don't have enough data to fill this entry, so we store what we have
                 // in the entry itself.
                 System.arraycopy(data, offset, mCurrentEntry.data, mEntryDataOffset, length);
-                
+
                 // save the amount read for the data.
                 mEntryDataOffset += length;
                 return;
@@ -200,18 +226,19 @@ public final class LogReceiver {
     public boolean isCancelled() {
         return mIsCancelled;
     }
-    
+
     /**
      * Cancels the current remote service.
      */
     public void cancel() {
         mIsCancelled = true;
     }
-    
+
     /**
      * Creates a {@link LogEntry} from the array of bytes. This expects the data buffer size
      * to be at least <code>offset + {@link #ENTRY_HEADER_SIZE}</code>.
-     * @param data the data buffer the entry is read from.
+     *
+     * @param data   the data buffer the entry is read from.
      * @param offset the offset of the first byte from the buffer representing the entry.
      * @return a new {@link LogEntry} or <code>null</code> if some error happened.
      */
@@ -224,11 +251,11 @@ public final class LogReceiver {
         // create the new entry and fill it.
         LogEntry entry = new LogEntry();
         entry.len = ArrayHelper.swapU16bitFromArray(data, offset);
-        
+
         // we've read only 16 bits, but since there's also a 16 bit padding,
         // we can skip right over both.
         offset += 4;
-        
+
         entry.pid = ArrayHelper.swap32bitFromArray(data, offset);
         offset += 4;
         entry.tid = ArrayHelper.swap32bitFromArray(data, offset);
@@ -237,11 +264,11 @@ public final class LogReceiver {
         offset += 4;
         entry.nsec = ArrayHelper.swap32bitFromArray(data, offset);
         offset += 4;
-        
+
         // allocate the data
         entry.data = new byte[entry.len];
-        
+
         return entry;
     }
-    
+
 }

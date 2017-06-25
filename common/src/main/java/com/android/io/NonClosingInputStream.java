@@ -78,6 +78,7 @@ public class NonClosingInputStream extends FilterInputStream {
 
     /**
      * Wraps an existing stream into this filtering stream.
+     *
      * @param in A non-null input stream.
      */
     public NonClosingInputStream(@NonNull InputStream in) {
@@ -87,6 +88,7 @@ public class NonClosingInputStream extends FilterInputStream {
 
     /**
      * Returns the current {@link CloseBehavior}.
+     *
      * @return the current {@link CloseBehavior}. Never null.
      */
     @NonNull
@@ -112,14 +114,14 @@ public class NonClosingInputStream extends FilterInputStream {
     @Override
     public void close() throws IOException {
         switch (mCloseBehavior) {
-        case IGNORE:
-            break;
-        case RESET:
-            mInputStream.reset();
-            break;
-        case CLOSE:
-            mInputStream.close();
-            break;
+            case IGNORE:
+                break;
+            case RESET:
+                mInputStream.reset();
+                break;
+            case CLOSE:
+                mInputStream.close();
+                break;
         }
     }
 }

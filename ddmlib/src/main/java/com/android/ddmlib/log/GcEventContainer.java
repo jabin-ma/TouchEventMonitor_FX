@@ -24,10 +24,10 @@ import com.android.ddmlib.log.LogReceiver.LogEntry;
  * int or long format, but encodes several values on 4 longs.
  * <p/>
  * The array of {@link EventValueDescription}s parsed from the "event-log-tags" file must
- * be ignored, and instead, the array returned from {@link #getValueDescriptions()} must be used. 
+ * be ignored, and instead, the array returned from {@link #getValueDescriptions()} must be used.
  */
 final class GcEventContainer extends EventContainer {
-    
+
     public static final int GC_EVENT_TAG = 20001;
 
     private String processId;
@@ -63,15 +63,15 @@ final class GcEventContainer extends EventContainer {
      */
     private void init(Object data) {
         if (data instanceof Object[]) {
-            Object[] values = (Object[])data;
+            Object[] values = (Object[]) data;
             for (int i = 0; i < values.length; i++) {
                 if (values[i] instanceof Long) {
-                    parseDvmHeapInfo((Long)values[i], i);
+                    parseDvmHeapInfo((Long) values[i], i);
                 }
             }
         }
     }
-    
+
     @Override
     public EventValueType getType() {
         return EventValueType.LIST;
@@ -88,7 +88,7 @@ final class GcEventContainer extends EventContainer {
         } else if (!(value instanceof Long)) {
             throw new InvalidTypeException();
         }
-        
+
         switch (compareMethod) {
             case EQUAL_TO:
                 if (index == 0) {
@@ -116,19 +116,19 @@ final class GcEventContainer extends EventContainer {
         if (valueIndex == 0) {
             return processId;
         }
-        
+
         try {
             return getValueAsLong(valueIndex);
         } catch (InvalidTypeException e) {
             // this would only happened if valueIndex was 0, which we test above.
         }
-        
+
         return null;
     }
 
     @Override
     public double getValueAsDouble(int valueIndex) throws InvalidTypeException {
-        return (double)getValueAsLong(valueIndex);
+        return (double) getValueAsLong(valueIndex);
     }
 
     @Override
@@ -146,14 +146,14 @@ final class GcEventContainer extends EventContainer {
 
         throw new ArrayIndexOutOfBoundsException();
     }
-    
+
     /**
      * Returns a custom array of {@link EventValueDescription} since the actual content of this
      * event (list of (long, long) does not match the values encoded into those longs.
      */
     static EventValueDescription[] getValueDescriptions() {
         try {
-            return new EventValueDescription[] {
+            return new EventValueDescription[]{
                     new EventValueDescription("Process Name", EventValueType.STRING),
                     new EventValueDescription("GC Time", EventValueType.LONG,
                             ValueType.MILLISECONDS),
@@ -191,7 +191,7 @@ final class GcEventContainer extends EventContainer {
                             ValueType.BYTES),
                     new EventValueDescription("Malloc Info: Total Allocated Space",
                             EventValueType.LONG, ValueType.BYTES),
-                  };
+            };
         } catch (InvalidValueTypeException e) {
             // this shouldn't happen since we control manual the EventValueType and the ValueType
             // values. For development purpose, we assert if this happens.
@@ -209,15 +209,15 @@ final class GcEventContainer extends EventContainer {
                 //    [62-24] ASCII process identifier
                 //    [23-12] GC time in ms
                 //    [11- 0] Bytes freed
-                
-                gcTime = float12ToInt((int)((data >> 12) & 0xFFFL));
-                bytesFreed = float12ToInt((int)(data & 0xFFFL));
-                
+
+                gcTime = float12ToInt((int) ((data >> 12) & 0xFFFL));
+                bytesFreed = float12ToInt((int) (data & 0xFFFL));
+
                 // convert the long into an array, in the proper order so that we can convert the
                 // first 5 char into a string.
                 byte[] dataArray = new byte[8];
                 put64bitsToArray(data, dataArray, 0);
-                
+
                 // get the name from the string
                 processId = new String(dataArray, 0, 5);
                 break;
@@ -229,11 +229,11 @@ final class GcEventContainer extends EventContainer {
                 //    [35-24] Allowed size (current hard max)
                 //    [23-12] Objects allocated
                 //    [11- 0] Bytes allocated
-                objectsFreed = float12ToInt((int)((data >> 48) & 0xFFFL));
-                actualSize = float12ToInt((int)((data >> 36) & 0xFFFL));
-                allowedSize = float12ToInt((int)((data >> 24) & 0xFFFL));
-                objectsAllocated = float12ToInt((int)((data >> 12) & 0xFFFL));
-                bytesAllocated = float12ToInt((int)(data & 0xFFFL));
+                objectsFreed = float12ToInt((int) ((data >> 48) & 0xFFFL));
+                actualSize = float12ToInt((int) ((data >> 36) & 0xFFFL));
+                allowedSize = float12ToInt((int) ((data >> 24) & 0xFFFL));
+                objectsAllocated = float12ToInt((int) ((data >> 12) & 0xFFFL));
+                bytesAllocated = float12ToInt((int) (data & 0xFFFL));
                 break;
             case 2:
                 //    [63-62] 11
@@ -243,11 +243,11 @@ final class GcEventContainer extends EventContainer {
                 //    [35-24] Allowed size (current hard max)
                 //    [23-12] Objects allocated
                 //    [11- 0] Bytes allocated
-                softLimit = float12ToInt((int)((data >> 48) & 0xFFFL));
-                zActualSize = float12ToInt((int)((data >> 36) & 0xFFFL));
-                zAllowedSize = float12ToInt((int)((data >> 24) & 0xFFFL));
-                zObjectsAllocated = float12ToInt((int)((data >> 12) & 0xFFFL));
-                zBytesAllocated = float12ToInt((int)(data & 0xFFFL));
+                softLimit = float12ToInt((int) ((data >> 48) & 0xFFFL));
+                zActualSize = float12ToInt((int) ((data >> 36) & 0xFFFL));
+                zAllowedSize = float12ToInt((int) ((data >> 24) & 0xFFFL));
+                zObjectsAllocated = float12ToInt((int) ((data >> 12) & 0xFFFL));
+                zBytesAllocated = float12ToInt((int) (data & 0xFFFL));
                 break;
             case 3:
                 //    [63-48] Reserved; must be zero
@@ -255,44 +255,47 @@ final class GcEventContainer extends EventContainer {
                 //    [35-24] mallinfo: total allocated space
                 //    [23-12] External byte limit
                 //    [11- 0] External bytes allocated
-                dlmallocFootprint = float12ToInt((int)((data >> 36) & 0xFFFL));
-                mallinfoTotalAllocatedSpace = float12ToInt((int)((data >> 24) & 0xFFFL));
-                externalLimit = float12ToInt((int)((data >> 12) & 0xFFFL));
-                externalBytesAllocated = float12ToInt((int)(data & 0xFFFL));
+                dlmallocFootprint = float12ToInt((int) ((data >> 36) & 0xFFFL));
+                mallinfoTotalAllocatedSpace = float12ToInt((int) ((data >> 24) & 0xFFFL));
+                externalLimit = float12ToInt((int) ((data >> 12) & 0xFFFL));
+                externalBytesAllocated = float12ToInt((int) (data & 0xFFFL));
                 break;
             default:
                 break;
         }
     }
-    
+
     /**
      * Converts a 12 bit float representation into an unsigned int (returned as a long)
+     *
      * @param f12
      */
     private static long float12ToInt(int f12) {
         return (f12 & 0x1FF) << ((f12 >>> 9) * 4);
     }
-    
+
     /**
      * puts an unsigned value in an array.
-     * @param value The value to put.
-     * @param dest the destination array
+     *
+     * @param value  The value to put.
+     * @param dest   the destination array
      * @param offset the offset in the array where to put the value.
-     *      Array length must be at least offset + 8
+     *               Array length must be at least offset + 8
      */
     private static void put64bitsToArray(long value, byte[] dest, int offset) {
-        dest[offset + 7] = (byte)(value & 0x00000000000000FFL);
-        dest[offset + 6] = (byte)((value & 0x000000000000FF00L) >> 8);
-        dest[offset + 5] = (byte)((value & 0x0000000000FF0000L) >> 16);
-        dest[offset + 4] = (byte)((value & 0x00000000FF000000L) >> 24);
-        dest[offset + 3] = (byte)((value & 0x000000FF00000000L) >> 32);
-        dest[offset + 2] = (byte)((value & 0x0000FF0000000000L) >> 40);
-        dest[offset + 1] = (byte)((value & 0x00FF000000000000L) >> 48);
-        dest[offset + 0] = (byte)((value & 0xFF00000000000000L) >> 56);
+        dest[offset + 7] = (byte) (value & 0x00000000000000FFL);
+        dest[offset + 6] = (byte) ((value & 0x000000000000FF00L) >> 8);
+        dest[offset + 5] = (byte) ((value & 0x0000000000FF0000L) >> 16);
+        dest[offset + 4] = (byte) ((value & 0x00000000FF000000L) >> 24);
+        dest[offset + 3] = (byte) ((value & 0x000000FF00000000L) >> 32);
+        dest[offset + 2] = (byte) ((value & 0x0000FF0000000000L) >> 40);
+        dest[offset + 1] = (byte) ((value & 0x00FF000000000000L) >> 48);
+        dest[offset + 0] = (byte) ((value & 0xFF00000000000000L) >> 56);
     }
-    
+
     /**
      * Returns the long value of the <code>valueIndex</code>-th value.
+     *
      * @param valueIndex the index of the value.
      * @throws InvalidTypeException if index is 0 as it is a string value.
      */
@@ -325,7 +328,7 @@ final class GcEventContainer extends EventContainer {
             case 12:
                 return bytesAllocated - zBytesAllocated;
             case 13:
-               return zActualSize;
+                return zActualSize;
             case 14:
                 return zAllowedSize;
             case 15:

@@ -44,6 +44,7 @@ final class HandleNativeHeap extends ChunkHandler {
         }
 
         public abstract int getSizeT();
+
         public abstract long getPtr();
 
         protected ByteBuffer mBuffer;
@@ -54,16 +55,17 @@ final class HandleNativeHeap extends ChunkHandler {
      */
     final class NativeBuffer32 extends NativeBuffer {
         public NativeBuffer32(ByteBuffer buffer) {
-          super(buffer);
+            super(buffer);
         }
 
         @Override
         public int getSizeT() {
             return mBuffer.getInt();
         }
+
         @Override
         public long getPtr() {
-            return (long)mBuffer.getInt() & 0x00000000ffffffffL;
+            return (long) mBuffer.getInt() & 0x00000000ffffffffL;
         }
     }
 
@@ -72,13 +74,14 @@ final class HandleNativeHeap extends ChunkHandler {
      */
     final class NativeBuffer64 extends NativeBuffer {
         public NativeBuffer64(ByteBuffer buffer) {
-          super(buffer);
+            super(buffer);
         }
 
         @Override
         public int getSizeT() {
-            return (int)mBuffer.getLong();
+            return (int) mBuffer.getLong();
         }
+
         @Override
         public long getPtr() {
             return mBuffer.getLong();
@@ -103,13 +106,15 @@ final class HandleNativeHeap extends ChunkHandler {
      * Client is ready.
      */
     @Override
-    public void clientReady(Client client) throws IOException {}
+    public void clientReady(Client client) throws IOException {
+    }
 
     /**
      * Client went away.
      */
     @Override
-    public void clientDisconnected(Client client) {}
+    public void clientDisconnected(Client client) {
+    }
 
     /**
      * Chunk handler entry point.
@@ -155,8 +160,8 @@ final class HandleNativeHeap extends ChunkHandler {
         packet = new JdwpPacket(rawBuf);
         buf = getChunkDataBuf(rawBuf);
 
-        buf.put((byte)HandleHeap.WHEN_DISABLE);
-        buf.put((byte)HandleHeap.WHAT_OBJ);
+        buf.put((byte) HandleHeap.WHEN_DISABLE);
+        buf.put((byte) HandleHeap.WHAT_OBJ);
 
         finishChunkPacket(packet, CHUNK_NHSG, buf.position());
         Log.d("ddm-nativeheap", "Sending " + name(CHUNK_NHSG));
@@ -238,7 +243,7 @@ final class HandleNativeHeap extends ChunkHandler {
 
         // this means that updates aren't turned on.
         if (allocInfoSize == 0) {
-          return;
+            return;
         }
 
         if (mapSize > 0) {
@@ -248,12 +253,12 @@ final class HandleNativeHeap extends ChunkHandler {
         }
 
         int iterations = allocSize / allocInfoSize;
-        for (int i = 0 ; i < iterations ; i++) {
+        for (int i = 0; i < iterations; i++) {
             NativeAllocationInfo info = new NativeAllocationInfo(
                     buffer.getSizeT() /* size */,
                     buffer.getSizeT() /* allocations */);
 
-            for (int j = 0 ; j < backtraceSize ; j++) {
+            for (int j = 0; j < backtraceSize; j++) {
                 long addr = buffer.getPtr();
                 if (addr == 0x0) {
                     // skip past null addresses
@@ -315,7 +320,7 @@ final class HandleNativeHeap extends ChunkHandler {
 
                 // Assume that any string that starts with a / is a
                 // shared library or executable that we will try to symbolize.
-                String library = line.substring(library_start+1);
+                String library = line.substring(library_start + 1);
                 if (!library.startsWith("/")) {
                     continue;
                 }
@@ -331,7 +336,7 @@ final class HandleNativeHeap extends ChunkHandler {
                 long endAddr = 0;
                 try {
                     startAddr = Long.parseLong(line.substring(0, dashIndex), 16);
-                    endAddr = Long.parseLong(line.substring(dashIndex+1, spaceIndex), 16);
+                    endAddr = Long.parseLong(line.substring(dashIndex + 1, spaceIndex), 16);
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     continue;
@@ -339,7 +344,7 @@ final class HandleNativeHeap extends ChunkHandler {
 
                 clientData.addNativeLibraryMapInfo(startAddr, endAddr, library);
                 Log.d("ddms", library + "(" + Long.toHexString(startAddr) +
-                      " - " + Long.toHexString(endAddr) + ")");
+                        " - " + Long.toHexString(endAddr) + ")");
             }
         } catch (IOException e) {
             e.printStackTrace();

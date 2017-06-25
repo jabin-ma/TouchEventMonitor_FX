@@ -59,11 +59,14 @@ public class GrabProcessOutput {
     public interface IProcessOutput {
         /**
          * Processes an stdout message line.
+         *
          * @param line The stdout message line. Null when the reader reached the end of stdout.
          */
         void out(@Nullable String line);
+
         /**
          * Processes an stderr message line.
+         *
          * @param line The stderr message line. Null when the reader reached the end of stderr.
          */
         void err(@Nullable String line);
@@ -73,10 +76,10 @@ public class GrabProcessOutput {
      * Get the stderr/stdout outputs of a process and return when the process is done.
      * Both <b>must</b> be read or the process will block on windows.
      *
-     * @param process The process to get the output from.
-     * @param output Optional object to capture stdout/stderr.
-     *      Note that on Windows capturing the output is not optional. If output is null
-     *      the stdout/stderr will be captured and discarded.
+     * @param process  The process to get the output from.
+     * @param output   Optional object to capture stdout/stderr.
+     *                 Note that on Windows capturing the output is not optional. If output is null
+     *                 the stdout/stderr will be captured and discarded.
      * @param waitMode Whether to wait for the process and/or the readers to finish.
      * @return the process return code.
      * @throws InterruptedException if {@link Process#waitFor()} was interrupted.

@@ -20,23 +20,23 @@ package com.android.ddmlib;
  * Classes which implement this interface provide methods that deal with out from a remote shell
  * command on a device/emulator.
  */
-public abstract class OneLineReceiver extends MultiLineReceiver{
+public abstract class OneLineReceiver extends MultiLineReceiver {
 
-	 public OneLineReceiver() {
-		 setReportOneLine(true);
-	}
-	
-	@Override
-	public boolean isCancelled() {
-		return false;
-	}
+    public OneLineReceiver() {
+        setReportOneLine(true);
+    }
 
-	@Override
-	public void processNewLines(String[] lines) {
-		if(lines.length>0){
-			processNewLines(lines[0]);
-		}
-	}
-	
-	public abstract void processNewLines(String line);
+    @Override
+    public boolean isCancelled() {
+        return false;
+    }
+
+    @Override
+    public void processNewLines(String[] lines) {
+        if (lines.length > 0) {
+            processNewLines(lines[0]);
+        }
+    }
+
+    public abstract void processNewLines(String line);
 }

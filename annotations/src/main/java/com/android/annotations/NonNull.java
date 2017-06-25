@@ -33,6 +33,6 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(RetentionPolicy.SOURCE)
-@Target({METHOD,PARAMETER,LOCAL_VARIABLE,FIELD})
+@Target({METHOD, PARAMETER, LOCAL_VARIABLE, FIELD})
 public @interface NonNull {
 }

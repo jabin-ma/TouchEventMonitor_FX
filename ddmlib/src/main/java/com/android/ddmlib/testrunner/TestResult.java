@@ -15,8 +15,6 @@
  */
 package com.android.ddmlib.testrunner;
 
-import com.android.ddmlib.testrunner.TestResult.TestStatus;
-
 import java.util.Arrays;
 import java.util.Map;
 
@@ -26,15 +24,25 @@ import java.util.Map;
 public class TestResult {
 
     public enum TestStatus {
-        /** Test failed. */
+        /**
+         * Test failed.
+         */
         FAILURE,
-        /** Test passed */
+        /**
+         * Test passed
+         */
         PASSED,
-        /** Test started but not ended */
+        /**
+         * Test started but not ended
+         */
         INCOMPLETE,
-        /** Test assumption failure */
+        /**
+         * Test assumption failure
+         */
         ASSUMPTION_FAILURE,
-        /** Test ignored */
+        /**
+         * Test ignored
+         */
         IGNORED,
     }
 
@@ -99,8 +107,8 @@ public class TestResult {
      * Set the {@link TestStatus}.
      */
     public TestResult setStatus(TestStatus status) {
-       mStatus = status;
-       return this;
+        mStatus = status;
+        return this;
     }
 
     /**
@@ -119,7 +127,7 @@ public class TestResult {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(new Object[] {mMetrics, mStackTrace, mStatus});
+        return Arrays.hashCode(new Object[]{mMetrics, mStackTrace, mStatus});
     }
 
     @Override
@@ -135,8 +143,8 @@ public class TestResult {
         }
         TestResult other = (TestResult) obj;
         return equal(mMetrics, other.mMetrics) &&
-               equal(mStackTrace, other.mStackTrace) &&
-               equal(mStatus, other.mStatus);
+                equal(mStackTrace, other.mStackTrace) &&
+                equal(mStatus, other.mStatus);
     }
 
     private static boolean equal(Object a, Object b) {

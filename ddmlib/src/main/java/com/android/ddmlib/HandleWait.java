@@ -32,7 +32,8 @@ final class HandleWait extends ChunkHandler {
     private static final HandleWait mInst = new HandleWait();
 
 
-    private HandleWait() {}
+    private HandleWait() {
+    }
 
     /**
      * Register for the packets we expect to get from the client.
@@ -45,13 +46,15 @@ final class HandleWait extends ChunkHandler {
      * Client is ready.
      */
     @Override
-    public void clientReady(Client client) throws IOException {}
+    public void clientReady(Client client) throws IOException {
+    }
 
     /**
      * Client went away.
      */
     @Override
-    public void clientDisconnected(Client client) {}
+    public void clientDisconnected(Client client) {
+    }
 
     /**
      * Chunk handler entry point.

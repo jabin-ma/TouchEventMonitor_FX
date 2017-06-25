@@ -31,11 +31,17 @@ import java.util.concurrent.TimeUnit;
 public interface IRemoteAndroidTestRunner {
 
     enum TestSize {
-        /** Run tests annotated with SmallTest */
+        /**
+         * Run tests annotated with SmallTest
+         */
         SMALL("small"),
-        /** Run tests annotated with MediumTest */
+        /**
+         * Run tests annotated with MediumTest
+         */
         MEDIUM("medium"),
-        /** Run tests annotated with LargeTest */
+        /**
+         * Run tests annotated with LargeTest
+         */
         LARGE("large");
 
         private String mRunnerValue;
@@ -44,7 +50,7 @@ public interface IRemoteAndroidTestRunner {
          * Create a {@link TestSize}.
          *
          * @param runnerValue the {@link String} value that represents the size that is passed to
-         * device. Defined on device in android.test.InstrumentationTestRunner.
+         *                    device. Defined on device in android.test.InstrumentationTestRunner.
          */
         TestSize(String runnerValue) {
             mRunnerValue = runnerValue;
@@ -109,7 +115,7 @@ public interface IRemoteAndroidTestRunner {
      * Must be called before 'run'.
      *
      * @param className fully qualified class name (eg x.y.z)
-     * @param testName method name
+     * @param testName  method name
      */
     void setMethodName(String className, String testName);
 
@@ -135,7 +141,7 @@ public interface IRemoteAndroidTestRunner {
      * Must be called before 'run'. If an argument with given name has already been provided, it's
      * value will be overridden.
      *
-     * @param name the name of the instrumentation bundle argument
+     * @param name  the name of the instrumentation bundle argument
      * @param value the value of the argument
      */
     void addInstrumentationArg(String name, String value);
@@ -150,10 +156,10 @@ public interface IRemoteAndroidTestRunner {
     /**
      * Adds a boolean argument to include in instrumentation command.
      * <p/>
-     * @see RemoteAndroidTestRunner#addInstrumentationArg
      *
-     * @param name the name of the instrumentation bundle argument
+     * @param name  the name of the instrumentation bundle argument
      * @param value the value of the argument
+     * @see RemoteAndroidTestRunner#addInstrumentationArg
      */
     void addBooleanArg(String name, boolean value);
 
@@ -195,11 +201,10 @@ public interface IRemoteAndroidTestRunner {
      * By default no timeout will be specified.
      *
      * @param maxTimeToOutputResponse the maximum amount of time during which the command is allowed
-     *            to not output any response. A value of 0 means the method will wait forever
-     *            (until the <var>receiver</var> cancels the execution) for command output and
-     *            never throw.
-     * @param maxTimeUnits Units for non-zero {@code maxTimeToOutputResponse} values.
-     *
+     *                                to not output any response. A value of 0 means the method will wait forever
+     *                                (until the <var>receiver</var> cancels the execution) for command output and
+     *                                never throw.
+     * @param maxTimeUnits            Units for non-zero {@code maxTimeToOutputResponse} values.
      * @see IDevice#executeShellCommand(String, com.android.ddmlib.IShellOutputReceiver, int)
      */
     void setMaxTimeToOutputResponse(long maxTimeToOutputResponse, TimeUnit maxTimeUnits);
@@ -219,12 +224,11 @@ public interface IRemoteAndroidTestRunner {
      * Convenience method for {@link #run(Collection)}.
      *
      * @param listeners listens for test results
-     * @throws TimeoutException in case of a timeout on the connection.
-     * @throws AdbCommandRejectedException if adb rejects the command
+     * @throws TimeoutException                  in case of a timeout on the connection.
+     * @throws AdbCommandRejectedException       if adb rejects the command
      * @throws ShellCommandUnresponsiveException if the device did not output any test result for
-     * a period longer than the max time to output.
-     * @throws IOException if connection to device was lost.
-     *
+     *                                           a period longer than the max time to output.
+     * @throws IOException                       if connection to device was lost.
      * @see #setMaxtimeToOutputResponse(int)
      */
     void run(ITestRunListener... listeners)
@@ -235,12 +239,11 @@ public interface IRemoteAndroidTestRunner {
      * Execute this test run.
      *
      * @param listeners collection of listeners for test results
-     * @throws TimeoutException in case of a timeout on the connection.
-     * @throws AdbCommandRejectedException if adb rejects the command
+     * @throws TimeoutException                  in case of a timeout on the connection.
+     * @throws AdbCommandRejectedException       if adb rejects the command
      * @throws ShellCommandUnresponsiveException if the device did not output any test result for
-     * a period longer than the max time to output.
-     * @throws IOException if connection to device was lost.
-     *
+     *                                           a period longer than the max time to output.
+     * @throws IOException                       if connection to device was lost.
      * @see #setMaxtimeToOutputResponse(int)
      */
     void run(Collection<ITestRunListener> listeners)

@@ -22,35 +22,35 @@ import java.util.concurrent.DelayQueue;
  * Low-level class holding the list of messages to be dispatched by a
  * {@link Looper}. Messages are not added directly to a MessageQueue, but rather
  * through {@link Handler} objects associated with the Looper.
- *
+ * <p>
  * <p>
  * You can retrieve the MessageQueue for the current thread with
  * {@link Looper#myQueue() Looper.myQueue()}.
  */
 public final class MessageQueue extends DelayQueue<Message> {
 
-	private static final Message MESSAGE_QUIT = Message.obtain();
+    private static final Message MESSAGE_QUIT = Message.obtain();
 
-	public MessageQueue(boolean quitAllowed) {
-		
-	}
+    public MessageQueue(boolean quitAllowed) {
 
-	public Message next() {
-		try {
-			return take();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    }
 
-	public void quit() {
-		enqueueMessage(MESSAGE_QUIT, 0);
-	}
+    public Message next() {
+        try {
+            return take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void quit() {
+        enqueueMessage(MESSAGE_QUIT, 0);
+    }
 
 
-	public boolean enqueueMessage(Message msg, long delayMillis) {
-		msg.submit(delayMillis);
-		return add(msg);
-	}
+    public boolean enqueueMessage(Message msg, long delayMillis) {
+        msg.submit(delayMillis);
+        return add(msg);
+    }
 }

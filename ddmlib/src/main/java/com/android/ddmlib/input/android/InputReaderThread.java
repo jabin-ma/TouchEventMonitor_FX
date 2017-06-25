@@ -17,8 +17,7 @@ public class InputReaderThread extends Thread {
     public void run() {
         while (read) {
             MonitorEvent monitorEvent = mContext.inputReader.readBySync();
-            if(monitorEvent!=null)
-            {
+            if (monitorEvent != null) {
                 mContext.getInputDispatcher().dispatchEvent(monitorEvent);
             }
         }

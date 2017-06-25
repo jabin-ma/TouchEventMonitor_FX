@@ -618,7 +618,7 @@ final class Device implements IDevice {
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException {
         AdbHelper.executeRemoteCommand(AndroidDebugBridge.getSocketAddress(), this,
-                receiver, maxTimeToOutputResponse, command,args);
+                receiver, maxTimeToOutputResponse, command, args);
     }
 
     @Override
@@ -637,7 +637,7 @@ final class Device implements IDevice {
 
     @Override
     public void executeShellCommand(IShellOutputReceiver receiver, long maxTimeToOutputResponse, TimeUnit maxTimeUnits, Command command, String... args) throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException, IOException {
-        executeShellCommand(receiver,maxTimeToOutputResponse,maxTimeUnits,command.getCmd(),command.getArgs(args));
+        executeShellCommand(receiver, maxTimeToOutputResponse, maxTimeUnits, command.getCmd(), command.getArgs(args));
     }
 
     @Override
@@ -1326,10 +1326,12 @@ final class Device implements IDevice {
     public NetworkMonkey getMonkey() throws IOException {
         return NetworkMonkey.create(this);
     }
+
     InputManager inputManager;
-    public InputManager getInputManager(){
-        if(inputManager==null){
-            inputManager=new InputManager(this);
+
+    public InputManager getInputManager() {
+        if (inputManager == null) {
+            inputManager = new InputManager(this);
         }
         return inputManager;
     }

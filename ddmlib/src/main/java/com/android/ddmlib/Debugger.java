@@ -47,8 +47,8 @@ class Debugger {
     /* connection state */
     private int mConnState;
     private static final int ST_NOT_CONNECTED = 1;
-    private static final int ST_AWAIT_SHAKE   = 2;
-    private static final int ST_READY         = 3;
+    private static final int ST_AWAIT_SHAKE = 2;
+    private static final int ST_READY = 3;
 
     /* peer */
     private Client mClient;         // client we're forwarding to/from
@@ -116,9 +116,9 @@ class Debugger {
 
     /**
      * Accept a new connection, but only if we don't already have one.
-     *
+     * <p>
      * Must be synchronized with other uses of mChannel and mPreBuffer.
-     *
+     * <p>
      * Returns "null" if we're already talking to somebody.
      */
     synchronized SocketChannel accept() throws IOException {
@@ -129,13 +129,13 @@ class Debugger {
      * Accept a new connection from the specified listen channel.  This
      * is so we can listen on a dedicated port for the "current" client,
      * where "current" is constantly in flux.
-     *
+     * <p>
      * Must be synchronized with other uses of mChannel and mPreBuffer.
-     *
+     * <p>
      * Returns "null" if we're already talking to somebody.
      */
     synchronized SocketChannel accept(ServerSocketChannel listenChan)
-        throws IOException {
+            throws IOException {
 
         if (listenChan != null) {
             SocketChannel newChan;
@@ -143,7 +143,7 @@ class Debugger {
             newChan = listenChan.accept();
             if (mChannel != null) {
                 Log.w("ddms", "debugger already talking to " + mClient
-                    + " on " + mListenPort);
+                        + " on " + mListenPort);
                 newChan.close();
                 return null;
             }
@@ -195,7 +195,7 @@ class Debugger {
 
     /**
      * Read data from our channel.
-     *
+     * <p>
      * This is called when data is known to be available, and we don't yet
      * have a full packet in the buffer.  If the buffer is at capacity,
      * expand it.
@@ -208,7 +208,7 @@ class Debugger {
                 throw new BufferOverflowException();
             }
             Log.d("ddms", "Expanding read buffer to "
-                + mReadBuffer.capacity() * 2);
+                    + mReadBuffer.capacity() * 2);
 
             ByteBuffer newBuffer =
                     ByteBuffer.allocate(mReadBuffer.capacity() * 2);
@@ -225,9 +225,9 @@ class Debugger {
 
     /**
      * Return information for the first full JDWP packet in the buffer.
-     *
+     * <p>
      * If we don't yet have a full packet, return null.
-     *
+     * <p>
      * If we haven't yet received the JDWP handshake, we watch for it here
      * and consume it without admitting to have done so.  We also send
      * the handshake response to the debugger, along with any pending
@@ -280,10 +280,10 @@ class Debugger {
 
     /**
      * Forward a packet to the client.
-     *
+     * <p>
      * "mClient" will never be null, though it's possible that the channel
      * in the client has closed and our send attempt will fail.
-     *
+     * <p>
      * Consumes the packet.
      */
     void forwardPacketToClient(JdwpPacket packet) throws IOException {
@@ -318,20 +318,20 @@ class Debugger {
 
     /**
      * Send a packet to the debugger.
-     *
+     * <p>
      * Ideally, we can do this with a single channel write.  If that doesn't
      * happen, we have to prevent anybody else from writing to the channel
      * until this packet completes, so we synchronize on the channel.
-     *
+     * <p>
      * Another goal is to avoid unnecessary buffer copies, so we write
      * directly out of the JdwpPacket's ByteBuffer.
-     *
+     * <p>
      * We must synchronize on "mChannel" before writing to it.  We want to
      * coordinate the buffered data with mChannel creation, so this whole
      * method is synchronized.
      */
     synchronized void sendAndConsume(JdwpPacket packet)
-        throws IOException {
+            throws IOException {
 
         if (mChannel == null) {
             /*

@@ -17,8 +17,8 @@
 package com.android.ddmlib;
 
 import com.android.annotations.NonNull;
-import com.android.ddmlib.DebugPortManager.IDebugPortProvider;
 import com.android.ddmlib.AndroidDebugBridge.IClientChangeListener;
+import com.android.ddmlib.DebugPortManager.IDebugPortProvider;
 
 import java.io.IOException;
 import java.nio.BufferOverflowException;
@@ -41,34 +41,61 @@ public class Client {
 
     private static final int SERVER_PROTOCOL_VERSION = 1;
 
-    /** Client change bit mask: application name change */
-    public static final int CHANGE_NAME                       = 0x0001;
-    /** Client change bit mask: debugger status change */
-    public static final int CHANGE_DEBUGGER_STATUS            = 0x0002;
-    /** Client change bit mask: debugger port change */
-    public static final int CHANGE_PORT                       = 0x0004;
-    /** Client change bit mask: thread update flag change */
-    public static final int CHANGE_THREAD_MODE                = 0x0008;
-    /** Client change bit mask: thread data updated */
-    public static final int CHANGE_THREAD_DATA                = 0x0010;
-    /** Client change bit mask: heap update flag change */
-    public static final int CHANGE_HEAP_MODE                  = 0x0020;
-    /** Client change bit mask: head data updated */
-    public static final int CHANGE_HEAP_DATA                  = 0x0040;
-    /** Client change bit mask: native heap data updated */
-    public static final int CHANGE_NATIVE_HEAP_DATA           = 0x0080;
-    /** Client change bit mask: thread stack trace updated */
-    public static final int CHANGE_THREAD_STACKTRACE          = 0x0100;
-    /** Client change bit mask: allocation information updated */
-    public static final int CHANGE_HEAP_ALLOCATIONS           = 0x0200;
-    /** Client change bit mask: allocation information updated */
-    public static final int CHANGE_HEAP_ALLOCATION_STATUS     = 0x0400;
-    /** Client change bit mask: allocation information updated */
-    public static final int CHANGE_METHOD_PROFILING_STATUS    = 0x0800;
-    /** Client change bit mask: hprof data updated */
-    public static final int CHANGE_HPROF                      = 0x1000;
+    /**
+     * Client change bit mask: application name change
+     */
+    public static final int CHANGE_NAME = 0x0001;
+    /**
+     * Client change bit mask: debugger status change
+     */
+    public static final int CHANGE_DEBUGGER_STATUS = 0x0002;
+    /**
+     * Client change bit mask: debugger port change
+     */
+    public static final int CHANGE_PORT = 0x0004;
+    /**
+     * Client change bit mask: thread update flag change
+     */
+    public static final int CHANGE_THREAD_MODE = 0x0008;
+    /**
+     * Client change bit mask: thread data updated
+     */
+    public static final int CHANGE_THREAD_DATA = 0x0010;
+    /**
+     * Client change bit mask: heap update flag change
+     */
+    public static final int CHANGE_HEAP_MODE = 0x0020;
+    /**
+     * Client change bit mask: head data updated
+     */
+    public static final int CHANGE_HEAP_DATA = 0x0040;
+    /**
+     * Client change bit mask: native heap data updated
+     */
+    public static final int CHANGE_NATIVE_HEAP_DATA = 0x0080;
+    /**
+     * Client change bit mask: thread stack trace updated
+     */
+    public static final int CHANGE_THREAD_STACKTRACE = 0x0100;
+    /**
+     * Client change bit mask: allocation information updated
+     */
+    public static final int CHANGE_HEAP_ALLOCATIONS = 0x0200;
+    /**
+     * Client change bit mask: allocation information updated
+     */
+    public static final int CHANGE_HEAP_ALLOCATION_STATUS = 0x0400;
+    /**
+     * Client change bit mask: allocation information updated
+     */
+    public static final int CHANGE_METHOD_PROFILING_STATUS = 0x0800;
+    /**
+     * Client change bit mask: hprof data updated
+     */
+    public static final int CHANGE_HPROF = 0x1000;
 
-    /** Client change bit mask: combination of {@link Client#CHANGE_NAME},
+    /**
+     * Client change bit mask: combination of {@link Client#CHANGE_NAME},
      * {@link Client#CHANGE_DEBUGGER_STATUS}, and {@link Client#CHANGE_PORT}.
      */
     public static final int CHANGE_INFO = CHANGE_NAME | CHANGE_DEBUGGER_STATUS | CHANGE_PORT;
@@ -80,7 +107,7 @@ public class Client {
     private int mDebuggerListenPort;
 
     // list of IDs for requests we have sent to the client
-    private HashMap<Integer,ChunkHandler> mOutstandingReqs;
+    private HashMap<Integer, ChunkHandler> mOutstandingReqs;
 
     // chunk handlers stash state data in here
     private ClientData mClientData;
@@ -100,8 +127,8 @@ public class Client {
      * Pass-through debugger traffic is sent without copying.  "mWriteBuffer"
      * is only used for data generated within Client.
      */
-    private static final int INITIAL_BUF_SIZE = 2*1024;
-    private static final int MAX_BUF_SIZE = 800*1024*1024;
+    private static final int INITIAL_BUF_SIZE = 2 * 1024;
+    private static final int MAX_BUF_SIZE = 800 * 1024 * 1024;
     private ByteBuffer mReadBuffer;
 
     private static final int WRITE_BUF_SIZE = 256;
@@ -111,13 +138,13 @@ public class Client {
 
     private int mConnState;
 
-    private static final int ST_INIT         = 1;
-    private static final int ST_NOT_JDWP     = 2;
-    private static final int ST_AWAIT_SHAKE  = 10;
+    private static final int ST_INIT = 1;
+    private static final int ST_NOT_JDWP = 2;
+    private static final int ST_AWAIT_SHAKE = 10;
     private static final int ST_NEED_DDM_PKT = 11;
-    private static final int ST_NOT_DDM      = 12;
-    private static final int ST_READY        = 13;
-    private static final int ST_ERROR        = 20;
+    private static final int ST_NOT_DDM = 12;
+    private static final int ST_READY = 13;
+    private static final int ST_ERROR = 20;
     private static final int ST_DISCONNECTED = 21;
 
 
@@ -125,8 +152,8 @@ public class Client {
      * Create an object for a new client connection.
      *
      * @param device the device this client belongs to
-     * @param chan the connected {@link SocketChannel}.
-     * @param pid the client pid.
+     * @param chan   the connected {@link SocketChannel}.
+     * @param pid    the client pid.
      */
     Client(Device device, SocketChannel chan, int pid) {
         mDevice = device;
@@ -135,7 +162,7 @@ public class Client {
         mReadBuffer = ByteBuffer.allocate(INITIAL_BUF_SIZE);
         mWriteBuffer = ByteBuffer.allocate(WRITE_BUF_SIZE);
 
-        mOutstandingReqs = new HashMap<Integer,ChunkHandler>();
+        mOutstandingReqs = new HashMap<Integer, ChunkHandler>();
 
         mConnState = ST_INIT;
 
@@ -161,7 +188,8 @@ public class Client {
         return mDevice;
     }
 
-    /** Returns the {@link Device} on which this Client is running.
+    /**
+     * Returns the {@link Device} on which this Client is running.
      */
     Device getDeviceImpl() {
         return mDevice;
@@ -176,7 +204,7 @@ public class Client {
 
     /**
      * Returns <code>true</code> if the client VM is DDM-aware.
-     *
+     * <p>
      * Calling here is only allowed after the connection has been
      * established.
      */
@@ -253,6 +281,7 @@ public class Client {
 
     /**
      * Toggles method profiling state.
+     *
      * @deprecated Use {@link #startMethodTracer()}, {@link #stopMethodTracer()},
      * {@link #startSamplingProfiler(int, java.util.concurrent.TimeUnit)} or
      * {@link #stopSamplingProfiler()} instead.
@@ -363,6 +392,7 @@ public class Client {
      * Enables or disables the thread update.
      * <p/>If <code>true</code> the VM will be able to send thread information. Thread information
      * must be requested with {@link #requestThreadUpdate()}.
+     *
      * @param enabled the enable flag.
      */
     public void setThreadUpdateEnabled(boolean enabled) {
@@ -418,6 +448,7 @@ public class Client {
      * <p/>The notification that the new data is available
      * will be received through {@link IClientChangeListener#clientChanged(Client, int)}
      * with a <code>changeMask</code> containing the value {@link #CHANGE_HEAP_DATA}.
+     *
      * @param enabled the enable flag
      */
     public void setHeapUpdateEnabled(boolean enabled) {
@@ -470,6 +501,7 @@ public class Client {
 
     /**
      * Returns whether any heap update is enabled.
+     *
      * @see #setHeapUpdateEnabled(boolean)
      */
     public boolean isHeapUpdateEnabled() {
@@ -499,6 +531,7 @@ public class Client {
      * <p/>If enabled, the VM will start tracking allocation information. A call to
      * {@link #requestAllocationDetails()} will make the VM sends the information about all the
      * allocations that happened between the enabling and the request.
+     *
      * @param enable
      * @see #requestAllocationDetails()
      */
@@ -605,7 +638,7 @@ public class Client {
 
     /**
      * Initiate the JDWP handshake.
-     *
+     * <p>
      * On failure, closes the socket and returns false.
      */
     boolean sendHandshake() {
@@ -618,14 +651,12 @@ public class Client {
             mWriteBuffer.flip();
             if (mChan.write(mWriteBuffer) != expectedLen)
                 throw new IOException("partial handshake write");
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             Log.e("ddms-client", "IO error during handshake: " + ioe.getMessage());
             mConnState = ST_ERROR;
             close(true /* notify */);
             return false;
-        }
-        finally {
+        } finally {
             mWriteBuffer.clear();
         }
 
@@ -637,7 +668,7 @@ public class Client {
 
     /**
      * Send a non-DDM packet to the client.
-     *
+     * <p>
      * Equivalent to sendAndConsume(packet, null).
      */
     void sendAndConsume(JdwpPacket packet) throws IOException {
@@ -646,16 +677,16 @@ public class Client {
 
     /**
      * Send a DDM packet to the client.
-     *
+     * <p>
      * Ideally, we can do this with a single channel write.  If that doesn't
      * happen, we have to prevent anybody else from writing to the channel
      * until this packet completes, so we synchronize on the channel.
-     *
+     * <p>
      * Another goal is to avoid unnecessary buffer copies, so we write
      * directly out of the JdwpPacket's ByteBuffer.
      */
     void sendAndConsume(JdwpPacket packet, ChunkHandler replyHandler)
-        throws IOException {
+            throws IOException {
 
         // Fix to avoid a race condition on mChan. This should be better synchronized
         // but just capturing the channel here, avoids a NPE.
@@ -682,8 +713,7 @@ public class Client {
         synchronized (chan) {
             try {
                 packet.writeAndConsume(chan);
-            }
-            catch (IOException ioe) {
+            } catch (IOException ioe) {
                 removeRequestId(packet.getId());
                 throw ioe;
             }
@@ -692,11 +722,11 @@ public class Client {
 
     /**
      * Forward the packet to the debugger (if still connected to one).
-     *
+     * <p>
      * Consumes the packet.
      */
     void forwardPacketToDebugger(JdwpPacket packet)
-        throws IOException {
+            throws IOException {
 
         Debugger dbg = mDebugger;
 
@@ -710,13 +740,13 @@ public class Client {
 
     /**
      * Read data from our channel.
-     *
+     * <p>
      * This is called when data is known to be available, and we don't yet
      * have a full packet in the buffer.  If the buffer is at capacity,
      * expand it.
      */
     void read()
-        throws IOException, BufferOverflowException {
+            throws IOException, BufferOverflowException {
 
         int count;
 
@@ -726,7 +756,7 @@ public class Client {
                 throw new BufferOverflowException();
             }
             Log.d("ddms", "Expanding read buffer to "
-                + mReadBuffer.capacity() * 2);
+                    + mReadBuffer.capacity() * 2);
 
             ByteBuffer newBuffer = ByteBuffer.allocate(mReadBuffer.capacity() * 2);
 
@@ -748,9 +778,9 @@ public class Client {
 
     /**
      * Return information for the first full JDWP packet in the buffer.
-     *
+     * <p>
      * If we don't yet have a full packet, return null.
-     *
+     * <p>
      * If we haven't yet received the JDWP handshake, we watch for it here
      * and consume it without admitting to have done so.  Upon receipt
      * we send out the "HELO" message, which is why this can throw an
@@ -775,7 +805,7 @@ public class Client {
             switch (result) {
                 case JdwpPacket.HANDSHAKE_GOOD:
                     Log.d("ddms",
-                        "Good handshake from client, sending HELO to " + mClientData.getPid());
+                            "Good handshake from client, sending HELO to " + mClientData.getPid());
                     JdwpPacket.consumeHandshake(mReadBuffer);
                     mConnState = ST_NEED_DDM_PKT;
                     HandleHello.sendHelloCommands(this, SERVER_PROTOCOL_VERSION);
@@ -802,14 +832,14 @@ public class Client {
             }
             return null;
         } else if (mConnState == ST_NEED_DDM_PKT ||
-            mConnState == ST_NOT_DDM ||
-            mConnState == ST_READY) {
+                mConnState == ST_NOT_DDM ||
+                mConnState == ST_READY) {
             /*
              * Normal packet traffic.
              */
             if (mReadBuffer.position() != 0) {
                 if (Log.Config.LOGV) Log.v("ddms",
-                    "Checking " + mReadBuffer.position() + " bytes");
+                        "Checking " + mReadBuffer.position() + " bytes");
             }
             return JdwpPacket.findPacket(mReadBuffer);
         } else {
@@ -829,7 +859,7 @@ public class Client {
     private void addRequestId(int id, ChunkHandler handler) {
         synchronized (mOutstandingReqs) {
             if (Log.Config.LOGV) Log.v("ddms",
-                "Adding req 0x" + Integer.toHexString(id) +" to set");
+                    "Adding req 0x" + Integer.toHexString(id) + " to set");
             mOutstandingReqs.put(id, handler);
         }
     }
@@ -840,7 +870,7 @@ public class Client {
     void removeRequestId(int id) {
         synchronized (mOutstandingReqs) {
             if (Log.Config.LOGV) Log.v("ddms",
-                "Removing req 0x" + Integer.toHexString(id) + " from set");
+                    "Removing req 0x" + Integer.toHexString(id) + " from set");
             mOutstandingReqs.remove(id);
         }
 
@@ -858,8 +888,8 @@ public class Client {
             ChunkHandler handler = mOutstandingReqs.get(id);
             if (handler != null) {
                 if (Log.Config.LOGV) Log.v("ddms",
-                    "Found 0x" + Integer.toHexString(id)
-                    + " in request set - " + handler);
+                        "Found 0x" + Integer.toHexString(id)
+                                + " in request set - " + handler);
                 return handler;
             }
         }
@@ -884,7 +914,7 @@ public class Client {
      * The MonitorThread calls this when it sees a DDM request or reply.
      * If we haven't seen a DDM packet before, we advance the state to
      * ST_READY and return "false".  Otherwise, just return true.
-     *
+     * <p>
      * The idea is to let the MonitorThread know when we first see a DDM
      * packet, so we can send a broadcast to the handlers when a client
      * connection is made.  This method is synchronized so that we only
@@ -903,11 +933,12 @@ public class Client {
     /**
      * Close the client socket channel.  If there is a debugger associated
      * with us, close that too.
-     *
+     * <p>
      * Closing a channel automatically unregisters it from the selector.
      * However, we have to iterate through the selector loop before it
      * actually lets them go and allows the file descriptors to close.
      * The caller is expected to manage that.
+     *
      * @param notify Whether or not to notify the listeners of a change.
      */
     void close(boolean notify) {
@@ -925,8 +956,7 @@ public class Client {
                 mDebugger.close();
                 mDebugger = null;
             }
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             Log.w("ddms", "failed to close " + this);
             // swallow it -- not much else to do
         }

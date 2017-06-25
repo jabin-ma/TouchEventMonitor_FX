@@ -31,7 +31,8 @@ final class HandleTest extends ChunkHandler {
     private static final HandleTest mInst = new HandleTest();
 
 
-    private HandleTest() {}
+    private HandleTest() {
+    }
 
     /**
      * Register for the packets we expect to get from the client.
@@ -44,13 +45,15 @@ final class HandleTest extends ChunkHandler {
      * Client is ready.
      */
     @Override
-    public void clientReady(Client client) throws IOException {}
+    public void clientReady(Client client) throws IOException {
+    }
 
     /**
      * Client went away.
      */
     @Override
-    public void clientDisconnected(Client client) {}
+    public void clientDisconnected(Client client) {
+    }
 
     /**
      * Chunk handler entry point.
@@ -70,8 +73,7 @@ final class HandleTest extends ChunkHandler {
     /*
      * Handle a thread creation message.
      */
-    private void handleTEST(Client client, ByteBuffer data)
-    {
+    private void handleTEST(Client client, ByteBuffer data) {
         /*
          * Can't call data.array() on a read-only ByteBuffer, so we make
          * a copy.

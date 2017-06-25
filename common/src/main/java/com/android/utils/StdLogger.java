@@ -27,7 +27,6 @@ import java.util.Formatter;
 /**
  * An implementation of {@link ILogger} that prints to {@link System#out} and {@link System#err}.
  * <p/>
- *
  */
 public class StdLogger implements ILogger {
 
@@ -48,6 +47,7 @@ public class StdLogger implements ILogger {
 
     /**
      * Creates the {@link StdLogger} with a given log {@link Level}.
+     *
      * @param level the log Level.
      */
     public StdLogger(@NonNull Level level) {
@@ -60,6 +60,7 @@ public class StdLogger implements ILogger {
 
     /**
      * Returns the logger's log {@link Level}.
+     *
      * @return the log level.
      */
     public Level getLevel() {
@@ -76,11 +77,11 @@ public class StdLogger implements ILogger {
      * <p/>
      * This is always displayed, independent of the logging {@link Level}.
      *
-     * @param t is an optional {@link Throwable} or {@link Exception}. If non-null, it's
-     *          message will be printed out.
+     * @param t           is an optional {@link Throwable} or {@link Exception}. If non-null, it's
+     *                    message will be printed out.
      * @param errorFormat is an optional error format. If non-null, it will be printed
-     *          using a {@link Formatter} with the provided arguments.
-     * @param args provides the arguments for errorFormat.
+     *                    using a {@link Formatter} with the provided arguments.
+     * @param args        provides the arguments for errorFormat.
      */
     @Override
     public void error(@Nullable Throwable t, @Nullable String errorFormat, Object... args) {
@@ -105,7 +106,7 @@ public class StdLogger implements ILogger {
      * This is displayed only if the logging {@link Level} is {@link Level#WARNING} or higher.
      *
      * @param warningFormat is a string format to be used with a {@link Formatter}. Cannot be null.
-     * @param args provides the arguments for warningFormat.
+     * @param args          provides the arguments for warningFormat.
      */
     @Override
     public void warning(@NonNull String warningFormat, Object... args) {
@@ -126,7 +127,7 @@ public class StdLogger implements ILogger {
      * This is displayed only if the logging {@link Level} is {@link Level#INFO} or higher.
      *
      * @param msgFormat is a string format to be used with a {@link Formatter}. Cannot be null.
-     * @param args provides the arguments for msgFormat.
+     * @param args      provides the arguments for msgFormat.
      */
     @Override
     public void info(@NonNull String msgFormat, Object... args) {
@@ -147,7 +148,7 @@ public class StdLogger implements ILogger {
      * This is displayed only if the logging {@link Level} is {@link Level#VERBOSE} or higher.
      *
      * @param msgFormat is a string format to be used with a {@link Formatter}. Cannot be null.
-     * @param args provides the arguments for msgFormat.
+     * @param args      provides the arguments for msgFormat.
      */
     @Override
     public void verbose(@NonNull String msgFormat, Object... args) {

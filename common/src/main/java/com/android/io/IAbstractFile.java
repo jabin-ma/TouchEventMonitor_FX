@@ -29,7 +29,7 @@ public interface IAbstractFile extends IAbstractResource {
 
     /**
      * Returns an {@link InputStream} object on the file content.
-     *
+     * <p>
      * The stream must be closed by the caller.
      *
      * @throws StreamException
@@ -38,6 +38,7 @@ public interface IAbstractFile extends IAbstractResource {
 
     /**
      * Sets the content of the file.
+     *
      * @param source the content
      * @throws StreamException
      */
@@ -45,6 +46,7 @@ public interface IAbstractFile extends IAbstractResource {
 
     /**
      * Returns an {@link OutputStream} to write into the file.
+     *
      * @throws StreamException
      */
     OutputStream getOutputStream() throws StreamException;

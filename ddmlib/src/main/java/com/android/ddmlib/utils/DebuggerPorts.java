@@ -39,7 +39,7 @@ public class DebuggerPorts {
 
                 // if there's nothing left, add the next port to the list
                 if (mDebuggerPorts.isEmpty()) {
-                    mDebuggerPorts.add(port+1);
+                    mDebuggerPorts.add(port + 1);
                 }
 
                 return port;

@@ -30,56 +30,92 @@ import java.util.regex.Pattern;
  */
 public final class FileListingService {
 
-    /** Pattern to find filenames that match "*.apk" */
+    /**
+     * Pattern to find filenames that match "*.apk"
+     */
     private static final Pattern sApkPattern =
-        Pattern.compile(".*\\.apk", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+            Pattern.compile(".*\\.apk", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
     private static final String PM_FULL_LISTING = "pm list packages -f"; //$NON-NLS-1$
 
-    /** Pattern to parse the output of the 'pm -lf' command.<br>
+    /**
+     * Pattern to parse the output of the 'pm -lf' command.<br>
      * The output format looks like:<br>
-     * /data/app/myapp.apk=com.mypackage.myapp */
+     * /data/app/myapp.apk=com.mypackage.myapp
+     */
     private static final Pattern sPmPattern = Pattern.compile("^package:(.+?)=(.+)$"); //$NON-NLS-1$
 
-    /** Top level data folder. */
+    /**
+     * Top level data folder.
+     */
     public static final String DIRECTORY_DATA = "data"; //$NON-NLS-1$
-    /** Top level sdcard folder. */
+    /**
+     * Top level sdcard folder.
+     */
     public static final String DIRECTORY_SDCARD = "sdcard"; //$NON-NLS-1$
-    /** Top level mount folder. */
+    /**
+     * Top level mount folder.
+     */
     public static final String DIRECTORY_MNT = "mnt"; //$NON-NLS-1$
-    /** Top level system folder. */
+    /**
+     * Top level system folder.
+     */
     public static final String DIRECTORY_SYSTEM = "system"; //$NON-NLS-1$
-    /** Top level temp folder. */
+    /**
+     * Top level temp folder.
+     */
     public static final String DIRECTORY_TEMP = "tmp"; //$NON-NLS-1$
-    /** Application folder. */
+    /**
+     * Application folder.
+     */
     public static final String DIRECTORY_APP = "app"; //$NON-NLS-1$
 
     public static final long REFRESH_RATE = 5000L;
     /**
      * Refresh test has to be slightly lower for precision issue.
      */
-    static final long REFRESH_TEST = (long)(REFRESH_RATE * .8);
+    static final long REFRESH_TEST = (long) (REFRESH_RATE * .8);
 
-    /** Entry type: File */
+    /**
+     * Entry type: File
+     */
     public static final int TYPE_FILE = 0;
-    /** Entry type: Directory */
+    /**
+     * Entry type: Directory
+     */
     public static final int TYPE_DIRECTORY = 1;
-    /** Entry type: Directory Link */
+    /**
+     * Entry type: Directory Link
+     */
     public static final int TYPE_DIRECTORY_LINK = 2;
-    /** Entry type: Block */
+    /**
+     * Entry type: Block
+     */
     public static final int TYPE_BLOCK = 3;
-    /** Entry type: Character */
+    /**
+     * Entry type: Character
+     */
     public static final int TYPE_CHARACTER = 4;
-    /** Entry type: Link */
+    /**
+     * Entry type: Link
+     */
     public static final int TYPE_LINK = 5;
-    /** Entry type: Socket */
+    /**
+     * Entry type: Socket
+     */
     public static final int TYPE_SOCKET = 6;
-    /** Entry type: FIFO */
+    /**
+     * Entry type: FIFO
+     */
     public static final int TYPE_FIFO = 7;
-    /** Entry type: Other */
+    /**
+     * Entry type: Other
+     */
     public static final int TYPE_OTHER = 8;
 
-    /** Device side file separator. */
+    /**
+     * Device side file separator.
+     */
     public static final String FILE_SEPARATOR = "/"; //$NON-NLS-1$
 
     private static final String FILE_ROOT = "/"; //$NON-NLS-1$
@@ -90,10 +126,10 @@ public final class FileListingService {
      */
     private static final Pattern LS_L_PATTERN = Pattern.compile(
             "^([bcdlsp-][-r][-w][-xsS][-r][-w][-xsS][-r][-w][-xstST])\\s+(\\S+)\\s+(\\S+)\\s+" +
-            "([\\d\\s,]*)\\s+(\\d{4}-\\d\\d-\\d\\d)\\s+(\\d\\d:\\d\\d)\\s+(.*)$"); //$NON-NLS-1$
+                    "([\\d\\s,]*)\\s+(\\d{4}-\\d\\d-\\d\\d)\\s+(\\d\\d:\\d\\d)\\s+(.*)$"); //$NON-NLS-1$
 
     private static final Pattern LS_LD_PATTERN = Pattern.compile(
-                    "d[rwx-]{9}\\s+\\S+\\s+\\S+\\s+[0-9-]{10}\\s+\\d{2}:\\d{2}$"); //$NON-NLS-1$
+            "d[rwx-]{9}\\s+\\S+\\s+\\S+\\s+[0-9-]{10}\\s+\\d{2}:\\d{2}$"); //$NON-NLS-1$
 
 
     private Device mDevice;
@@ -105,9 +141,11 @@ public final class FileListingService {
      * Represents an entry in a directory. This can be a file or a directory.
      */
     public static final class FileEntry {
-        /** Pattern to escape filenames for shell command consumption.
-         *  This pattern identifies any special characters that need to be escaped with a
-         *  backslash. */
+        /**
+         * Pattern to escape filenames for shell command consumption.
+         * This pattern identifies any special characters that need to be escaped with a
+         * backslash.
+         */
         private static final Pattern sEscapePattern = Pattern.compile(
                 "([\\\\()*+?\"'&#/\\s])"); //$NON-NLS-1$
 
@@ -149,10 +187,11 @@ public final class FileListingService {
 
         /**
          * Creates a new file entry.
+         *
          * @param parent parent entry or null if entry is root
-         * @param name name of the entry.
-         * @param type entry type. Can be one of the following: {@link FileListingService#TYPE_FILE},
-         * {@link FileListingService#TYPE_DIRECTORY}, {@link FileListingService#TYPE_OTHER}.
+         * @param name   name of the entry.
+         * @param type   entry type. Can be one of the following: {@link FileListingService#TYPE_FILE},
+         *               {@link FileListingService#TYPE_DIRECTORY}, {@link FileListingService#TYPE_OTHER}.
          */
         private FileEntry(FileEntry parent, String name, int type, boolean isRoot) {
             this.parent = parent;
@@ -231,6 +270,7 @@ public final class FileListingService {
 
         /**
          * Return the full path of the entry.
+         *
          * @return a path string using {@link FileListingService#FILE_SEPARATOR} as separator.
          */
         public String getFullPath() {
@@ -246,6 +286,7 @@ public final class FileListingService {
         /**
          * Return the fully escaped path of the entry. This path is safe to use in a
          * shell command line.
+         *
          * @return a path string using {@link FileListingService#FILE_SEPARATOR} as separator
          */
         public String getFullEscapedPath() {
@@ -304,6 +345,7 @@ public final class FileListingService {
         /**
          * Returns the child {@link FileEntry} matching the name.
          * This uses the cached children list.
+         *
          * @param name the name of the child to return.
          * @return the FileEntry matching the name or null.
          */
@@ -358,9 +400,10 @@ public final class FileListingService {
 
         /**
          * Recursively fills the pathBuilder with the full path
+         *
          * @param pathBuilder a StringBuilder used to create the path.
-         * @param escapePath Whether the path need to be escaped for consumption by
-         * a shell command line.
+         * @param escapePath  Whether the path need to be escaped for consumption by
+         *                    a shell command line.
          */
         protected void fillPathBuilder(StringBuilder pathBuilder, boolean escapePath) {
             if (isRoot) {
@@ -376,6 +419,7 @@ public final class FileListingService {
 
         /**
          * Recursively fills the segment list with the full path.
+         *
          * @param list The list of segments to fill.
          */
         protected void fillPathSegments(ArrayList<String> list) {
@@ -400,12 +444,13 @@ public final class FileListingService {
             String[] segments = getPathSegments();
             if (type == TYPE_FILE && segments.length == 3 && isAppFileName()) {
                 isAppPackage = DIRECTORY_APP.equals(segments[1]) &&
-                    (DIRECTORY_SYSTEM.equals(segments[0]) || DIRECTORY_DATA.equals(segments[0]));
+                        (DIRECTORY_SYSTEM.equals(segments[0]) || DIRECTORY_DATA.equals(segments[0]));
             }
         }
 
         /**
          * Returns an escaped version of the entry name.
+         *
          * @param entryName
          */
         public static String escape(String entryName) {
@@ -422,16 +467,17 @@ public final class FileListingService {
 
         /**
          * Create an ls receiver/parser.
+         *
          * @param currentChildren The list of current children. To prevent
-         *      collapse during update, reusing the same FileEntry objects for
-         *      files that were already there is paramount.
-         * @param entryList the list of new children to be filled by the
-         *      receiver.
-         * @param linkList the list of link path to compute post ls, to figure
-         *      out if the link pointed to a file or to a directory.
+         *                        collapse during update, reusing the same FileEntry objects for
+         *                        files that were already there is paramount.
+         * @param entryList       the list of new children to be filled by the
+         *                        receiver.
+         * @param linkList        the list of link path to compute post ls, to figure
+         *                        out if the link pointed to a file or to a directory.
          */
         public LsReceiver(FileEntry parentEntry, ArrayList<FileEntry> entryList,
-                ArrayList<String> linkList) {
+                          ArrayList<String> linkList) {
             mParentEntry = parentEntry;
             mCurrentChildren = parentEntry.getCachedChildren();
             mEntryList = entryList;
@@ -467,25 +513,25 @@ public final class FileListingService {
                 // and the type
                 int objectType = TYPE_OTHER;
                 switch (permissions.charAt(0)) {
-                    case '-' :
+                    case '-':
                         objectType = TYPE_FILE;
                         break;
-                    case 'b' :
+                    case 'b':
                         objectType = TYPE_BLOCK;
                         break;
-                    case 'c' :
+                    case 'c':
                         objectType = TYPE_CHARACTER;
                         break;
-                    case 'd' :
+                    case 'd':
                         objectType = TYPE_DIRECTORY;
                         break;
-                    case 'l' :
+                    case 'l':
                         objectType = TYPE_LINK;
                         break;
-                    case 's' :
+                    case 's':
                         objectType = TYPE_SOCKET;
                         break;
-                    case 'p' :
+                    case 'p':
                         objectType = TYPE_FIFO;
                         break;
                 }
@@ -545,12 +591,13 @@ public final class FileListingService {
 
         /**
          * Queries for an already existing Entry per name
+         *
          * @param name the name of the entry
          * @return the existing FileEntry or null if no entry with a matching
          * name exists.
          */
         private FileEntry getExistingEntry(String name) {
-            for (int i = 0 ; i < mCurrentChildren.length; i++) {
+            for (int i = 0; i < mCurrentChildren.length; i++) {
                 FileEntry e = mCurrentChildren[i];
 
                 // since we're going to "erase" the one we use, we need to
@@ -613,7 +660,7 @@ public final class FileListingService {
                 final String command = String.format("ls -l -d %s%s", entry.getFullEscapedPath(),
                         FILE_SEPARATOR);
 
-                device.executeShellCommand(receiver,command);
+                device.executeShellCommand(receiver, command);
 
                 if (nLines[0] > 0) {
                     // We saw lines matching the directory pattern, so it's a directory!
@@ -637,6 +684,7 @@ public final class FileListingService {
 
     /**
      * Creates a File Listing Service for a specified {@link Device}.
+     *
      * @param device The Device the service is connected to.
      */
     FileListingService(Device device) {
@@ -645,6 +693,7 @@ public final class FileListingService {
 
     /**
      * Returns the root element.
+     *
      * @return the {@link FileEntry} object representing the root element or
      * <code>null</code> if the device is invalid.
      */
@@ -679,15 +728,14 @@ public final class FileListingService {
      * If the cache is valid and <code>useCache == true</code>, the method will always simply
      * return the value of the cache, whether a {@link IListingReceiver} has been provided or not.
      *
-     * @param entry The parent entry.
+     * @param entry    The parent entry.
      * @param useCache A flag to use the cache or to force a new ls command.
      * @param receiver A receiver for asynchronous calls.
      * @return The list of children or <code>null</code> for asynchronous calls.
-     *
      * @see FileEntry#getCachedChildren()
      */
     public FileEntry[] getChildren(final FileEntry entry, boolean useCache,
-            final IListingReceiver receiver) {
+                                   final IListingReceiver receiver) {
         // first thing we do is check the cache, and if we already have a recent
         // enough children list, we just return that.
         if (useCache && !entry.needFetch()) {
@@ -723,7 +771,7 @@ public final class FileListingService {
                     // call pm.
                     String command = PM_FULL_LISTING;
                     try {
-                        mDevice.executeShellCommand( new MultiLineReceiver() {
+                        mDevice.executeShellCommand(new MultiLineReceiver() {
                             @Override
                             public void processNewLines(String[] lines) {
                                 for (String line : lines) {
@@ -741,11 +789,12 @@ public final class FileListingService {
                                     }
                                 }
                             }
+
                             @Override
                             public boolean isCancelled() {
                                 return false;
                             }
-                        },command);
+                        }, command);
                     } catch (Exception e) {
                         // adb failed somehow, we do nothing.
                     }
@@ -793,11 +842,11 @@ public final class FileListingService {
      *
      * @param entry The parent entry.
      * @return The list of children
-     * @throws TimeoutException in case of timeout on the connection when sending the command.
-     * @throws AdbCommandRejectedException if adb rejects the command.
+     * @throws TimeoutException                  in case of timeout on the connection when sending the command.
+     * @throws AdbCommandRejectedException       if adb rejects the command.
      * @throws ShellCommandUnresponsiveException in case the shell command doesn't send any output
-     *            for a period longer than <var>maxTimeToOutputResponse</var>.
-     * @throws IOException in case of I/O error on the connection.
+     *                                           for a period longer than <var>maxTimeToOutputResponse</var>.
+     * @throws IOException                       in case of I/O error on the connection.
      */
     public FileEntry[] getChildrenSync(final FileEntry entry) throws TimeoutException,
             AdbCommandRejectedException, ShellCommandUnresponsiveException, IOException {
@@ -835,7 +884,7 @@ public final class FileListingService {
             LsReceiver receiver = new LsReceiver(entry, entryList, linkList);
 
             // call ls.
-            mDevice.executeShellCommand(receiver,command);
+            mDevice.executeShellCommand(receiver, command);
 
             // finish the process of the receiver to handle links
             receiver.finishLinks(mDevice, entryList);

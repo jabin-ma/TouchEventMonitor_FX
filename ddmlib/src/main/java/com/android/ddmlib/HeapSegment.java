@@ -36,28 +36,44 @@ public final class HeapSegment implements Comparable<HeapSegment> {
          * the HPSG data.
          */
 
-        /** The element describes a free block. */
+        /**
+         * The element describes a free block.
+         */
         public static final int SOLIDITY_FREE = 0;
 
-        /** The element is strongly-reachable. */
+        /**
+         * The element is strongly-reachable.
+         */
         public static final int SOLIDITY_HARD = 1;
 
-        /** The element is softly-reachable. */
+        /**
+         * The element is softly-reachable.
+         */
         public static final int SOLIDITY_SOFT = 2;
 
-        /** The element is weakly-reachable. */
+        /**
+         * The element is weakly-reachable.
+         */
         public static final int SOLIDITY_WEAK = 3;
 
-        /** The element is phantom-reachable. */
+        /**
+         * The element is phantom-reachable.
+         */
         public static final int SOLIDITY_PHANTOM = 4;
 
-        /** The element is pending finalization. */
+        /**
+         * The element is pending finalization.
+         */
         public static final int SOLIDITY_FINALIZABLE = 5;
 
-        /** The element is not reachable, and is about to be swept/freed. */
+        /**
+         * The element is not reachable, and is about to be swept/freed.
+         */
         public static final int SOLIDITY_SWEEP = 6;
 
-        /** The reachability of the object is unknown. */
+        /**
+         * The reachability of the object is unknown.
+         */
         public static final int SOLIDITY_INVALID = -1;
 
 
@@ -66,31 +82,49 @@ public final class HeapSegment implements Comparable<HeapSegment> {
          * the HPSG data.
          */
 
-        /** The element describes a data object. */
+        /**
+         * The element describes a data object.
+         */
         public static final int KIND_OBJECT = 0;
 
-        /** The element describes a class object. */
+        /**
+         * The element describes a class object.
+         */
         public static final int KIND_CLASS_OBJECT = 1;
 
-        /** The element describes an array of 1-byte elements. */
+        /**
+         * The element describes an array of 1-byte elements.
+         */
         public static final int KIND_ARRAY_1 = 2;
 
-        /** The element describes an array of 2-byte elements. */
+        /**
+         * The element describes an array of 2-byte elements.
+         */
         public static final int KIND_ARRAY_2 = 3;
 
-        /** The element describes an array of 4-byte elements. */
+        /**
+         * The element describes an array of 4-byte elements.
+         */
         public static final int KIND_ARRAY_4 = 4;
 
-        /** The element describes an array of 8-byte elements. */
+        /**
+         * The element describes an array of 8-byte elements.
+         */
         public static final int KIND_ARRAY_8 = 5;
 
-        /** The element describes an unknown type of object. */
+        /**
+         * The element describes an unknown type of object.
+         */
         public static final int KIND_UNKNOWN = 6;
 
-        /** The element describes a native object. */
+        /**
+         * The element describes a native object.
+         */
         public static final int KIND_NATIVE = 7;
 
-        /** The object kind is unknown or unspecified. */
+        /**
+         * The object kind is unknown or unspecified.
+         */
         public static final int KIND_INVALID = -1;
 
 
@@ -274,7 +308,7 @@ public final class HeapSegment implements Comparable<HeapSegment> {
      * appended to another segment.
      *
      * @return true if this segment has not been appended to
-     *         another segment.
+     * another segment.
      */
     public boolean isValid() {
         return mStartAddress != INVALID_START_ADDRESS;
@@ -285,7 +319,7 @@ public final class HeapSegment implements Comparable<HeapSegment> {
      *
      * @param other The HeapSegment to check.
      * @return true if <code>other</code> comes immediately after this
-     *         segment.
+     * segment.
      */
     public boolean canAppend(HeapSegment other) {
         return isValid() && other.isValid() && mHeapId == other.mHeapId &&
@@ -301,7 +335,7 @@ public final class HeapSegment implements Comparable<HeapSegment> {
      *              If appended, <code>other</code> will be invalid
      *              when this method returns.
      * @return true if <code>other</code> was successfully appended to
-     *         this segment.
+     * this segment.
      */
     public boolean append(HeapSegment other) {
         if (canAppend(other)) {

@@ -15,49 +15,28 @@
  */
 package com.android.utils;
 
-import static com.android.SdkConstants.AMP_ENTITY;
-import static com.android.SdkConstants.ANDROID_NS_NAME;
-import static com.android.SdkConstants.ANDROID_URI;
-import static com.android.SdkConstants.APOS_ENTITY;
-import static com.android.SdkConstants.APP_PREFIX;
-import static com.android.SdkConstants.GT_ENTITY;
-import static com.android.SdkConstants.LT_ENTITY;
-import static com.android.SdkConstants.QUOT_ENTITY;
-import static com.android.SdkConstants.XMLNS;
-import static com.android.SdkConstants.XMLNS_PREFIX;
-import static com.android.SdkConstants.XMLNS_URI;
-import static com.google.common.base.Charsets.UTF_16BE;
-import static com.google.common.base.Charsets.UTF_16LE;
-import static com.google.common.base.Charsets.UTF_8;
-
 import com.android.SdkConstants;
 import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
 import com.google.common.io.Files;
-
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.HashSet;
-import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.util.HashSet;
+import java.util.Locale;
 
-/** XML Utilities */
+import static com.android.SdkConstants.*;
+import static com.google.common.base.Charsets.*;
+import static com.google.common.base.Charsets.UTF_8;
+
+/**
+ * XML Utilities
+ */
 public class XmlUtils {
     public static final String XML_COMMENT_BEGIN = "<!--"; //$NON-NLS-1$
     public static final String XML_COMMENT_END = "-->";    //$NON-NLS-1$
@@ -76,11 +55,11 @@ public class XmlUtils {
      * will be created. If this is not desirable, call
      * {@link #lookupNamespacePrefix(Node, String, boolean)} instead.
      *
-     * @param node The current node. Must not be null.
+     * @param node  The current node. Must not be null.
      * @param nsUri The namespace URI of which the prefix is to be found,
      *              e.g. {@link SdkConstants#ANDROID_URI}
      * @return The first prefix declared or the default "android" prefix
-     *              (or "app" for non-Android URIs)
+     * (or "app" for non-Android URIs)
      */
     @NonNull
     public static String lookupNamespacePrefix(@NonNull Node node, @NonNull String nsUri) {
@@ -93,17 +72,17 @@ public class XmlUtils {
      * such declaration is found, returns the default "android" prefix for the
      * Android URI, and "app" for other URI's.
      *
-     * @param node The current node. Must not be null.
-     * @param nsUri The namespace URI of which the prefix is to be found, e.g.
-     *            {@link SdkConstants#ANDROID_URI}
+     * @param node   The current node. Must not be null.
+     * @param nsUri  The namespace URI of which the prefix is to be found, e.g.
+     *               {@link SdkConstants#ANDROID_URI}
      * @param create whether the namespace declaration should be created, if
-     *            necessary
+     *               necessary
      * @return The first prefix declared or the default "android" prefix (or
-     *         "app" for non-Android URIs)
+     * "app" for non-Android URIs)
      */
     @NonNull
     public static String lookupNamespacePrefix(@NonNull Node node, @NonNull String nsUri,
-            boolean create) {
+                                               boolean create) {
         String defaultPrefix = ANDROID_URI.equals(nsUri) ? ANDROID_NS_NAME : APP_PREFIX;
         return lookupNamespacePrefix(node, nsUri, defaultPrefix, create);
     }
@@ -112,16 +91,16 @@ public class XmlUtils {
      * Returns the namespace prefix matching the requested namespace URI. If no
      * such declaration is found, returns the default "android" prefix.
      *
-     * @param node The current node. Must not be null.
-     * @param nsUri The namespace URI of which the prefix is to be found, e.g.
-     *            {@link SdkConstants#ANDROID_URI}
+     * @param node          The current node. Must not be null.
+     * @param nsUri         The namespace URI of which the prefix is to be found, e.g.
+     *                      {@link SdkConstants#ANDROID_URI}
      * @param defaultPrefix The default prefix (root) to use if the namespace is
-     *            not found. If null, do not create a new namespace if this URI
-     *            is not defined for the document.
-     * @param create whether the namespace declaration should be created, if
-     *            necessary
+     *                      not found. If null, do not create a new namespace if this URI
+     *                      is not defined for the document.
+     * @param create        whether the namespace declaration should be created, if
+     *                      necessary
      * @return The first prefix declared or the provided prefix (possibly with a
-     *            number appended to avoid conflicts with existing prefixes.
+     * number appended to avoid conflicts with existing prefixes.
      */
     public static String lookupNamespacePrefix(
             @Nullable Node node, @Nullable String nsUri, @Nullable String defaultPrefix,
@@ -157,7 +136,7 @@ public class XmlUtils {
         // If that failed, try to look it up manually.
         // This also gathers prefixed in use in the case we want to generate a new one below.
         for (; node != null && node.getNodeType() == Node.ELEMENT_NODE;
-               node = node.getParentNode()) {
+             node = node.getParentNode()) {
             NamedNodeMap attrs = node.getAttributes();
             for (int n = attrs.getLength() - 1; n >= 0; --n) {
                 Node attr = attrs.item(n);
@@ -278,11 +257,11 @@ public class XmlUtils {
      * Appends text to the given {@link StringBuilder} and escapes it as required for a
      * DOM attribute node.
      *
-     * @param sb the string builder
+     * @param sb        the string builder
      * @param attrValue the attribute value to be appended and escaped
      */
     public static void appendXmlAttributeValue(@NonNull StringBuilder sb,
-            @NonNull String attrValue) {
+                                               @NonNull String attrValue) {
         int n = attrValue.length();
         // &, ", ' and < are illegal in attributes; see http://www.w3.org/TR/REC-xml/#NT-AttValue
         // (' legal in a " string and " is legal in a ' string but here we'll stay on the safe
@@ -307,7 +286,7 @@ public class XmlUtils {
      * Appends text to the given {@link StringBuilder} and escapes it as required for a
      * DOM text node.
      *
-     * @param sb the string builder
+     * @param sb        the string builder
      * @param textValue the text value to be appended and escaped
      */
     public static void appendXmlTextValue(@NonNull StringBuilder sb, @NonNull String textValue) {
@@ -355,31 +334,31 @@ public class XmlUtils {
         }
 
         switch (bytes[0]) {
-            case (byte)0xEF: {
+            case (byte) 0xEF: {
                 if (length >= 3
-                        && bytes[1] == (byte)0xBB
-                        && bytes[2] == (byte)0xBF) {
+                        && bytes[1] == (byte) 0xBB
+                        && bytes[2] == (byte) 0xBF) {
                     // UTF-8 BOM: EF BB BF: Skip it
                     return new InputStreamReader(new ByteArrayInputStream(bytes, 3, length - 3),
                             UTF_8);
                 }
                 break;
             }
-            case (byte)0xFE: {
+            case (byte) 0xFE: {
                 if (length >= 2
-                        && bytes[1] == (byte)0xFF) {
+                        && bytes[1] == (byte) 0xFF) {
                     // UTF-16 Big Endian BOM: FE FF
                     return new InputStreamReader(new ByteArrayInputStream(bytes, 2, length - 2),
                             UTF_16BE);
                 }
                 break;
             }
-            case (byte)0xFF: {
+            case (byte) 0xFF: {
                 if (length >= 2
-                        && bytes[1] == (byte)0xFE) {
+                        && bytes[1] == (byte) 0xFE) {
                     if (length >= 4
-                            && bytes[2] == (byte)0x00
-                            && bytes[3] == (byte)0x00) {
+                            && bytes[2] == (byte) 0x00
+                            && bytes[3] == (byte) 0x00) {
                         // UTF-32 Little Endian BOM: FF FE 00 00
                         return new InputStreamReader(new ByteArrayInputStream(bytes, 4,
                                 length - 4), "UTF-32LE");
@@ -391,12 +370,12 @@ public class XmlUtils {
                 }
                 break;
             }
-            case (byte)0x00: {
+            case (byte) 0x00: {
                 if (length >= 4
-                        && bytes[0] == (byte)0x00
-                        && bytes[1] == (byte)0x00
-                        && bytes[2] == (byte)0xFE
-                        && bytes[3] == (byte)0xFF) {
+                        && bytes[0] == (byte) 0x00
+                        && bytes[1] == (byte) 0x00
+                        && bytes[2] == (byte) 0xFE
+                        && bytes[3] == (byte) 0xFF) {
                     // UTF-32 Big Endian BOM: 00 00 FE FF
                     return new InputStreamReader(new ByteArrayInputStream(bytes, 4, length - 4),
                             "UTF-32BE");
@@ -453,7 +432,9 @@ public class XmlUtils {
         }
     }
 
-    /** Strips out a leading UTF byte order mark, if present */
+    /**
+     * Strips out a leading UTF byte order mark, if present
+     */
     @NonNull
     public static String stripBom(@NonNull String xml) {
         if (!xml.isEmpty() && xml.charAt(0) == '\uFEFF') {
@@ -493,7 +474,9 @@ public class XmlUtils {
         return sb.toString();
     }
 
-    /** Dump node to string without indentation adjustments */
+    /**
+     * Dump node to string without indentation adjustments
+     */
     private static void append(
             @NonNull StringBuilder sb,
             @NonNull Node node,

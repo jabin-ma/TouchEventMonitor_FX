@@ -22,15 +22,9 @@ import com.android.ddmlib.Log;
 import com.android.ddmlib.Log.LogLevel;
 import com.android.ddmlib.testrunner.TestResult.TestStatus;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-
 import org.kxml2.io.KXmlSerializer;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -43,6 +37,7 @@ import java.util.TimeZone;
  * <p/>
  * Creates a separate XML file per test run.
  * <p/>
+ *
  * @see https://svn.jenkins-ci.org/trunk/hudson/dtkit/dtkit-format/dtkit-junit-model/src/main/resources/com/thalesgroup/dtkit/junit/model/xsd/junit-4.xsd
  */
 public class XmlTestRunListener implements ITestRunListener {
@@ -72,7 +67,9 @@ public class XmlTestRunListener implements ITestRunListener {
     private static final String TIMESTAMP = "timestamp";
     private static final String HOSTNAME = "hostname";
 
-    /** the XML namespace */
+    /**
+     * the XML namespace
+     */
     private static final String ns = null;
 
     private String mHostName = "localhost";
@@ -96,6 +93,7 @@ public class XmlTestRunListener implements ITestRunListener {
 
     /**
      * Returns the {@link TestRunResult}
+     *
      * @return the test run results.
      */
     public TestRunResult getRunResult() {
@@ -110,7 +108,7 @@ public class XmlTestRunListener implements ITestRunListener {
 
     @Override
     public void testStarted(TestIdentifier test) {
-       mRunResult.testStarted(test);
+        mRunResult.testStarted(test);
     }
 
     @Override
@@ -166,7 +164,7 @@ public class XmlTestRunListener implements ITestRunListener {
             // TODO: insert build info
             printTestResults(serializer, timestamp, elapsedTime);
             serializer.endDocument();
-            String msg = String.format("XML test result file generated at %s. %s" ,
+            String msg = String.format("XML test result file generated at %s. %s",
                     getAbsoluteReportPath(), mRunResult.getTextSummary());
             Log.logAndDisplay(LogLevel.INFO, LOG_TAG, msg);
         } catch (IOException e) {
@@ -183,7 +181,7 @@ public class XmlTestRunListener implements ITestRunListener {
     }
 
     private String getAbsoluteReportPath() {
-        return mReportPath ;
+        return mReportPath;
     }
 
     /**
@@ -201,6 +199,7 @@ public class XmlTestRunListener implements ITestRunListener {
 
     /**
      * Creates a {@link File} where the report will be created.
+     *
      * @param reportDir the root directory of the report.
      * @return a file
      * @throws IOException
@@ -247,7 +246,7 @@ public class XmlTestRunListener implements ITestRunListener {
         serializer.attribute(ns, HOSTNAME, mHostName);
 
         serializer.startTag(ns, PROPERTIES);
-        for (Map.Entry<String,String> entry: getPropertiesAttributes().entrySet()) {
+        for (Map.Entry<String, String> entry : getPropertiesAttributes().entrySet()) {
             serializer.startTag(ns, PROPERTY);
             serializer.attribute(ns, "name", entry.getKey());
             serializer.attribute(ns, "value", entry.getValue());
@@ -268,7 +267,7 @@ public class XmlTestRunListener implements ITestRunListener {
      */
     @NonNull
     protected Map<String, String> getPropertiesAttributes() {
-        return  ImmutableMap.of();
+        return ImmutableMap.of();
     }
 
     protected String getTestName(TestIdentifier testId) {
@@ -282,7 +281,7 @@ public class XmlTestRunListener implements ITestRunListener {
         serializer.attribute(ns, ATTR_NAME, getTestName(testId));
         serializer.attribute(ns, ATTR_CLASSNAME, testId.getClassName());
         long elapsedTimeMs = testResult.getEndTime() - testResult.getStartTime();
-        serializer.attribute(ns, ATTR_TIME, Double.toString((double)elapsedTimeMs / 1000.f));
+        serializer.attribute(ns, ATTR_TIME, Double.toString((double) elapsedTimeMs / 1000.f));
 
         switch (testResult.getStatus()) {
             case FAILURE:

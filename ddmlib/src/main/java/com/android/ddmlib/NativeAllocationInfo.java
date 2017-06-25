@@ -37,16 +37,20 @@ public class NativeAllocationInfo {
     public static final String ALLOCATIONS_KW = "Allocations:";
 
     /* constants for flag bits */
-    private static final int FLAG_ZYGOTE_CHILD  = (1<<31);
-    private static final int FLAG_MASK          = (FLAG_ZYGOTE_CHILD);
+    private static final int FLAG_ZYGOTE_CHILD = (1 << 31);
+    private static final int FLAG_MASK = (FLAG_ZYGOTE_CHILD);
 
-    /** Libraries whose methods will be assumed to be not part of the user code. */
+    /**
+     * Libraries whose methods will be assumed to be not part of the user code.
+     */
     private static final List<String> FILTERED_LIBRARIES = Arrays.asList(
             "libc.so",
             "libc_malloc_debug_leak.so"
     );
 
-    /** Method names that should be assumed to be not part of the user code. */
+    /**
+     * Method names that should be assumed to be not part of the user code.
+     */
     private static final List<Pattern> FILTERED_METHOD_NAME_PATTERNS = Arrays.asList(
             Pattern.compile("malloc", Pattern.CASE_INSENSITIVE),
             Pattern.compile("calloc", Pattern.CASE_INSENSITIVE),
@@ -68,7 +72,8 @@ public class NativeAllocationInfo {
 
     /**
      * Constructs a new {@link NativeAllocationInfo}.
-     * @param size The size of the allocations.
+     *
+     * @param size        The size of the allocations.
      * @param allocations the allocation count
      */
     public NativeAllocationInfo(int size, int allocations) {
@@ -79,6 +84,7 @@ public class NativeAllocationInfo {
 
     /**
      * Adds a stack call address for this allocation.
+     *
      * @param address The address to add.
      */
     public void addStackCallAddress(long address) {
@@ -117,6 +123,7 @@ public class NativeAllocationInfo {
 
     /**
      * Returns the stack call of this allocation as raw addresses.
+     *
      * @return the list of addresses where the allocation happened.
      */
     public List<Long> getStackCallAddresses() {
@@ -128,6 +135,7 @@ public class NativeAllocationInfo {
      * <p/>
      * If <code>resolvedStackCall</code> is non <code>null</code> then
      * {@link #isStackCallResolved()} will return <code>true</code> after this call.
+     *
      * @param resolvedStackCall The list of {@link NativeStackCallInfo}.
      */
     public synchronized void setResolvedStackCall(List<NativeStackCallInfo> resolvedStackCall) {
@@ -142,6 +150,7 @@ public class NativeAllocationInfo {
 
     /**
      * Returns the resolved stack call.
+     *
      * @return An array of {@link NativeStackCallInfo} or <code>null</code> if the stack call
      * was not resolved.
      * @see #setResolvedStackCall(List)
@@ -157,6 +166,7 @@ public class NativeAllocationInfo {
 
     /**
      * Indicates whether some other object is "equal to" this one.
+     *
      * @param obj the reference object with which to compare.
      * @return <code>true</code> if this object is equal to the obj argument;
      * <code>false</code> otherwise.
@@ -167,7 +177,7 @@ public class NativeAllocationInfo {
         if (obj == this)
             return true;
         if (obj instanceof NativeAllocationInfo) {
-            NativeAllocationInfo mi = (NativeAllocationInfo)obj;
+            NativeAllocationInfo mi = (NativeAllocationInfo) obj;
             // compare of size and alloc
             if (mSize != mi.mSize || mAllocations != mi.mAllocations) {
                 return false;
@@ -185,7 +195,7 @@ public class NativeAllocationInfo {
         }
 
         int count = mStackCallAddresses.size();
-        for (int i = 0 ; i < count ; i++) {
+        for (int i = 0; i < count; i++) {
             long a = mStackCallAddresses.get(i);
             long b = mi.mStackCallAddresses.get(i);
             if (a != b) {
@@ -217,6 +227,7 @@ public class NativeAllocationInfo {
 
     /**
      * Returns a string representation of the object.
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -267,6 +278,7 @@ public class NativeAllocationInfo {
      * <p/>
      * A relevant <code>NativeStackCallInfo</code> is a stack call that is not deep in the
      * lower level of the libc, but the actual method that performed the allocation.
+     *
      * @return a <code>NativeStackCallInfo</code> or <code>null</code> if the stack call has not
      * been processed from the raw addresses.
      * @see #setResolvedStackCall(List)

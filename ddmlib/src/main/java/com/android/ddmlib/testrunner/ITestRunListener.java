@@ -41,7 +41,7 @@ public interface ITestRunListener {
     /**
      * Reports the start of a test run.
      *
-     * @param runName the test run name
+     * @param runName   the test run name
      * @param testCount total number of tests in test run
      */
     void testRunStarted(String runName, int testCount);
@@ -58,7 +58,7 @@ public interface ITestRunListener {
      * <p/>
      * Will be called between testStarted and testEnded.
      *
-     * @param test identifies the test
+     * @param test  identifies the test
      * @param trace stack trace of failure
      */
     void testFailed(TestIdentifier test, String trace);
@@ -67,7 +67,7 @@ public interface ITestRunListener {
      * Called when an atomic test flags that it assumes a condition that is
      * false
      *
-     * @param test identifies the test
+     * @param test  identifies the test
      * @param trace stack trace of failure
      */
     void testAssumptionFailure(TestIdentifier test, String trace);
@@ -86,7 +86,7 @@ public interface ITestRunListener {
      * If {@link #testFailed} was not invoked, this test passed.  Also returns any key/value
      * metrics which may have been emitted during the test case's execution.
      *
-     * @param test identifies the test
+     * @param test        identifies the test
      * @param testMetrics a {@link Map} of the metrics emitted
      */
     void testEnded(TestIdentifier test, Map<String, String> testMetrics);
@@ -111,7 +111,7 @@ public interface ITestRunListener {
      * Reports end of test run.
      *
      * @param elapsedTime device reported elapsed time, in milliseconds
-     * @param runMetrics key-value pairs reported at the end of a test run
+     * @param runMetrics  key-value pairs reported at the end of a test run
      */
     void testRunEnded(long elapsedTime, Map<String, String> runMetrics);
 }

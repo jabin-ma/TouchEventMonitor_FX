@@ -27,7 +27,7 @@ package com.android.utils;
  * @param <S> The type of the first value
  * @param <T> The type of the second value
  */
-public class Pair<S,T> {
+public class Pair<S, T> {
     private final S mFirst;
     private final T mSecond;
 
@@ -58,14 +58,14 @@ public class Pair<S,T> {
     /**
      * Constructs a new pair of the given two objects, inferring generic types.
      *
-     * @param first the first item to store in the pair
+     * @param first  the first item to store in the pair
      * @param second the second item to store in the pair
-     * @param <S> the type of the first item
-     * @param <T> the type of the second item
+     * @param <S>    the type of the first item
+     * @param <T>    the type of the second item
      * @return a new pair wrapping the two items
      */
-    public static <S,T> Pair<S,T> of(S first, T second) {
-        return new Pair<S,T>(first,second);
+    public static <S, T> Pair<S, T> of(S first, T second) {
+        return new Pair<S, T>(first, second);
     }
 
     @Override

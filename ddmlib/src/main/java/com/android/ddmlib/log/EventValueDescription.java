@@ -30,7 +30,6 @@ import java.util.Locale;
  * The index of the value is not contained within this class, and is instead dependent on the
  * index of this particular object in the array of {@link EventValueDescription} returned by
  * {@link EventLogParser#getEventInfoMap()} when queried for a particular event tag.
- *
  */
 public final class EventValueDescription {
 
@@ -51,6 +50,7 @@ public final class EventValueDescription {
 
         /**
          * Checks that the {@link EventValueType} is compatible with the {@link ValueType}.
+         *
          * @param type the {@link EventValueType} to check.
          * @throws InvalidValueTypeException if the types are not compatible.
          */
@@ -65,6 +65,7 @@ public final class EventValueDescription {
         /**
          * Returns a {@link ValueType} from an integer value, or <code>null</code> if no match
          * were found.
+         *
          * @param value the integer value.
          */
         public static ValueType getValueType(int value) {
@@ -103,6 +104,7 @@ public final class EventValueDescription {
      * If the type is {@link EventValueType#INT} or {@link EventValueType#LONG}, the
      * {@link #mValueType} is set to {@link ValueType#BYTES} by default. It set to
      * {@link ValueType#NOT_APPLICABLE} for all other {@link EventValueType} values.
+     *
      * @param name
      * @param type
      */
@@ -119,11 +121,11 @@ public final class EventValueDescription {
     /**
      * Builds a {@link EventValueDescription} with a name and a type, and a {@link ValueType}.
      * <p/>
+     *
      * @param name
      * @param type
      * @param valueType
      * @throws InvalidValueTypeException if type and valuetype are not compatible.
-     *
      */
     EventValueDescription(String name, EventValueType type, ValueType valueType)
             throws InvalidValueTypeException {
@@ -166,6 +168,7 @@ public final class EventValueDescription {
 
     /**
      * Checks if the value is of the proper type for this receiver.
+     *
      * @param value the value to check.
      * @return true if the value is of the proper type for this receiver.
      */
@@ -190,6 +193,7 @@ public final class EventValueDescription {
      * <p/>
      * IMPORTANT {@link EventValueType#LIST} and {@link EventValueType#TREE} are not
      * supported.
+     *
      * @param value the value of the object expressed as a string.
      * @return an object or null if the conversion could not be done.
      */

@@ -31,7 +31,9 @@ class BatteryFetcher {
 
     private static final String LOG_TAG = "BatteryFetcher";
 
-    /** the amount of time to wait between unsuccessful battery fetch attempts */
+    /**
+     * the amount of time to wait between unsuccessful battery fetch attempts
+     */
     private static final long FETCH_BACKOFF_MS = 5 * 1000; // 5 seconds
     private static final long BATTERY_TIMEOUT = 2 * 1000; // 2 seconds
 
@@ -45,6 +47,7 @@ class BatteryFetcher {
 
         /**
          * Get the parsed battery level.
+         *
          * @return battery level or <code>null</code> if it cannot be determined
          */
         @Nullable
@@ -70,7 +73,7 @@ class BatteryFetcher {
                         if (!mBatteryLevel.equals(tmpLevel)) {
                             Log.w(LOG_TAG, String.format(
                                     "Multiple lines matched with different value; " +
-                                    "Original: %s, Current: %s (keeping original)",
+                                            "Original: %s, Current: %s (keeping original)",
                                     mBatteryLevel.toString(), tmpLevel.toString()));
                         }
                     }
@@ -91,6 +94,7 @@ class BatteryFetcher {
 
         /**
          * Get the parsed percent battery level.
+         *
          * @return
          */
         public Integer getBatteryLevel() {
@@ -143,7 +147,7 @@ class BatteryFetcher {
      * Make a possibly asynchronous request for the device's battery level
      *
      * @param freshness the desired recentness of battery level
-     * @param timeUnit the {@link TimeUnit} of freshness
+     * @param timeUnit  the {@link TimeUnit} of freshness
      * @return a {@link Future} that can be used to retrieve the battery level
      */
     public synchronized Future<Integer> getBattery(long freshness, TimeUnit timeUnit) {
@@ -181,18 +185,18 @@ class BatteryFetcher {
                     // first try to get it from sysfs
                     SysFsBatteryLevelReceiver sysBattReceiver = new SysFsBatteryLevelReceiver();
                     mDevice.executeShellCommand(
-                            sysBattReceiver, BATTERY_TIMEOUT, TimeUnit.MILLISECONDS,"cat /sys/class/power_supply/*/capacity");
+                            sysBattReceiver, BATTERY_TIMEOUT, TimeUnit.MILLISECONDS, "cat /sys/class/power_supply/*/capacity");
                     if (!setBatteryLevel(sysBattReceiver.getBatteryLevel())) {
                         // failed! try dumpsys
                         BatteryReceiver receiver = new BatteryReceiver();
-                        mDevice.executeShellCommand( receiver, BATTERY_TIMEOUT,
-                                TimeUnit.MILLISECONDS,"dumpsys battery");
+                        mDevice.executeShellCommand(receiver, BATTERY_TIMEOUT,
+                                TimeUnit.MILLISECONDS, "dumpsys battery");
                         if (setBatteryLevel(receiver.getBatteryLevel())) {
                             return;
                         }
                         exception = new IOException("Unrecognized response to battery level queries");
-                    }else{
-                    	return;
+                    } else {
+                        return;
                     }
                 } catch (TimeoutException e) {
                     exception = e;

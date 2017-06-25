@@ -20,7 +20,7 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
         when (handleType) {
             KnownEventList.HandleType.EVENT_CREATE -> {
                 monitorEvent = MonitorEventItem();
-                monitorEvent?.inputDevice=rawEvent.devFile
+                monitorEvent?.inputDevice = rawEvent.devFile
                 monitorEvent?.onCreate(rawEvent)
             }
             KnownEventList.HandleType.EVENT_ARG_X, KnownEventList.HandleType.EVENT_ARG_Y -> {
@@ -28,7 +28,7 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
             }
             KnownEventList.HandleType.EVENT_SYNC -> {
                 monitorEvent?.onSync(rawEvent)
-                if(monitorEvent!=null && monitorEvent!!.isClosed){
+                if (monitorEvent != null && monitorEvent!!.isClosed) {
                     return monitorEvent;
                 }
             }

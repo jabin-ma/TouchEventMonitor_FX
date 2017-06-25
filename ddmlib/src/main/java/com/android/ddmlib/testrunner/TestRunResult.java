@@ -18,11 +18,7 @@ package com.android.ddmlib.testrunner;
 import com.android.ddmlib.Log;
 import com.android.ddmlib.testrunner.TestResult.TestStatus;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Holds results from a single test run.
@@ -36,14 +32,18 @@ public class TestRunResult implements ITestRunListener {
     private String mTestRunName;
     // Uses a LinkedHashMap to have predictable iteration order
     private Map<TestIdentifier, TestResult> mTestResults =
-        new LinkedHashMap<TestIdentifier, TestResult>();
+            new LinkedHashMap<TestIdentifier, TestResult>();
     private Map<String, String> mRunMetrics = new HashMap<String, String>();
     private boolean mIsRunComplete = false;
     private long mElapsedTime = 0;
 
-    /** represents sums of tests in each TestStatus state. Indexed by TestStatus.ordinal() */
+    /**
+     * represents sums of tests in each TestStatus state. Indexed by TestStatus.ordinal()
+     */
     private int[] mStatusCounts = new int[TestStatus.values().length];
-    /** tracks if mStatusCounts is accurate, or if it needs to be recalculated */
+    /**
+     * tracks if mStatusCounts is accurate, or if it needs to be recalculated
+     */
     private boolean mIsCountDirty = true;
 
     private String mRunFailureError = null;
@@ -70,6 +70,7 @@ public class TestRunResult implements ITestRunListener {
 
     /**
      * Gets a map of the test results.
+     *
      * @return
      */
     public Map<TestIdentifier, TestResult> getTestResults() {
@@ -120,7 +121,7 @@ public class TestRunResult implements ITestRunListener {
     public int getNumTestsInState(TestStatus status) {
         if (mIsCountDirty) {
             // clear counts
-            for (int i=0; i < mStatusCounts.length; i++) {
+            for (int i = 0; i < mStatusCounts.length; i++) {
                 mStatusCounts[i] = 0;
             }
             // now recalculate
@@ -177,9 +178,9 @@ public class TestRunResult implements ITestRunListener {
 
     @Override
     public void testRunStarted(String runName, int testCount) {
-          mTestRunName = runName;
-          mIsRunComplete = false;
-          mRunFailureError = null;
+        mTestRunName = runName;
+        mIsRunComplete = false;
+        mRunFailureError = null;
     }
 
     @Override
@@ -239,7 +240,7 @@ public class TestRunResult implements ITestRunListener {
 
     @Override
     public void testRunStopped(long elapsedTime) {
-        mElapsedTime+= elapsedTime;
+        mElapsedTime += elapsedTime;
         mIsRunComplete = true;
     }
 
@@ -254,7 +255,7 @@ public class TestRunResult implements ITestRunListener {
         } else {
             mRunMetrics.putAll(runMetrics);
         }
-        mElapsedTime+= elapsedTime;
+        mElapsedTime += elapsedTime;
         mIsRunComplete = true;
     }
 
@@ -275,9 +276,9 @@ public class TestRunResult implements ITestRunListener {
                 // not a long, skip to next
             }
             try {
-               Double existingDouble = Double.parseDouble(existingValue);
-               Double newDouble = Double.parseDouble(newValue);
-               return Double.toString(existingDouble + newDouble);
+                Double existingDouble = Double.parseDouble(existingValue);
+                Double newDouble = Double.parseDouble(newValue);
+                return Double.toString(existingDouble + newDouble);
             } catch (NumberFormatException e) {
                 // not a double either, fall through
             }

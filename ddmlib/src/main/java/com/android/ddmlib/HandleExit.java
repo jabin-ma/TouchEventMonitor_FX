@@ -29,24 +29,28 @@ final class HandleExit extends ChunkHandler {
     private static final HandleExit mInst = new HandleExit();
 
 
-    private HandleExit() {}
+    private HandleExit() {
+    }
 
     /**
      * Register for the packets we expect to get from the client.
      */
-    public static void register(MonitorThread mt) {}
+    public static void register(MonitorThread mt) {
+    }
 
     /**
      * Client is ready.
      */
     @Override
-    public void clientReady(Client client) throws IOException {}
+    public void clientReady(Client client) throws IOException {
+    }
 
     /**
      * Client went away.
      */
     @Override
-    public void clientDisconnected(Client client) {}
+    public void clientDisconnected(Client client) {
+    }
 
     /**
      * Chunk handler entry point.
@@ -60,8 +64,7 @@ final class HandleExit extends ChunkHandler {
      * Send an EXIT request to the client.
      */
     public static void sendEXIT(Client client, int status)
-        throws IOException
-    {
+            throws IOException {
         ByteBuffer rawBuf = allocBuffer(4);
         JdwpPacket packet = new JdwpPacket(rawBuf);
         ByteBuffer buf = getChunkDataBuf(rawBuf);

@@ -46,24 +46,23 @@ public interface IShellEnabledDevice {
      * {@link IShellOutputReceiver#isCancelled()} returns <code>true</code>, should be
      * used.
      *
-     * @param command the shell command to execute
-     * @param receiver the {@link IShellOutputReceiver} that will receives the output of the shell
-     *            command
+     * @param command                 the shell command to execute
+     * @param receiver                the {@link IShellOutputReceiver} that will receives the output of the shell
+     *                                command
      * @param maxTimeToOutputResponse the maximum amount of time during which the command is allowed
-     *            to not output any response. A value of 0 means the method will wait forever
-     *            (until the <var>receiver</var> cancels the execution) for command output and
-     *            never throw.
-     * @param maxTimeUnits Units for non-zero {@code maxTimeToOutputResponse} values.
-     * @throws TimeoutException in case of timeout on the connection when sending the command.
-     * @throws AdbCommandRejectedException if adb rejects the command.
+     *                                to not output any response. A value of 0 means the method will wait forever
+     *                                (until the <var>receiver</var> cancels the execution) for command output and
+     *                                never throw.
+     * @param maxTimeUnits            Units for non-zero {@code maxTimeToOutputResponse} values.
+     * @throws TimeoutException                  in case of timeout on the connection when sending the command.
+     * @throws AdbCommandRejectedException       if adb rejects the command.
      * @throws ShellCommandUnresponsiveException in case the shell command doesn't send any output
-     *            for a period longer than <var>maxTimeToOutputResponse</var>.
-     * @throws IOException in case of I/O error on the connection.
-     *
+     *                                           for a period longer than <var>maxTimeToOutputResponse</var>.
+     * @throws IOException                       in case of I/O error on the connection.
      * @see DdmPreferences#getTimeOut()
      */
     void executeShellCommand(IShellOutputReceiver receiver,
-            long maxTimeToOutputResponse, TimeUnit maxTimeUnits,String command,String... args)
+                             long maxTimeToOutputResponse, TimeUnit maxTimeUnits, String command, String... args)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException;
 
@@ -77,7 +76,7 @@ public interface IShellEnabledDevice {
      *
      * @param name the name of the value to return.
      * @return a {@link java.util.concurrent.Future} which can be used to retrieve value of property. Future#get() can
-     *         return null if property can not be retrieved.
+     * return null if property can not be retrieved.
      */
     @NonNull
     Future<String> getSystemProperty(@NonNull String name);

@@ -16,14 +16,12 @@
 
 package com.android.ide.common.blame;
 
-import com.android.annotations.NonNull;
-import com.android.annotations.Nullable;
 import com.android.annotations.concurrency.Immutable;
 import com.google.common.base.Objects;
 
 /**
  * An immutable position in a text file, used in errors to point the user to an issue.
- *
+ * <p>
  * Positions that are unknown are represented by -1.
  */
 @Immutable
@@ -34,7 +32,7 @@ public final class SourcePosition {
     private final int mStartLine, mStartColumn, mStartOffset, mEndLine, mEndColumn, mEndOffset;
 
     public SourcePosition(int startLine, int startColumn, int startOffset,
-            int endLine, int endColumn, int endOffset) {
+                          int endLine, int endColumn, int endOffset) {
         mStartLine = startLine;
         mStartColumn = startColumn;
         mStartOffset = startOffset;
@@ -64,7 +62,7 @@ public final class SourcePosition {
 
     /**
      * Outputs positions as human-readable formatted strings.
-     *
+     * <p>
      * e.g.
      * <pre>84
      * 84-86

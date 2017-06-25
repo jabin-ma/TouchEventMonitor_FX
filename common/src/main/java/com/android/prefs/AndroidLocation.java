@@ -53,9 +53,9 @@ public final class AndroidLocation {
      * be checked via {@link System#getProperty(String)} or {@link System#getenv()} or both.
      */
     public enum EnvVar {
-        ANDROID_SDK_HOME("ANDROID_SDK_HOME", true,  true),  // both sys prop and env var
-        USER_HOME       ("user.home",        true,  false), // sys prop only
-        HOME            ("HOME",             false, true);  // env var only
+        ANDROID_SDK_HOME("ANDROID_SDK_HOME", true, true),  // both sys prop and env var
+        USER_HOME("user.home", true, false), // sys prop only
+        HOME("HOME", false, true);  // env var only
 
         final String mName;
         final boolean mIsSysProp;
@@ -74,21 +74,22 @@ public final class AndroidLocation {
 
     /**
      * Returns the folder used to store android related files.
+     *
      * @return an OS specific path, terminated by a separator.
      * @throws AndroidLocationException
      */
     @NonNull
     public static final String getFolder() throws AndroidLocationException {
         if (sPrefsLocation == null) {
-            String home = findValidPath(new EnvVar[] { EnvVar.ANDROID_SDK_HOME,
-                                                       EnvVar.USER_HOME,
-                                                       EnvVar.HOME });
+            String home = findValidPath(new EnvVar[]{EnvVar.ANDROID_SDK_HOME,
+                    EnvVar.USER_HOME,
+                    EnvVar.HOME});
 
             // if the above failed, we throw an exception.
             if (home == null) {
                 throw new AndroidLocationException(
                         "Unable to get the Android SDK home directory.\n" +
-                        "Make sure the environment variable ANDROID_SDK_HOME is set up.");
+                                "Make sure the environment variable ANDROID_SDK_HOME is set up.");
             } else {
                 sPrefsLocation = home;
                 if (!sPrefsLocation.endsWith(File.separator)) {
@@ -106,7 +107,7 @@ public final class AndroidLocation {
             } catch (SecurityException e) {
                 AndroidLocationException e2 = new AndroidLocationException(String.format(
                         "Unable to create folder '%1$s'. " +
-                        "This is the path of preference folder expected by the Android tools.",
+                                "This is the path of preference folder expected by the Android tools.",
                         sPrefsLocation));
                 e2.initCause(e);
                 throw e2;
@@ -130,6 +131,7 @@ public final class AndroidLocation {
     /**
      * Checks a list of system properties and/or system environment variables for validity, and
      * existing director, and returns the first one.
+     *
      * @param vars The variables to check. Order does matter.
      * @return the content of the first property/variable that is a valid directory.
      */

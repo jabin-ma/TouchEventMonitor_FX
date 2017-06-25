@@ -30,7 +30,9 @@ import java.util.regex.Pattern;
  * Fetches and caches 'getprop' values from device.
  */
 class PropertyFetcher {
-    /** the amount of time to wait between unsuccessful prop fetch attempts */
+    /**
+     * the amount of time to wait between unsuccessful prop fetch attempts
+     */
     private static final String GETPROP_COMMAND = "getprop"; //$NON-NLS-1$
     private static final Pattern GETPROP_PATTERN = Pattern.compile("^\\[([^]]+)\\]\\:\\s*\\[(.*)\\]$"); //$NON-NLS-1$
     private static final int GETPROP_TIMEOUT_SEC = 2;
@@ -142,7 +144,7 @@ class PropertyFetcher {
                 try {
                     GetPropReceiver propReceiver = new GetPropReceiver();
                     mDevice.executeShellCommand(propReceiver, GETPROP_TIMEOUT_SEC,
-                            TimeUnit.SECONDS,GETPROP_COMMAND);
+                            TimeUnit.SECONDS, GETPROP_COMMAND);
                     populateCache(propReceiver.getCollectedProperties());
                 } catch (Exception e) {
                     handleException(e);

@@ -26,19 +26,18 @@
 package application
 
 import com.android.ddmlib.input.EventData
+import com.sun.javafx.property.PropertyReference
+import com.sun.javafx.scene.control.Logging
 import javafx.beans.NamedArg
 import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.beans.value.ObservableValue
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableColumn.CellDataFeatures
 import javafx.util.Callback
-
 import sun.util.logging.PlatformLogger.Level
-import com.sun.javafx.property.PropertyReference
-import com.sun.javafx.scene.control.Logging
 
 
-class PropertyValueFactory(@param:NamedArg("property") val property: String) : Callback<TableColumn.CellDataFeatures<EventData, out Any>, ObservableValue<out Any>>{
+class PropertyValueFactory(@param:NamedArg("property") val property: String) : Callback<TableColumn.CellDataFeatures<EventData, out Any>, ObservableValue<out Any>> {
 
     private var columnClass: Class<*>? = null
     private var previousProperty: String? = null

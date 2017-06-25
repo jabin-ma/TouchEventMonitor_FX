@@ -29,7 +29,6 @@ public class EventContainer {
 
     /**
      * Comparison method for {@link EventContainer#testValue(int, Object, com.android.ddmlib.log.EventContainer.CompareMethod)}
-     *
      */
     public enum CompareMethod {
         EQUAL_TO("equals", "=="),
@@ -82,6 +81,7 @@ public class EventContainer {
         /**
          * Returns a {@link EventValueType} from an integer value, or <code>null</code> if no match
          * was found.
+         *
          * @param value the integer value.
          */
         static EventValueType getEventValueType(int value) {
@@ -102,6 +102,7 @@ public class EventContainer {
          * {@link #getObjectFromStorageString(String)}.
          * <p/>
          * NOTE: for now, only {@link #STRING}, {@link #INT}, and {@link #LONG} are supported.
+         *
          * @param object the object to "convert" into a storage string.
          * @return a string storing the object and its type or null if the type was not recognized.
          */
@@ -120,6 +121,7 @@ public class EventContainer {
         /**
          * Creates an {@link Object} from a storage string created with
          * {@link #getStorageString(Object)}.
+         *
          * @param value the storage string
          * @return an {@link Object} or null if the string or type were not recognized.
          */
@@ -177,9 +179,10 @@ public class EventContainer {
 
     /**
      * Creates an {@link EventContainer} from a {@link LogEntry}.
-     * @param entry  the LogEntry from which pid, tid, and time info is copied.
-     * @param tag the event tag value
-     * @param data the data of the EventContainer.
+     *
+     * @param entry the LogEntry from which pid, tid, and time info is copied.
+     * @param tag   the event tag value
+     * @param data  the data of the EventContainer.
      */
     EventContainer(LogEntry entry, int tag, Object data) {
         getType(data);
@@ -208,12 +211,13 @@ public class EventContainer {
 
     /**
      * Returns the data as an int.
+     *
      * @throws InvalidTypeException if the data type is not {@link EventValueType#INT}.
      * @see #getType()
      */
     public final Integer getInt() throws InvalidTypeException {
         if (getType(mData) == EventValueType.INT) {
-            return (Integer)mData;
+            return (Integer) mData;
         }
 
         throw new InvalidTypeException();
@@ -221,12 +225,13 @@ public class EventContainer {
 
     /**
      * Returns the data as a long.
+     *
      * @throws InvalidTypeException if the data type is not {@link EventValueType#LONG}.
      * @see #getType()
      */
     public final Long getLong() throws InvalidTypeException {
         if (getType(mData) == EventValueType.LONG) {
-            return (Long)mData;
+            return (Long) mData;
         }
 
         throw new InvalidTypeException();
@@ -234,12 +239,13 @@ public class EventContainer {
 
     /**
      * Returns the data as a String.
+     *
      * @throws InvalidTypeException if the data type is not {@link EventValueType#STRING}.
      * @see #getType()
      */
     public final String getString() throws InvalidTypeException {
         if (getType(mData) == EventValueType.STRING) {
-            return (String)mData;
+            return (String) mData;
         }
 
         throw new InvalidTypeException();
@@ -247,6 +253,7 @@ public class EventContainer {
 
     /**
      * Returns a value by index. The return type is defined by its type.
+     *
      * @param valueIndex the index of the value. If the data is not a list, this is ignored.
      */
     public Object getValue(int valueIndex) {
@@ -255,11 +262,12 @@ public class EventContainer {
 
     /**
      * Returns a value by index as a double.
+     *
      * @param valueIndex the index of the value. If the data is not a list, this is ignored.
      * @throws InvalidTypeException if the data type is not {@link EventValueType#INT},
-     * {@link EventValueType#LONG}, {@link EventValueType#LIST}, or if the item in the
-     * list at index <code>valueIndex</code> is not of type {@link EventValueType#INT} or
-     * {@link EventValueType#LONG}.
+     *                              {@link EventValueType#LONG}, {@link EventValueType#LIST}, or if the item in the
+     *                              list at index <code>valueIndex</code> is not of type {@link EventValueType#INT} or
+     *                              {@link EventValueType#LONG}.
      * @see #getType()
      */
     public double getValueAsDouble(int valueIndex) throws InvalidTypeException {
@@ -268,11 +276,12 @@ public class EventContainer {
 
     /**
      * Returns a value by index as a String.
+     *
      * @param valueIndex the index of the value. If the data is not a list, this is ignored.
      * @throws InvalidTypeException if the data type is not {@link EventValueType#INT},
-     * {@link EventValueType#LONG}, {@link EventValueType#STRING}, {@link EventValueType#LIST},
-     * or if the item in the list at index <code>valueIndex</code> is not of type
-     * {@link EventValueType#INT}, {@link EventValueType#LONG}, or {@link EventValueType#STRING}
+     *                              {@link EventValueType#LONG}, {@link EventValueType#STRING}, {@link EventValueType#LIST},
+     *                              or if the item in the list at index <code>valueIndex</code> is not of type
+     *                              {@link EventValueType#INT}, {@link EventValueType#LONG}, or {@link EventValueType#STRING}
      * @see #getType()
      */
     public String getValueAsString(int valueIndex) throws InvalidTypeException {
@@ -298,7 +307,7 @@ public class EventContainer {
             return EventValueType.STRING;
         } else if (data instanceof Object[]) {
             // loop through the list to see if we have another list
-            Object[] objects = (Object[])data;
+            Object[] objects = (Object[]) data;
             for (Object obj : objects) {
                 EventValueType type = getType(obj);
                 if (type == EventValueType.LIST || type == EventValueType.TREE) {
@@ -313,16 +322,17 @@ public class EventContainer {
 
     /**
      * Checks that the <code>index</code>-th value of this event against a provided value.
-     * @param index the index of the value to test
-     * @param value the value to test against
+     *
+     * @param index         the index of the value to test
+     * @param value         the value to test against
      * @param compareMethod the method of testing
      * @return true if the test passed.
      * @throws InvalidTypeException in case of type mismatch between the value to test and the value
-     * to test against, or if the compare method is incompatible with the type of the values.
+     *                              to test against, or if the compare method is incompatible with the type of the values.
      * @see CompareMethod
      */
     public boolean testValue(int index, Object value,
-            CompareMethod compareMethod) throws InvalidTypeException {
+                             CompareMethod compareMethod) throws InvalidTypeException {
         EventValueType type = getType(mData);
         if (index > 0 && type != EventValueType.LIST) {
             throw new InvalidTypeException();
@@ -330,7 +340,7 @@ public class EventContainer {
 
         Object data = mData;
         if (type == EventValueType.LIST) {
-            data = ((Object[])mData)[index];
+            data = ((Object[]) mData)[index];
         }
 
         if (!data.getClass().equals(data.getClass())) {
@@ -342,36 +352,36 @@ public class EventContainer {
                 return data.equals(value);
             case LESSER_THAN:
                 if (data instanceof Integer) {
-                    return (((Integer)data).compareTo((Integer)value) <= 0);
+                    return (((Integer) data).compareTo((Integer) value) <= 0);
                 } else if (data instanceof Long) {
-                    return (((Long)data).compareTo((Long)value) <= 0);
+                    return (((Long) data).compareTo((Long) value) <= 0);
                 }
 
                 // other types can't use this compare method.
                 throw new InvalidTypeException();
             case LESSER_THAN_STRICT:
                 if (data instanceof Integer) {
-                    return (((Integer)data).compareTo((Integer)value) < 0);
+                    return (((Integer) data).compareTo((Integer) value) < 0);
                 } else if (data instanceof Long) {
-                    return (((Long)data).compareTo((Long)value) < 0);
+                    return (((Long) data).compareTo((Long) value) < 0);
                 }
 
                 // other types can't use this compare method.
                 throw new InvalidTypeException();
             case GREATER_THAN:
                 if (data instanceof Integer) {
-                    return (((Integer)data).compareTo((Integer)value) >= 0);
+                    return (((Integer) data).compareTo((Integer) value) >= 0);
                 } else if (data instanceof Long) {
-                    return (((Long)data).compareTo((Long)value) >= 0);
+                    return (((Long) data).compareTo((Long) value) >= 0);
                 }
 
                 // other types can't use this compare method.
                 throw new InvalidTypeException();
             case GREATER_THAN_STRICT:
                 if (data instanceof Integer) {
-                    return (((Integer)data).compareTo((Integer)value) > 0);
+                    return (((Integer) data).compareTo((Integer) value) > 0);
                 } else if (data instanceof Long) {
-                    return (((Long)data).compareTo((Long)value) > 0);
+                    return (((Long) data).compareTo((Long) value) > 0);
                 }
 
                 // other types can't use this compare method.
@@ -385,7 +395,7 @@ public class EventContainer {
 
                 // other types can't use this compare method.
                 throw new InvalidTypeException();
-            default :
+            default:
                 throw new InvalidTypeException();
         }
     }
@@ -416,9 +426,9 @@ public class EventContainer {
 
         switch (type) {
             case INT:
-                return ((Integer)data).doubleValue();
+                return ((Integer) data).doubleValue();
             case LONG:
-                return ((Long)data).doubleValue();
+                return ((Long) data).doubleValue();
             case STRING:
                 throw new InvalidTypeException();
             case LIST:
@@ -443,7 +453,7 @@ public class EventContainer {
             case LONG:
                 return data.toString();
             case STRING:
-                return (String)data;
+                return (String) data;
             case LIST:
                 if (recursive) {
                     Object[] list = (Object[]) data;

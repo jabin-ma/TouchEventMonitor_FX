@@ -41,6 +41,6 @@ public class InstallException extends CanceledException {
     @Override
     public boolean wasCanceled() {
         Throwable cause = getCause();
-        return cause instanceof SyncException && ((SyncException)cause).wasCanceled();
+        return cause instanceof SyncException && ((SyncException) cause).wasCanceled();
     }
 }

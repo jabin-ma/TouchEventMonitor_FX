@@ -23,7 +23,8 @@ package com.android.ddmlib;
 public interface IShellOutputReceiver {
     /**
      * Called every time some new data is available.
-     * @param data The new data.
+     *
+     * @param data   The new data.
      * @param offset The offset at which the new data starts.
      * @param length The length of the new data.
      */
@@ -38,6 +39,7 @@ public interface IShellOutputReceiver {
 
     /**
      * Cancel method to stop the execution of the remote shell command.
+     *
      * @return true to cancel the execution of the command.
      */
     boolean isCancelled();

@@ -17,6 +17,6 @@ public class InputDispatcher {
     }
 
     MonitorEvent getWaitingForDispatchEvent() throws InterruptedException {
-       return waitingForDispatch.take();
+        return waitingForDispatch.take();
     }
 }

@@ -36,7 +36,7 @@ public final class SourceFile {
 
     /**
      * A human readable description
-     *
+     * <p>
      * Usually the file name is OK for the short output, but for the manifest merger,
      * where all of the files will be named AndroidManifest.xml the variant name is more useful.
      */

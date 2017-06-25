@@ -38,8 +38,8 @@ public final class LogCatMessage {
      * Construct an immutable log message object.
      */
     public LogCatMessage(@NonNull LogLevel logLevel, @NonNull String pid, @NonNull String tid,
-            @NonNull String appName, @NonNull String tag,
-            @NonNull String time, @NonNull String msg) {
+                         @NonNull String appName, @NonNull String tag,
+                         @NonNull String time, @NonNull String msg) {
         mLogLevel = logLevel;
         mPid = pid;
         mAppName = appName;

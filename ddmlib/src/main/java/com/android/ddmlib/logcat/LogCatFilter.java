@@ -54,16 +54,17 @@ public final class LogCatFilter {
     /**
      * Construct a filter with the provided restrictions for the logcat message. All the text
      * fields accept Java regexes as input, but ignore invalid regexes.
-     * @param name name for the filter
-     * @param tag value for the logcat message's tag field.
-     * @param text value for the logcat message's text field.
-     * @param pid value for the logcat message's pid field.
-     * @param appName value for the logcat message's app name field.
+     *
+     * @param name     name for the filter
+     * @param tag      value for the logcat message's tag field.
+     * @param text     value for the logcat message's text field.
+     * @param pid      value for the logcat message's pid field.
+     * @param appName  value for the logcat message's app name field.
      * @param logLevel value for the logcat message's log level. Only messages of
-     * higher priority will be accepted by the filter.
+     *                 higher priority will be accepted by the filter.
      */
     public LogCatFilter(@NonNull String name, @NonNull String tag, @NonNull String text,
-            @NonNull String pid, @NonNull String appName, @NonNull LogLevel logLevel) {
+                        @NonNull String pid, @NonNull String appName, @NonNull LogLevel logLevel) {
         mName = name.trim();
         mTag = tag.trim();
         mText = text.trim();
@@ -119,11 +120,12 @@ public final class LogCatFilter {
 
     /**
      * Construct a list of {@link LogCatFilter} objects by decoding the query.
-     * @param query encoded search string. The query is simply a list of words (can be regexes)
-     * a user would type in a search bar. These words are searched for in the text field of
-     * each collected logcat message. To search in a different field, the word could be prefixed
-     * with a keyword corresponding to the field name. Currently, the following keywords are
-     * supported: "pid:", "tag:" and "text:". Invalid regexes are ignored.
+     *
+     * @param query    encoded search string. The query is simply a list of words (can be regexes)
+     *                 a user would type in a search bar. These words are searched for in the text field of
+     *                 each collected logcat message. To search in a different field, the word could be prefixed
+     *                 with a keyword corresponding to the field name. Currently, the following keywords are
+     *                 supported: "pid:", "tag:" and "text:". Invalid regexes are ignored.
      * @param minLevel minimum log level to match
      * @return list of filter settings that fully match the given query
      */
@@ -188,6 +190,7 @@ public final class LogCatFilter {
 
     /**
      * Check whether a given message will make it through this filter.
+     *
      * @param m message to check
      * @return true if the message matches the filter's conditions.
      */

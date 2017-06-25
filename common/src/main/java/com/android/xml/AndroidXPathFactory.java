@@ -18,25 +18,28 @@ package com.android.xml;
 
 import com.android.SdkConstants;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * XPath factory with automatic support for the android name space.
  */
 public class AndroidXPathFactory {
-    /** Default prefix for android name space: 'android' */
+    /**
+     * Default prefix for android name space: 'android'
+     */
     public static final String DEFAULT_NS_PREFIX = "android"; //$NON-NLS-1$
 
     private static final XPathFactory sFactory = XPathFactory.newInstance();
 
-    /** Name space context for Android resource XML files. */
+    /**
+     * Name space context for Android resource XML files.
+     */
     private static class AndroidNamespaceContext implements NamespaceContext {
         private static final AndroidNamespaceContext sThis = new AndroidNamespaceContext(
                 DEFAULT_NS_PREFIX);
@@ -53,6 +56,7 @@ public class AndroidXPathFactory {
 
         /**
          * Construct the context with the prefix associated with the android namespace.
+         *
          * @param androidPrefix the Prefix
          */
         public AndroidNamespaceContext(String androidPrefix) {
@@ -93,6 +97,7 @@ public class AndroidXPathFactory {
     /**
      * Creates a new XPath object, specifying which prefix in the query is used for the
      * android namespace.
+     *
      * @param androidPrefix The namespace prefix.
      */
     public static XPath newXPath(String androidPrefix) {
@@ -103,6 +108,7 @@ public class AndroidXPathFactory {
 
     /**
      * Creates a new XPath object using the default prefix for the android namespace.
+     *
      * @see #DEFAULT_NS_PREFIX
      */
     public static XPath newXPath() {

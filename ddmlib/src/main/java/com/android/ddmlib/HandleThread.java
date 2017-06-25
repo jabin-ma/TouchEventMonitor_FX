@@ -37,7 +37,8 @@ final class HandleThread extends ChunkHandler {
     private static volatile boolean sThreadStatusReqRunning = false;
     private static volatile boolean sThreadStackTraceReqRunning = false;
 
-    private HandleThread() {}
+    private HandleThread() {
+    }
 
 
     /**
@@ -65,7 +66,8 @@ final class HandleThread extends ChunkHandler {
      * Client went away.
      */
     @Override
-    public void clientDisconnected(Client client) {}
+    public void clientDisconnected(Client client) {
+    }
 
     /**
      * Chunk handler entry point.
@@ -170,8 +172,8 @@ final class HandleThread extends ChunkHandler {
                 isDaemon = (data.get() != 0);
 
             Log.v("ddm-thread", "  id=" + threadId
-                + ", status=" + status + ", tid=" + tid
-                + ", utime=" + utime + ", stime=" + stime);
+                    + ", status=" + status + ", tid=" + tid
+                    + ", utime=" + utime + ", stime=" + stime);
 
             ClientData cd = client.getClientData();
             ThreadInfo threadInfo = cd.getThread(threadId);
@@ -246,7 +248,7 @@ final class HandleThread extends ChunkHandler {
             lineNumber = data.getInt();
 
             trace[i] = new StackTraceElement(className, methodName, fileName,
-                        lineNumber);
+                    lineNumber);
         }
 
         ThreadInfo threadInfo = client.getClientData().getThread(threadId);
@@ -265,16 +267,16 @@ final class HandleThread extends ChunkHandler {
      * Send a THEN (THread notification ENable) request to the client.
      */
     public static void sendTHEN(Client client, boolean enable)
-        throws IOException {
+            throws IOException {
 
         ByteBuffer rawBuf = allocBuffer(1);
         JdwpPacket packet = new JdwpPacket(rawBuf);
         ByteBuffer buf = getChunkDataBuf(rawBuf);
 
         if (enable)
-            buf.put((byte)1);
+            buf.put((byte) 1);
         else
-            buf.put((byte)0);
+            buf.put((byte) 0);
 
         finishChunkPacket(packet, CHUNK_THEN, buf.position());
         Log.d("ddm-thread", "Sending " + name(CHUNK_THEN) + ": " + enable);
@@ -288,7 +290,7 @@ final class HandleThread extends ChunkHandler {
      * is no longer running, a failure result will be returned.
      */
     public static void sendSTKL(Client client, int threadId)
-        throws IOException {
+            throws IOException {
 
         if (false) {
             Log.d("ddm-thread", "would send STKL " + threadId);
@@ -310,7 +312,6 @@ final class HandleThread extends ChunkHandler {
     /**
      * This is called periodically from the UI thread.  To avoid locking
      * the UI while we request the updates, we create a new thread.
-     *
      */
     static void requestThreadUpdate(final Client client) {
         if (client.isDdmAware() && client.isThreadUpdateEnabled()) {

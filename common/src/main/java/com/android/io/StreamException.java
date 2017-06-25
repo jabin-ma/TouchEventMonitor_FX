@@ -27,7 +27,7 @@ public class StreamException extends Exception {
         DEFAULT, OUTOFSYNC, FILENOTFOUND
     }
 
-    private final  Error mError;
+    private final Error mError;
     private final IAbstractFile mFile;
 
     public StreamException(Exception e, IAbstractFile file) {

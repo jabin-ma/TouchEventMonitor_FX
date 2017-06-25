@@ -26,8 +26,7 @@ import java.lang.reflect.Array;
  * ArrayUtils contains some methods that you can call to find out
  * the most efficient increments by which to grow arrays.
  */
-/* package */ class ArrayUtils
-{
+/* package */ class ArrayUtils {
     private static final Object[] EMPTY = new Object[0];
     private static final int CACHE_SIZE = 73;
     private static Object[] sCache = new Object[CACHE_SIZE];
@@ -119,6 +118,7 @@ import java.lang.reflect.Array;
 
     /**
      * Checks that value is present as at least one of the elements of the array.
+     *
      * @param array the array to check in
      * @param value the value to check for
      * @return true if the value is present in the array

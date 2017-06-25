@@ -39,7 +39,8 @@ final class HandleProfiling extends ChunkHandler {
 
     private static final HandleProfiling mInst = new HandleProfiling();
 
-    private HandleProfiling() {}
+    private HandleProfiling() {
+    }
 
     /**
      * Register for the packets we expect to get from the client.
@@ -54,20 +55,22 @@ final class HandleProfiling extends ChunkHandler {
      * Client is ready.
      */
     @Override
-    public void clientReady(Client client) throws IOException {}
+    public void clientReady(Client client) throws IOException {
+    }
 
     /**
      * Client went away.
      */
     @Override
-    public void clientDisconnected(Client client) {}
+    public void clientDisconnected(Client client) {
+    }
 
     /**
      * Chunk handler entry point.
      */
     @Override
     public void handleChunk(Client client, int type, ByteBuffer data,
-        boolean isReply, int msgId) {
+                            boolean isReply, int msgId) {
 
         Log.d("ddm-prof", "handling " + ChunkHandler.name(type));
 
@@ -86,20 +89,20 @@ final class HandleProfiling extends ChunkHandler {
 
     /**
      * Send a MPRS (Method PRofiling Start) request to the client.
-     *
+     * <p>
      * The arguments to this method will eventually be passed to
      * android.os.Debug.startMethodTracing() on the device.
      *
-     * @param fileName is the name of the file to which profiling data
-     *          will be written (on the device); it will have {@link DdmConstants#DOT_TRACE}
-     *          appended if necessary
+     * @param fileName   is the name of the file to which profiling data
+     *                   will be written (on the device); it will have {@link DdmConstants#DOT_TRACE}
+     *                   appended if necessary
      * @param bufferSize is the desired buffer size in bytes (8MB is good)
-     * @param flags see startMethodTracing() docs; use 0 for default behavior
+     * @param flags      see startMethodTracing() docs; use 0 for default behavior
      */
     public static void sendMPRS(Client client, String fileName, int bufferSize,
-        int flags) throws IOException {
+                                int flags) throws IOException {
 
-        ByteBuffer rawBuf = allocBuffer(3*4 + fileName.length() * 2);
+        ByteBuffer rawBuf = allocBuffer(3 * 4 + fileName.length() * 2);
         JdwpPacket packet = new JdwpPacket(rawBuf);
         ByteBuffer buf = getChunkDataBuf(rawBuf);
 
@@ -110,7 +113,7 @@ final class HandleProfiling extends ChunkHandler {
 
         finishChunkPacket(packet, CHUNK_MPRS, buf.position());
         Log.d("ddm-prof", "Sending " + name(CHUNK_MPRS) + " '" + fileName
-            + "', size=" + bufferSize + ", flags=" + flags);
+                + "', size=" + bufferSize + ", flags=" + flags);
         client.sendAndConsume(packet, mInst);
 
         // record the filename we asked for.
@@ -169,17 +172,17 @@ final class HandleProfiling extends ChunkHandler {
 
     /**
      * Send a MPSS (Method Profiling Streaming Start) request to the client.
-     *
+     * <p>
      * The arguments to this method will eventually be passed to
      * android.os.Debug.startMethodTracing() on the device.
      *
      * @param bufferSize is the desired buffer size in bytes (8MB is good)
-     * @param flags see startMethodTracing() docs; use 0 for default behavior
+     * @param flags      see startMethodTracing() docs; use 0 for default behavior
      */
     public static void sendMPSS(Client client, int bufferSize,
-        int flags) throws IOException {
+                                int flags) throws IOException {
 
-        ByteBuffer rawBuf = allocBuffer(2*4);
+        ByteBuffer rawBuf = allocBuffer(2 * 4);
         JdwpPacket packet = new JdwpPacket(rawBuf);
         ByteBuffer buf = getChunkDataBuf(rawBuf);
 
@@ -188,7 +191,7 @@ final class HandleProfiling extends ChunkHandler {
 
         finishChunkPacket(packet, CHUNK_MPSS, buf.position());
         Log.d("ddm-prof", "Sending " + name(CHUNK_MPSS)
-            + "', size=" + bufferSize + ", flags=" + flags);
+                + "', size=" + bufferSize + ", flags=" + flags);
         client.sendAndConsume(packet, mInst);
 
         // send a status query. this ensure that the status is properly updated if for some
@@ -199,15 +202,15 @@ final class HandleProfiling extends ChunkHandler {
     /**
      * Send a SPSS (Sampling Profiling Streaming Start) request to the client.
      *
-     * @param bufferSize is the desired buffer size in bytes (8MB is good)
-     * @param samplingInterval sampling interval
+     * @param bufferSize                is the desired buffer size in bytes (8MB is good)
+     * @param samplingInterval          sampling interval
      * @param samplingIntervalTimeUnits units for sampling interval
      */
     public static void sendSPSS(Client client, int bufferSize, int samplingInterval,
-            TimeUnit samplingIntervalTimeUnits) throws IOException {
+                                TimeUnit samplingIntervalTimeUnits) throws IOException {
         int interval = (int) samplingIntervalTimeUnits.toMicros(samplingInterval);
 
-        ByteBuffer rawBuf = allocBuffer(3*4);
+        ByteBuffer rawBuf = allocBuffer(3 * 4);
         JdwpPacket packet = new JdwpPacket(rawBuf);
         ByteBuffer buf = getChunkDataBuf(rawBuf);
 
@@ -311,7 +314,8 @@ final class HandleProfiling extends ChunkHandler {
     }
 
     private void handleFAIL(Client client, ByteBuffer data) {
-        /*int errorCode =*/ data.getInt();
+        /*int errorCode =*/
+        data.getInt();
         int length = data.getInt() * 2;
         String message = null;
         if (length > 0) {

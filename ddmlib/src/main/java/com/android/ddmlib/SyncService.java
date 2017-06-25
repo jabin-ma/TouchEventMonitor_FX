@@ -23,11 +23,7 @@ import com.android.ddmlib.FileListingService.FileEntry;
 import com.android.ddmlib.SyncException.SyncError;
 import com.android.ddmlib.utils.ArrayHelper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
@@ -40,13 +36,13 @@ import java.util.Date;
  */
 public class SyncService {
 
-    private static final byte[] ID_OKAY = { 'O', 'K', 'A', 'Y' };
-    private static final byte[] ID_FAIL = { 'F', 'A', 'I', 'L' };
-    private static final byte[] ID_STAT = { 'S', 'T', 'A', 'T' };
-    private static final byte[] ID_RECV = { 'R', 'E', 'C', 'V' };
-    private static final byte[] ID_DATA = { 'D', 'A', 'T', 'A' };
-    private static final byte[] ID_DONE = { 'D', 'O', 'N', 'E' };
-    private static final byte[] ID_SEND = { 'S', 'E', 'N', 'D' };
+    private static final byte[] ID_OKAY = {'O', 'K', 'A', 'Y'};
+    private static final byte[] ID_FAIL = {'F', 'A', 'I', 'L'};
+    private static final byte[] ID_STAT = {'S', 'T', 'A', 'T'};
+    private static final byte[] ID_RECV = {'R', 'E', 'C', 'V'};
+    private static final byte[] ID_DATA = {'D', 'A', 'T', 'A'};
+    private static final byte[] ID_DONE = {'D', 'O', 'N', 'E'};
+    private static final byte[] ID_SEND = {'S', 'E', 'N', 'D'};
 //    private final static byte[] ID_LIST = { 'L', 'I', 'S', 'T' };
 //    private final static byte[] ID_DENT = { 'D', 'E', 'N', 'T' };
 
@@ -78,7 +74,7 @@ public class SyncService {
     private final static int S_IXOTH = 0x0001; // other: execute
 */
 
-    private static final int SYNC_DATA_MAX = 64*1024;
+    private static final int SYNC_DATA_MAX = 64 * 1024;
     private static final int REMOTE_PATH_MAX_LENGTH = 1024;
 
     /**
@@ -88,52 +84,60 @@ public class SyncService {
     public interface ISyncProgressMonitor {
         /**
          * Sent when the transfer starts
+         *
          * @param totalWork the total amount of work.
          */
         void start(int totalWork);
+
         /**
          * Sent when the transfer is finished or interrupted.
          */
         void stop();
+
         /**
          * Sent to query for possible cancellation.
+         *
          * @return true if the transfer should be stopped.
          */
         boolean isCanceled();
+
         /**
          * Sent when a sub task is started.
+         *
          * @param name the name of the sub task.
          */
         void startSubTask(String name);
+
         /**
          * Sent when some progress have been made.
+         *
          * @param work the amount of work done.
          */
         void advance(int work);
     }
 
     public static class FileStat {
-      private final int myMode;
-      private final int mySize;
-      private final Date myLastModified;
+        private final int myMode;
+        private final int mySize;
+        private final Date myLastModified;
 
-      public FileStat(int mode, int size, int lastModifiedSecs) {
-        myMode = mode;
-        mySize = size;
-        myLastModified = new Date((long)(lastModifiedSecs) * 1000);
-      }
+        public FileStat(int mode, int size, int lastModifiedSecs) {
+            myMode = mode;
+            mySize = size;
+            myLastModified = new Date((long) (lastModifiedSecs) * 1000);
+        }
 
-      public int getMode() {
-        return myMode;
-      }
+        public int getMode() {
+            return myMode;
+        }
 
-      public int getSize() {
-        return mySize;
-      }
+        public int getSize() {
+            return mySize;
+        }
 
-      public Date getLastModified() {
-        return myLastModified;
-      }
+        public Date getLastModified() {
+            return myLastModified;
+        }
     }
 
     /**
@@ -143,6 +147,7 @@ public class SyncService {
         @Override
         public void advance(int work) {
         }
+
         @Override
         public boolean isCanceled() {
             return false;
@@ -151,9 +156,11 @@ public class SyncService {
         @Override
         public void start(int totalWork) {
         }
+
         @Override
         public void startSubTask(String name) {
         }
+
         @Override
         public void stop() {
         }
@@ -170,8 +177,9 @@ public class SyncService {
 
     /**
      * Creates a Sync service object.
+     *
      * @param address The address to connect to
-     * @param device the {@link Device} that the service connects to.
+     * @param device  the {@link Device} that the service connects to.
      */
     SyncService(InetSocketAddress address, Device device) {
         mAddress = address;
@@ -180,11 +188,12 @@ public class SyncService {
 
     /**
      * Opens the sync connection. This must be called before any calls to push[File] / pull[File].
+     *
      * @return true if the connection opened, false if adb refuse the connection. This can happen
      * if the {@link Device} is invalid.
-     * @throws TimeoutException in case of timeout on the connection.
+     * @throws TimeoutException            in case of timeout on the connection.
      * @throws AdbCommandRejectedException if adb rejects the command
-     * @throws IOException If the connection to adb failed.
+     * @throws IOException                 If the connection to adb failed.
      */
     boolean openSync() throws TimeoutException, AdbCommandRejectedException, IOException {
         try {
@@ -257,14 +266,14 @@ public class SyncService {
 
     /**
      * Pulls file(s) or folder(s).
-     * @param entries the remote item(s) to pull
+     *
+     * @param entries   the remote item(s) to pull
      * @param localPath The local destination. If the entries count is > 1 or
-     *      if the unique entry is a folder, this should be a folder.
-     * @param monitor The progress monitor. Cannot be null.
+     *                  if the unique entry is a folder, this should be a folder.
+     * @param monitor   The progress monitor. Cannot be null.
      * @throws SyncException
      * @throws IOException
      * @throws TimeoutException
-     *
      * @see FileListingService.FileEntry
      * @see #getNullProgressMonitor()
      */
@@ -296,14 +305,13 @@ public class SyncService {
 
     /**
      * Pulls a single file.
-     * @param remote the remote file
+     *
+     * @param remote        the remote file
      * @param localFilename The local destination.
-     * @param monitor The progress monitor. Cannot be null.
-     *
-     * @throws IOException in case of an IO exception.
+     * @param monitor       The progress monitor. Cannot be null.
+     * @throws IOException      in case of an IO exception.
      * @throws TimeoutException in case of a timeout reading responses from the device.
-     * @throws SyncException in case of a sync exception.
-     *
+     * @throws SyncException    in case of a sync exception.
      * @see FileListingService.FileEntry
      * @see #getNullProgressMonitor()
      */
@@ -322,18 +330,17 @@ public class SyncService {
      * <p/>Because this method just deals with a String for the remote file instead of a
      * {@link FileEntry}, the size of the file being pulled is unknown and the
      * {@link ISyncProgressMonitor} will not properly show the progress
+     *
      * @param remoteFilepath the full path to the remote file
-     * @param localFilename The local destination.
-     * @param monitor The progress monitor. Cannot be null.
-     *
-     * @throws IOException in case of an IO exception.
+     * @param localFilename  The local destination.
+     * @param monitor        The progress monitor. Cannot be null.
+     * @throws IOException      in case of an IO exception.
      * @throws TimeoutException in case of a timeout reading responses from the device.
-     * @throws SyncException in case of a sync exception.
-     *
+     * @throws SyncException    in case of a sync exception.
      * @see #getNullProgressMonitor()
      */
     public void pullFile(String remoteFilepath, String localFilename,
-            ISyncProgressMonitor monitor) throws TimeoutException, IOException, SyncException {
+                         ISyncProgressMonitor monitor) throws TimeoutException, IOException, SyncException {
         FileStat fileStat = statFile(remoteFilepath);
         if (fileStat == null) {
             // attempts to download anyway
@@ -351,11 +358,12 @@ public class SyncService {
 
     /**
      * Push several files.
-     * @param local An array of loca files to push
-     * @param remote the remote {@link FileEntry} representing a directory.
+     *
+     * @param local   An array of loca files to push
+     * @param remote  the remote {@link FileEntry} representing a directory.
      * @param monitor The progress monitor. Cannot be null.
-     * @throws SyncException if file could not be pushed
-     * @throws IOException in case of I/O error on the connection.
+     * @throws SyncException    if file could not be pushed
+     * @throws IOException      in case of I/O error on the connection.
      * @throws TimeoutException in case of a timeout reading responses from the device.
      */
     public void push(String[] local, FileEntry remote, ISyncProgressMonitor monitor)
@@ -383,12 +391,12 @@ public class SyncService {
 
     /**
      * Push a single file.
-     * @param local the local filepath.
-     * @param remote The remote filepath.
-     * @param monitor The progress monitor. Cannot be null.
      *
-     * @throws SyncException if file could not be pushed
-     * @throws IOException in case of I/O error on the connection.
+     * @param local   the local filepath.
+     * @param remote  The remote filepath.
+     * @param monitor The progress monitor. Cannot be null.
+     * @throws SyncException    if file could not be pushed
+     * @throws IOException      in case of I/O error on the connection.
      * @throws TimeoutException in case of a timeout reading responses from the device.
      */
     public void pushFile(String local, String remote, ISyncProgressMonitor monitor)
@@ -402,7 +410,7 @@ public class SyncService {
             throw new SyncException(SyncError.LOCAL_IS_DIRECTORY);
         }
 
-        monitor.start((int)f.length());
+        monitor.start((int) f.length());
 
         doPushFile(local, remote, monitor);
 
@@ -412,6 +420,7 @@ public class SyncService {
     /**
      * compute the recursive file size of all the files in the list. Folder
      * have a weight of 1.
+     *
      * @param entries
      * @param fls
      * @return
@@ -436,6 +445,7 @@ public class SyncService {
      * compute the recursive file size of all the files in the list. Folder
      * have a weight of 1.
      * This does not check for circular links.
+     *
      * @param files
      * @return
      */
@@ -457,18 +467,18 @@ public class SyncService {
 
     /**
      * Pulls multiple files/folders recursively.
-     * @param entries The list of entry to pull
-     * @param localPath the localpath to a directory
-     * @param fileListingService a FileListingService object to browse through remote directories.
-     * @param monitor the progress monitor. Must be started already.
      *
-     * @throws SyncException if file could not be pushed
-     * @throws IOException in case of I/O error on the connection.
+     * @param entries            The list of entry to pull
+     * @param localPath          the localpath to a directory
+     * @param fileListingService a FileListingService object to browse through remote directories.
+     * @param monitor            the progress monitor. Must be started already.
+     * @throws SyncException    if file could not be pushed
+     * @throws IOException      in case of I/O error on the connection.
      * @throws TimeoutException in case of a timeout reading responses from the device.
      */
     private void doPull(FileEntry[] entries, String localPath,
-            FileListingService fileListingService,
-            ISyncProgressMonitor monitor) throws SyncException, IOException, TimeoutException {
+                        FileListingService fileListingService,
+                        ISyncProgressMonitor monitor) throws SyncException, IOException, TimeoutException {
 
         for (FileEntry e : entries) {
             // check if we're cancelled
@@ -501,15 +511,16 @@ public class SyncService {
 
     /**
      * Pulls a remote file
+     *
      * @param remotePath the remote file (length max is 1024)
-     * @param localPath the local destination
-     * @param monitor the monitor. The monitor must be started already.
-     * @throws SyncException if file could not be pushed
-     * @throws IOException in case of I/O error on the connection.
+     * @param localPath  the local destination
+     * @param monitor    the monitor. The monitor must be started already.
+     * @throws SyncException    if file could not be pushed
+     * @throws IOException      in case of I/O error on the connection.
      * @throws TimeoutException in case of a timeout reading responses from the device.
      */
     private void doPullFile(String remotePath, String localPath,
-            ISyncProgressMonitor monitor) throws IOException, SyncException, TimeoutException {
+                            ISyncProgressMonitor monitor) throws IOException, SyncException, TimeoutException {
         byte[] msg = null;
         byte[] pullResult = new byte[8];
 
@@ -604,12 +615,12 @@ public class SyncService {
 
     /**
      * Push multiple files
+     *
      * @param fileArray
      * @param remotePath
      * @param monitor
-     *
-     * @throws SyncException if file could not be pushed
-     * @throws IOException in case of I/O error on the connection.
+     * @throws SyncException    if file could not be pushed
+     * @throws IOException      in case of I/O error on the connection.
      * @throws TimeoutException in case of a timeout reading responses from the device.
      */
     private void doPush(File[] fileArray, String remotePath, ISyncProgressMonitor monitor)
@@ -639,16 +650,16 @@ public class SyncService {
 
     /**
      * Push a single file
-     * @param localPath the local file to push
-     * @param remotePath the remote file (length max is 1024)
-     * @param monitor the monitor. The monitor must be started already.
      *
-     * @throws SyncException if file could not be pushed
-     * @throws IOException in case of I/O error on the connection.
+     * @param localPath  the local file to push
+     * @param remotePath the remote file (length max is 1024)
+     * @param monitor    the monitor. The monitor must be started already.
+     * @throws SyncException    if file could not be pushed
+     * @throws IOException      in case of I/O error on the connection.
      * @throws TimeoutException in case of a timeout reading responses from the device.
      */
     private void doPushFile(String localPath, String remotePath,
-            ISyncProgressMonitor monitor) throws SyncException, IOException, TimeoutException {
+                            ISyncProgressMonitor monitor) throws SyncException, IOException, TimeoutException {
         FileInputStream fis = null;
         byte[] msg;
 
@@ -694,7 +705,7 @@ public class SyncService {
                 ArrayHelper.swap32bitsToArray(readCount, getBuffer(), 4);
 
                 // now write it
-                AdbHelper.write(mChannel, getBuffer(), readCount+8, timeOut);
+                AdbHelper.write(mChannel, getBuffer(), readCount + 8, timeOut);
 
                 // and advance the monitor
                 monitor.advance(readCount);
@@ -710,7 +721,7 @@ public class SyncService {
 
         // create the DONE message
         long time = f.lastModified() / 1000;
-        msg = createReq(ID_DONE, (int)time);
+        msg = createReq(ID_DONE, (int) time);
 
         // and send it.
         AdbHelper.write(mChannel, msg, -1, timeOut);
@@ -728,7 +739,8 @@ public class SyncService {
 
     /**
      * Reads an error message from the opened {@link #mChannel}.
-     * @param result the current adb result. Must contain both FAIL and the length of the message.
+     *
+     * @param result  the current adb result. Must contain both FAIL and the length of the message.
      * @param timeOut
      * @return
      * @throws TimeoutException in case of a timeout reading responses from the device.
@@ -754,9 +766,10 @@ public class SyncService {
 
     /**
      * Returns the stat info of the remote file.
+     *
      * @param path the remote file
      * @return an FileStat containing the mode, size and last modified info if all went well or null
-     *      otherwise
+     * otherwise
      * @throws IOException
      * @throws TimeoutException in case of a timeout reading responses from the device.
      */
@@ -785,6 +798,7 @@ public class SyncService {
 
     /**
      * Create a command with a code and an int values
+     *
      * @param command
      * @param value
      * @return
@@ -800,8 +814,9 @@ public class SyncService {
 
     /**
      * Creates the data array for a stat request.
+     *
      * @param command the 4 byte command (ID_STAT, ID_RECV, ...)
-     * @param path The path of the remote file on which to execute the command
+     * @param path    The path of the remote file on which to execute the command
      * @return the byte[] to send to the device through adb
      */
     private static byte[] createFileReq(byte[] command, String path) {
@@ -818,9 +833,10 @@ public class SyncService {
     /**
      * Creates the data array for a file request. This creates an array with a 4 byte command + the
      * remote file name.
+     *
      * @param command the 4 byte command (ID_STAT, ID_RECV, ...).
-     * @param path The path, as a byte array, of the remote file on which to
-     *      execute the command.
+     * @param path    The path, as a byte array, of the remote file on which to
+     *                execute the command.
      * @return the byte[] to send to the device through adb
      */
     private static byte[] createFileReq(byte[] command, byte[] path) {
@@ -857,8 +873,9 @@ public class SyncService {
 
     /**
      * Checks the result array starts with the provided code
+     *
      * @param result The result array to check
-     * @param code The 4 byte code.
+     * @param code   The 4 byte code.
      * @return true if the code matches.
      */
     private static boolean checkResult(byte[] result, byte[] code) {
@@ -903,6 +920,7 @@ public class SyncService {
 
     /**
      * Retrieve the buffer, allocating if necessary
+     *
      * @return
      */
     private byte[] getBuffer() {

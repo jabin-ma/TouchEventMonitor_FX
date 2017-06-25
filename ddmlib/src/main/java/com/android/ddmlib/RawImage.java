@@ -41,8 +41,9 @@ public final class RawImage {
     /**
      * Reads the header of a RawImage from a {@link ByteBuffer}.
      * <p/>The way the data is sent over adb is defined in system/core/adb/framebuffer_service.c
+     *
      * @param version the version of the protocol.
-     * @param buf the buffer to read from.
+     * @param buf     the buffer to read from.
      * @return true if success
      */
     public boolean readHeader(int version, ByteBuffer buf) {
@@ -113,6 +114,7 @@ public final class RawImage {
 
     /**
      * Returns the size of the header for a specific version of the framebuffer adb protocol.
+     *
      * @param version the version of the protocol
      * @return the number of int that makes up the header.
      */
@@ -154,11 +156,11 @@ public final class RawImage {
         int byteCount = this.bpp >> 3; // bpp is in bits, we want bytes to match our array
         final int w = this.width;
         final int h = this.height;
-        for (int y = 0 ; y < h ; y++) {
-            for (int x = 0 ; x < w ; x++) {
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
                 System.arraycopy(
                         this.data, (y * w + x) * byteCount,
-                        rotated.data, ((w-x-1) * h + y) * byteCount,
+                        rotated.data, ((w - x - 1) * h + y) * byteCount,
                         byteCount);
             }
         }
@@ -174,18 +176,18 @@ public final class RawImage {
         int r, g, b, a;
         if (bpp == 16) {
             value = data[index] & 0x00FF;
-            value |= (data[index+1] << 8) & 0x0FF00;
+            value |= (data[index + 1] << 8) & 0x0FF00;
             // RGB565 to RGB888
             // Multiply by 255/31 to convert from 5 bits (31 max) to 8 bits (255)
-            r = ((value >>> 11) & 0x1f) * 255/31;
-            g = ((value >>> 5)  & 0x3f) * 255/63;
-            b = ((value)        & 0x1f) * 255/31;
+            r = ((value >>> 11) & 0x1f) * 255 / 31;
+            g = ((value >>> 5) & 0x3f) * 255 / 63;
+            b = ((value) & 0x1f) * 255 / 31;
             a = 0xFF; // force alpha to opaque if there's no alpha value in the framebuffer.
         } else if (bpp == 32) {
             value = data[index] & 0x00FF;
-            value |= (data[index+1] & 0x00FF) << 8;
-            value |= (data[index+2] & 0x00FF) << 16;
-            value |= (data[index+3] & 0x00FF) << 24;
+            value |= (data[index + 1] & 0x00FF) << 8;
+            value |= (data[index + 2] & 0x00FF) << 16;
+            value |= (data[index + 3] & 0x00FF) << 24;
             r = ((value >>> red_offset) & getMask(red_length)) << (8 - red_length);
             g = ((value >>> green_offset) & getMask(green_length)) << (8 - green_length);
             b = ((value >>> blue_offset) & getMask(blue_length)) << (8 - blue_length);
@@ -214,6 +216,7 @@ public final class RawImage {
 
     /**
      * Creates a mask value based on a length.
+     *
      * @param length
      * @return
      */

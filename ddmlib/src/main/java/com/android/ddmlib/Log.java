@@ -59,9 +59,10 @@ public final class Log {
 
             return null;
         }
-        
+
         /**
          * Returns the {@link LogLevel} enum matching the specified letter.
+         *
          * @param letter the letter matching a <code>LogLevel</code> enum
          * @return a <code>LogLevel</code> object or <code>null</code> if no match were found.
          */
@@ -79,7 +80,8 @@ public final class Log {
          * Returns the {@link LogLevel} enum matching the specified letter.
          * <p/>
          * The letter is passed as a {@link String} argument, but only the first character
-         * is used. 
+         * is used.
+         *
          * @param letter the letter matching a <code>LogLevel</code> enum
          * @return a <code>LogLevel</code> object or <code>null</code> if no match were found.
          */
@@ -112,7 +114,7 @@ public final class Log {
             return mStringValue;
         }
     }
-    
+
     /**
      * Classes which implement this interface provides methods that deal with outputting log
      * messages.
@@ -120,18 +122,20 @@ public final class Log {
     public interface ILogOutput {
         /**
          * Sent when a log message needs to be printed.
+         *
          * @param logLevel The {@link LogLevel} enum representing the priority of the message.
-         * @param tag The tag associated with the message.
-         * @param message The message to display.
+         * @param tag      The tag associated with the message.
+         * @param message  The message to display.
          */
         void printLog(LogLevel logLevel, String tag, String message);
 
         /**
          * Sent when a log message needs to be printed, and, if possible, displayed to the user
          * in a dialog box.
+         *
          * @param logLevel The {@link LogLevel} enum representing the priority of the message.
-         * @param tag The tag associated with the message.
-         * @param message The message to display.
+         * @param tag      The tag associated with the message.
+         * @param message  The message to display.
          */
         void printAndPromptLog(LogLevel logLevel, String tag, String message);
     }
@@ -142,10 +146,11 @@ public final class Log {
 
     private static final char[] mSpaceLine = new char[72];
     private static final char[] mHexDigit = new char[]
-        { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
+            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
     static {
         /* prep for hex dump */
-        int i = mSpaceLine.length-1;
+        int i = mSpaceLine.length - 1;
         while (i >= 0)
             mSpaceLine[i--] = ' ';
         mSpaceLine[0] = mSpaceLine[1] = mSpaceLine[2] = mSpaceLine[3] = '0';
@@ -157,11 +162,13 @@ public final class Log {
         static final boolean LOGD = true;
     }
 
-    private Log() {}
+    private Log() {
+    }
 
     /**
      * Outputs a {@link LogLevel#VERBOSE} level message.
-     * @param tag The tag associated with the message.
+     *
+     * @param tag     The tag associated with the message.
      * @param message The message to output.
      */
     public static void v(String tag, String message) {
@@ -170,7 +177,8 @@ public final class Log {
 
     /**
      * Outputs a {@link LogLevel#DEBUG} level message.
-     * @param tag The tag associated with the message.
+     *
+     * @param tag     The tag associated with the message.
      * @param message The message to output.
      */
     public static void d(String tag, String message) {
@@ -179,7 +187,8 @@ public final class Log {
 
     /**
      * Outputs a {@link LogLevel#INFO} level message.
-     * @param tag The tag associated with the message.
+     *
+     * @param tag     The tag associated with the message.
      * @param message The message to output.
      */
     public static void i(String tag, String message) {
@@ -188,7 +197,8 @@ public final class Log {
 
     /**
      * Outputs a {@link LogLevel#WARN} level message.
-     * @param tag The tag associated with the message.
+     *
+     * @param tag     The tag associated with the message.
      * @param message The message to output.
      */
     public static void w(String tag, String message) {
@@ -197,7 +207,8 @@ public final class Log {
 
     /**
      * Outputs a {@link LogLevel#ERROR} level message.
-     * @param tag The tag associated with the message.
+     *
+     * @param tag     The tag associated with the message.
      * @param message The message to output.
      */
     public static void e(String tag, String message) {
@@ -206,7 +217,8 @@ public final class Log {
 
     /**
      * Outputs a log message and attempts to display it in a dialog.
-     * @param tag The tag associated with the message.
+     *
+     * @param tag     The tag associated with the message.
      * @param message The message to output.
      */
     public static void logAndDisplay(LogLevel logLevel, String tag, String message) {
@@ -219,7 +231,8 @@ public final class Log {
 
     /**
      * Outputs a {@link LogLevel#ERROR} level {@link Throwable} information.
-     * @param tag The tag associated with the message.
+     *
+     * @param tag       The tag associated with the message.
      * @param throwable The {@link Throwable} to output.
      */
     public static void e(String tag, Throwable throwable) {
@@ -239,6 +252,7 @@ public final class Log {
     /**
      * Sets the {@link ILogOutput} to use to print the logs. If not set, {@link System#out}
      * will be used.
+     *
      * @param logOutput The {@link ILogOutput} to use to print the log.
      */
     public static void setLogOutput(ILogOutput logOutput) {
@@ -332,9 +346,10 @@ public final class Log {
             }
         }
     }
-    
+
     /**
      * Prints a log message.
+     *
      * @param logLevel
      * @param tag
      * @param message
@@ -345,6 +360,7 @@ public final class Log {
 
     /**
      * Formats a log message.
+     *
      * @param logLevel
      * @param tag
      * @param message
@@ -355,9 +371,9 @@ public final class Log {
                 logLevel.getPriorityLetter(), tag, message);
     }
 
-	public static void w(String string, String message, RuntimeException e) {
-		
-	}
+    public static void w(String string, String message, RuntimeException e) {
+
+    }
 }
 
 

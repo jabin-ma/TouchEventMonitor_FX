@@ -16,6 +16,10 @@
 
 package com.android.ddmlib;
 
+import com.android.annotations.Nullable;
+import com.android.ddmlib.log.LogReceiver;
+import com.android.ddmlib.utils.Bash;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -24,10 +28,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.TimeUnit;
-
-import com.android.annotations.Nullable;
-import com.android.ddmlib.log.LogReceiver;
-import com.android.ddmlib.utils.Bash;
 
 /**
  * Helper class to handle requests and connections to adb.
@@ -199,7 +199,7 @@ public final class AdbHelper {
      * matter).
      */
     public static byte[] formAdbRequest(String req) {
-        Log.d("AdbHelper","create request:"+req);
+        Log.d("AdbHelper", "create request:" + req);
         String resultStr = String.format("%04X%s", req.length(), req); //$NON-NLS-1$
         byte[] result;
         try {
@@ -482,7 +482,7 @@ public final class AdbHelper {
             // to a specific device
             setDevice(adbChan, device);
 
-            byte[] request = formAdbRequest(adbService.name().toLowerCase() + ":" + buildCmdLine(command,args)); //$NON-NLS-1$
+            byte[] request = formAdbRequest(adbService.name().toLowerCase() + ":" + buildCmdLine(command, args)); //$NON-NLS-1$
             write(adbChan, request);
             AdbResponse resp = readAdbResponse(adbChan, false /* readDiagString */);
             if (!resp.okay) {

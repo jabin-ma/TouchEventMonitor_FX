@@ -26,13 +26,19 @@ import java.util.regex.Pattern;
 public final class NativeStackCallInfo {
     private static final Pattern SOURCE_NAME_PATTERN = Pattern.compile("^(.+):(\\d+)(\\s+\\(discriminator\\s+\\d+\\))?$");
 
-    /** address of this stack frame */
+    /**
+     * address of this stack frame
+     */
     private long mAddress;
 
-    /** name of the library */
+    /**
+     * name of the library
+     */
     private String mLibrary;
 
-    /** name of the method */
+    /**
+     * name of the method
+     */
     private String mMethod;
 
     /**
@@ -46,11 +52,11 @@ public final class NativeStackCallInfo {
     /**
      * Basic constructor with library, method, and sourcefile information
      *
-     * @param address address of this stack frame
-     * @param lib The name of the library
-     * @param method the name of the method
+     * @param address    address of this stack frame
+     * @param lib        The name of the library
+     * @param method     the name of the method
      * @param sourceFile the name of the source file and the line number
-     * as "[sourcefile]:[fileNumber]"
+     *                   as "[sourcefile]:[fileNumber]"
      */
     public NativeStackCallInfo(long address, String lib, String method, String sourceFile) {
         mAddress = address;

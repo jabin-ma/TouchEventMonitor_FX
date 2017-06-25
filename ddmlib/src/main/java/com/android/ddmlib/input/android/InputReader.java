@@ -1,7 +1,5 @@
 package com.android.ddmlib.input.android;
 
-import com.android.ddmlib.Log;
-
 import java.util.HashMap;
 
 /**

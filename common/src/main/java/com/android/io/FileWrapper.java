@@ -17,13 +17,7 @@
 package com.android.io;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URI;
 
 /**
@@ -34,6 +28,7 @@ public class FileWrapper extends File implements IAbstractFile {
 
     /**
      * Creates a new File instance matching a given {@link File} object.
+     *
      * @param file the file to match
      */
     public FileWrapper(File file) {
@@ -42,9 +37,9 @@ public class FileWrapper extends File implements IAbstractFile {
 
     /**
      * Creates a new File instance from a parent abstract pathname and a child pathname string.
-     * @param parent the parent pathname
-     * @param child the child name
      *
+     * @param parent the parent pathname
+     * @param child  the child name
      * @see File#File(File, String)
      */
     public FileWrapper(File parent, String child) {
@@ -54,8 +49,8 @@ public class FileWrapper extends File implements IAbstractFile {
     /**
      * Creates a new File instance by converting the given pathname string into an abstract
      * pathname.
-     * @param osPathname the OS pathname
      *
+     * @param osPathname the OS pathname
      * @see File#File(String)
      */
     public FileWrapper(String osPathname) {
@@ -64,9 +59,9 @@ public class FileWrapper extends File implements IAbstractFile {
 
     /**
      * Creates a new File instance from a parent abstract pathname and a child pathname string.
-     * @param parent the parent pathname
-     * @param child the child name
      *
+     * @param parent the parent pathname
+     * @param child  the child name
      * @see File#File(String, String)
      */
     public FileWrapper(String parent, String child) {
@@ -76,9 +71,9 @@ public class FileWrapper extends File implements IAbstractFile {
     /**
      * Creates a new File instance by converting the given <code>file:</code> URI into an
      * abstract pathname.
-     * @param uri An absolute, hierarchical URI with a scheme equal to "file", a non-empty path
-     * component, and undefined authority, query, and fragment components
      *
+     * @param uri An absolute, hierarchical URI with a scheme equal to "file", a non-empty path
+     *            component, and undefined authority, query, and fragment components
      * @see File#File(URI)
      */
     public FileWrapper(URI uri) {

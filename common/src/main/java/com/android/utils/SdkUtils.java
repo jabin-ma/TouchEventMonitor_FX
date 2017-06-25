@@ -24,11 +24,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -36,16 +32,11 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
 
-import static com.android.SdkConstants.DOT_WEBP;
-import static com.android.SdkConstants.DOT_XML;
-import static com.android.SdkConstants.DOT_PNG;
-import static com.android.SdkConstants.DOT_GIF;
-import static com.android.SdkConstants.DOT_9PNG;
-import static com.android.SdkConstants.DOT_JPEG;
-import static com.android.SdkConstants.DOT_JPG;
-import static com.android.SdkConstants.DOT_BMP;
+import static com.android.SdkConstants.*;
 
-/** Miscellaneous utilities used by the Android SDK tools */
+/**
+ * Miscellaneous utilities used by the Android SDK tools
+ */
 public class SdkUtils {
     /**
      * Returns true if the given string ends with the given suffix, using a
@@ -65,7 +56,7 @@ public class SdkUtils {
      * sensitive).
      *
      * @param sequence the character sequence to be checked
-     * @param suffix the suffix to look for
+     * @param suffix   the suffix to look for
      * @return true if the given sequence ends with the given suffix
      */
     public static boolean endsWith(@NonNull CharSequence sequence, @NonNull CharSequence suffix) {
@@ -76,13 +67,13 @@ public class SdkUtils {
      * Returns true if the given sequence ends at the given offset with the given suffix (case
      * sensitive)
      *
-     * @param sequence the character sequence to be checked
+     * @param sequence  the character sequence to be checked
      * @param endOffset the offset at which the sequence is considered to end
-     * @param suffix the suffix to look for
+     * @param suffix    the suffix to look for
      * @return true if the given sequence ends with the given suffix
      */
     public static boolean endsWith(@NonNull CharSequence sequence, int endOffset,
-            @NonNull CharSequence suffix) {
+                                   @NonNull CharSequence suffix) {
         if (endOffset < suffix.length()) {
             return false;
         }
@@ -116,7 +107,7 @@ public class SdkUtils {
      * @param offset the offset in the string to start looking
      * @param prefix the prefix to be checked for
      * @return true if the string case-insensitively starts at the given offset
-     *         with the given prefix
+     * with the given prefix
      */
     public static boolean startsWith(@NonNull String string, int offset, @NonNull String prefix) {
         return string.regionMatches(true /* ignoreCase */, offset, prefix, 0, prefix.length());
@@ -156,7 +147,9 @@ public class SdkUtils {
         return false;
     }
 
-    /** For use by {@link #getLineSeparator()} */
+    /**
+     * For use by {@link #getLineSeparator()}
+     */
     private static String sLineSeparator;
 
     /**
@@ -183,10 +176,10 @@ public class SdkUtils {
      * Wraps the given text at the given line width, with an optional hanging
      * indent.
      *
-     * @param text the text to be wrapped
-     * @param lineWidth the number of characters to wrap the text to
+     * @param text          the text to be wrapped
+     * @param lineWidth     the number of characters to wrap the text to
      * @param hangingIndent the hanging indent (to be used for the second and
-     *            subsequent lines in each paragraph, or null if not known
+     *                      subsequent lines in each paragraph, or null if not known
      * @return the string, wrapped
      */
     @NonNull
@@ -265,7 +258,7 @@ public class SdkUtils {
      * US locale, "1,000", will return 1000. In the French locale, "1.000" will return
      * 1000.  If the format is invalid, returns the supplied default value instead.
      *
-     * @param string the string to be parsed
+     * @param string       the string to be parsed
      * @param defaultValue the value to be returned if there is a parsing error
      * @return the integer value
      */
@@ -302,7 +295,7 @@ public class SdkUtils {
      * US locale, "3.14", will return 3.14. In the French locale, "3,14" will return
      * 3.14. If the format is invalid, returns the supplied default value instead.
      *
-     * @param string the string to be parsed
+     * @param string       the string to be parsed
      * @param defaultValue the value to be returned if there is a parsing error
      * @return the double value
      */
@@ -330,13 +323,11 @@ public class SdkUtils {
     public static File urlToFile(@NonNull URL url) throws MalformedURLException {
         try {
             return new File(url.toURI());
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             MalformedURLException ex = new MalformedURLException(e.getLocalizedMessage());
             ex.initCause(e);
             throw ex;
-        }
-        catch (URISyntaxException e) {
+        } catch (URISyntaxException e) {
             return new File(url.getPath());
         }
     }
@@ -363,7 +354,9 @@ public class SdkUtils {
         return file.toURI().toURL();
     }
 
-    /** Prefix in comments which mark the source locations for merge results */
+    /**
+     * Prefix in comments which mark the source locations for merge results
+     */
     public static final String FILENAME_PREFIX = "From: ";
 
     /**
@@ -371,8 +364,7 @@ public class SdkUtils {
      * such as &amp; and &lt;; those are expected to be escaped by the caller (for
      * example, handled by a call to {@link org.w3c.dom.Document#createComment(String)})
      *
-     *
-     * @param file the file to create a path comment for
+     * @param file           the file to create a path comment for
      * @param includePadding whether to include padding. The final comment recognized by
      *                       error recognizers expect padding between the {@code <!--} and
      *                       the start marker (From:); you can disable padding if the caller
@@ -406,9 +398,11 @@ public class SdkUtils {
         copyXmlWithComment(from, to, createPathComment(from, true));
     }
 
-    /** Copies a given XML file, and appends a given comment to the end */
+    /**
+     * Copies a given XML file, and appends a given comment to the end
+     */
     private static void copyXmlWithComment(@NonNull File from, @NonNull File to,
-            @Nullable String comment) throws IOException {
+                                           @Nullable String comment) throws IOException {
         assert endsWithIgnoreCase(from.getPath(), DOT_XML) : from;
 
         int successfulOps = 0;
@@ -434,6 +428,7 @@ public class SdkUtils {
 
     /**
      * Translates an XML name (e.g. xml-name) into a Java / C++ constant name (e.g. XML_NAME)
+     *
      * @param xmlName the hyphen separated lower case xml name.
      * @return the equivalent constant name.
      */
@@ -443,6 +438,7 @@ public class SdkUtils {
 
     /**
      * Translates a camel case name (e.g. xmlName) into a Java / C++ constant name (e.g. XML_NAME)
+     *
      * @param camelCaseName the camel case name.
      * @return the equivalent constant name.
      */
@@ -452,6 +448,7 @@ public class SdkUtils {
 
     /**
      * Translates a Java / C++ constant name (e.g. XML_NAME) into camel case name (e.g. xmlName)
+     *
      * @param constantName the constant name.
      * @return the equivalent camel case name.
      */
@@ -461,6 +458,7 @@ public class SdkUtils {
 
     /**
      * Translates a Java / C++ constant name (e.g. XML_NAME) into a XML case name (e.g. xml-name)
+     *
      * @param constantName the constant name.
      * @return the equivalent XML name.
      */
@@ -501,7 +499,7 @@ public class SdkUtils {
      * @return true if the file represents an image file
      */
     public static boolean hasImageExtension(String path) {
-        for (String ext: IMAGE_EXTENSIONS) {
+        for (String ext : IMAGE_EXTENSIONS) {
             if (endsWithIgnoreCase(path, ext)) {
                 return true;
             }

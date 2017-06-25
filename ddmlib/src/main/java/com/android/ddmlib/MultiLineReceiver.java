@@ -30,25 +30,28 @@ import java.util.ArrayList;
 public abstract class MultiLineReceiver implements IShellOutputReceiver {
 
     private boolean mTrimLines = true;
-    
-    
-    private boolean reportOneLine=false;
-    
 
-    /** unfinished message line, stored for next packet */
+
+    private boolean reportOneLine = false;
+
+
+    /**
+     * unfinished message line, stored for next packet
+     */
     private String mUnfinishedLine = null;
 
     private final ArrayList<String> mArray = new ArrayList<String>();
 
     /**
      * Set the trim lines flag.
+     *
      * @param trim whether the lines are trimmed, or not.
      */
     public void setTrimLine(boolean trim) {
         mTrimLines = trim;
     }
 
-    
+
     /* (non-Javadoc)
      * @see com.android.ddmlib.adb.IShellOutputReceiver#addOutput(
      *      byte[], int, int)
@@ -90,16 +93,16 @@ public abstract class MultiLineReceiver implements IShellOutputReceiver {
                 if (mTrimLines) {
                     line = line.trim();
                 }
-                if(reportOneLine){
-                	processNewLines(line);
-                }else{
-                	mArray.add(line);
+                if (reportOneLine) {
+                    processNewLines(line);
+                } else {
+                    mArray.add(line);
                 }
                 // move start to after the \r\n we found
                 start = index + newlineLength;
             } while (true);
 
-            if (!mArray.isEmpty()&&!reportOneLine) {
+            if (!mArray.isEmpty() && !reportOneLine) {
                 // at this point we've split all the lines.
                 // make the array
                 String[] lines = mArray.toArray(new String[mArray.size()]);
@@ -116,7 +119,7 @@ public abstract class MultiLineReceiver implements IShellOutputReceiver {
     @Override
     public final void flush() {
         if (mUnfinishedLine != null) {
-            processNewLines(new String[] { mUnfinishedLine });
+            processNewLines(new String[]{mUnfinishedLine});
         }
 
         done();
@@ -133,12 +136,13 @@ public abstract class MultiLineReceiver implements IShellOutputReceiver {
     /**
      * Called when new lines are being received by the remote process.
      * <p/>It is guaranteed that the lines are complete when they are given to this method.
+     *
      * @param lines The array containing the new lines.
      */
     public abstract void processNewLines(String... lines);
 
 
-	public void setReportOneLine(boolean reportOneLine) {
-		this.reportOneLine = reportOneLine;
-	}
+    public void setReportOneLine(boolean reportOneLine) {
+        this.reportOneLine = reportOneLine;
+    }
 }

@@ -25,18 +25,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
-import java.nio.channels.CancelledKeyException;
-import java.nio.channels.NotYetBoundException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.nio.channels.*;
+import java.util.*;
 
 /**
  * Monitor open connections.
@@ -127,6 +117,7 @@ final class MonitorThread extends Thread {
 
     /**
      * Sets the client to accept debugger connection on the custom "Selected debug port".
+     *
      * @param selectedClient the client. Can be null.
      */
     synchronized void setSelectedClient(Client selectedClient) {
@@ -261,14 +252,11 @@ final class MonitorThread extends Thread {
                     try {
                         if (key.attachment() instanceof Client) {
                             processClientActivity(key);
-                        }
-                        else if (key.attachment() instanceof Debugger) {
+                        } else if (key.attachment() instanceof Debugger) {
                             processDebuggerActivity(key);
-                        }
-                        else if (key.attachment() instanceof MonitorThread) {
+                        } else if (key.attachment() instanceof MonitorThread) {
                             processDebugSelectedActivity(key);
-                        }
-                        else {
+                        } else {
                             Log.e("ddms", "unknown activity key");
                         }
                     } catch (Exception e) {
@@ -299,7 +287,7 @@ final class MonitorThread extends Thread {
      * Something happened. Figure out what.
      */
     private void processClientActivity(SelectionKey key) {
-        Client client = (Client)key.attachment();
+        Client client = (Client) key.attachment();
 
         try {
             if (!key.isReadable() || !key.isValid()) {
@@ -377,7 +365,7 @@ final class MonitorThread extends Thread {
      * request. The spec allows a JDWP message to include multiple DDM chunks.
      */
     private void callHandler(Client client, JdwpPacket packet,
-            ChunkHandler handler) {
+                             ChunkHandler handler) {
 
         // on first DDM packet received, broadcast a "ready" message
         if (!client.ddmSeen())
@@ -419,6 +407,7 @@ final class MonitorThread extends Thread {
     /**
      * Drops a client from the monitor.
      * <p/>This will lock the {@link Client} list of the {@link Device} running <var>client</var>.
+     *
      * @param client
      * @param notify
      */
@@ -457,7 +446,7 @@ final class MonitorThread extends Thread {
      * connection or a data packet.
      */
     private void processDebuggerActivity(SelectionKey key) {
-        Debugger dbg = (Debugger)key.attachment();
+        Debugger dbg = (Debugger) key.attachment();
 
         try {
             if (key.isAcceptable()) {
@@ -519,7 +508,7 @@ final class MonitorThread extends Thread {
      * We have incoming data from the debugger. Forward it to the client.
      */
     private void processDebuggerData(SelectionKey key) {
-        Debugger dbg = (Debugger)key.attachment();
+        Debugger dbg = (Debugger) key.attachment();
 
         try {
             /*
@@ -704,6 +693,7 @@ final class MonitorThread extends Thread {
 
     /**
      * Opens (or reopens) the "debug selected" port and listen for connections.
+     *
      * @return true if the port was opened successfully.
      * @throws IOException
      */
@@ -748,7 +738,7 @@ final class MonitorThread extends Thread {
     private void processDebugSelectedActivity(SelectionKey key) {
         assert key.isAcceptable();
 
-        ServerSocketChannel acceptChan = (ServerSocketChannel)key.channel();
+        ServerSocketChannel acceptChan = (ServerSocketChannel) key.channel();
 
         /*
          * Find the debugger associated with the currently-selected client.

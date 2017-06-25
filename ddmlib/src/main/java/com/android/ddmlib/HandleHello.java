@@ -30,7 +30,8 @@ final class HandleHello extends ChunkHandler {
 
     private static final HandleHello mInst = new HandleHello();
 
-    private HandleHello() {}
+    private HandleHello() {
+    }
 
     /**
      * Register for the packets we expect to get from the client.
@@ -57,6 +58,7 @@ final class HandleHello extends ChunkHandler {
 
     /**
      * Sends HELLO-type commands to the VM after a good handshake.
+     *
      * @param client
      * @param serverProtocolVersion
      * @throws IOException
@@ -144,7 +146,7 @@ final class HandleHello extends ChunkHandler {
         }
 
         Log.d("ddm-hello", "HELO: v=" + version + ", pid=" + pid
-            + ", vm='" + vmIdent + "', app='" + appName + "'");
+                + ", vm='" + vmIdent + "', app='" + appName + "'");
 
         ClientData cd = client.getClientData();
 
@@ -181,8 +183,7 @@ final class HandleHello extends ChunkHandler {
      * Send a HELO request to the client.
      */
     public static void sendHELO(Client client, int serverProtocolVersion)
-        throws IOException
-    {
+            throws IOException {
         ByteBuffer rawBuf = allocBuffer(4);
         JdwpPacket packet = new JdwpPacket(rawBuf);
         ByteBuffer buf = getChunkDataBuf(rawBuf);
@@ -191,7 +192,7 @@ final class HandleHello extends ChunkHandler {
 
         finishChunkPacket(packet, CHUNK_HELO, buf.position());
         Log.d("ddm-hello", "Sending " + name(CHUNK_HELO)
-            + " ID=0x" + Integer.toHexString(packet.getId()));
+                + " ID=0x" + Integer.toHexString(packet.getId()));
         client.sendAndConsume(packet, mInst);
     }
 

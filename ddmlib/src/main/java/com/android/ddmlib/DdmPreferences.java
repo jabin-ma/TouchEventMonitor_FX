@@ -30,21 +30,37 @@ import com.android.ddmlib.Log.LogLevel;
  */
 public final class DdmPreferences {
 
-    /** Default value for thread update flag upon client connection. */
+    /**
+     * Default value for thread update flag upon client connection.
+     */
     public static final boolean DEFAULT_INITIAL_THREAD_UPDATE = false;
-    /** Default value for heap update flag upon client connection. */
+    /**
+     * Default value for heap update flag upon client connection.
+     */
     public static final boolean DEFAULT_INITIAL_HEAP_UPDATE = false;
-    /** Default value for the selected client debug port */
+    /**
+     * Default value for the selected client debug port
+     */
     public static final int DEFAULT_SELECTED_DEBUG_PORT = 8700;
-    /** Default value for the debug port base */
+    /**
+     * Default value for the debug port base
+     */
     public static final int DEFAULT_DEBUG_PORT_BASE = 8600;
-    /** Default value for the logcat {@link LogLevel} */
+    /**
+     * Default value for the logcat {@link LogLevel}
+     */
     public static final LogLevel DEFAULT_LOG_LEVEL = LogLevel.DEBUG;
-    /** Default timeout values for adb connection (milliseconds) */
+    /**
+     * Default timeout values for adb connection (milliseconds)
+     */
     public static final int DEFAULT_TIMEOUT = 5000; // standard delay, in ms
-    /** Default profiler buffer size (megabytes) */
+    /**
+     * Default profiler buffer size (megabytes)
+     */
     public static final int DEFAULT_PROFILER_BUFFER_SIZE_MB = 8;
-    /** Default values for the use of the ADBHOST environment variable. */
+    /**
+     * Default values for the use of the ADBHOST environment variable.
+     */
     public static final boolean DEFAULT_USE_ADBHOST = false;
     public static final String DEFAULT_ADBHOST_VALUE = "127.0.0.1";
 
@@ -62,6 +78,7 @@ public final class DdmPreferences {
 
     /**
      * Returns the initial {@link Client} flag for thread updates.
+     *
      * @see #setInitialThreadUpdate(boolean)
      */
     public static boolean getInitialThreadUpdate() {
@@ -78,6 +95,7 @@ public final class DdmPreferences {
 
     /**
      * Returns the initial {@link Client} flag for heap updates.
+     *
      * @see #setInitialHeapUpdate(boolean)
      */
     public static boolean getInitialHeapUpdate() {
@@ -104,6 +122,7 @@ public final class DdmPreferences {
     /**
      * Sets the debug port used by the selected {@link Client}.
      * <p/>This change takes effect right away.
+     *
      * @param port the new port to use.
      */
     public static void setSelectedDebugPort(int port) {
@@ -160,6 +179,7 @@ public final class DdmPreferences {
     /**
      * Sets the timeout value for adb connection.
      * <p/>This change takes effect for newly created connections only.
+     *
      * @param timeOut the timeout value (milliseconds).
      */
     public static void setTimeOut(int timeOut) {
@@ -175,6 +195,7 @@ public final class DdmPreferences {
 
     /**
      * Sets the profiler buffer size value.
+     *
      * @param bufferSizeMb the buffer size (megabytes).
      */
     public static void setProfilerBufferSizeMb(int bufferSizeMb) {
@@ -190,6 +211,7 @@ public final class DdmPreferences {
 
     /**
      * Sets the value of the boolean indicating that the user uses or not the variable ADBHOST.
+     *
      * @param useAdbHost true if the user uses ADBHOST
      */
     public static void setUseAdbHost(boolean useAdbHost) {
@@ -205,6 +227,7 @@ public final class DdmPreferences {
 
     /**
      * Sets the value of the ADBHOST variable.
+     *
      * @param adbHostValue
      */
     public static void setAdbHostValue(String adbHostValue) {

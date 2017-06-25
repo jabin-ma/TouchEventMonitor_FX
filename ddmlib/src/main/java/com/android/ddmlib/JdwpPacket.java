@@ -24,13 +24,13 @@ import java.nio.channels.SocketChannel;
 
 /**
  * A JDWP packet, sitting at the start of a ByteBuffer somewhere.
- *
+ * <p>
  * This allows us to wrap a "pointer" to the data with the results of
  * decoding the packet.
- *
+ * <p>
  * None of the operations here are synchronized.  If multiple threads will
  * be accessing the same ByteBuffers, external sync will be required.
- *
+ * <p>
  * Use the constructor to create an empty packet, or "findPacket()" to
  * wrap a JdwpPacket around existing data.
  */
@@ -52,7 +52,7 @@ final class JdwpPacket {
 
     // this is sent and expected at the start of a JDWP connection
     private static final byte[] mHandshake = {
-        'J', 'D', 'W', 'P', '-', 'H', 'a', 'n', 'd', 's', 'h', 'a', 'k', 'e'
+            'J', 'D', 'W', 'P', '-', 'H', 'a', 'n', 'd', 's', 'h', 'a', 'k', 'e'
     };
 
     public static final int HANDSHAKE_LEN = mHandshake.length;
@@ -74,15 +74,15 @@ final class JdwpPacket {
 
     /**
      * Finish a packet created with newPacket().
-     *
+     * <p>
      * This always creates a command packet, with the next serial number
      * in sequence.
-     *
+     * <p>
      * We have to take "payloadLength" as an argument because we can't
      * see the position in the "slice" returned by getPayload().  We could
      * fish it out of the chunk header, but it's legal for there to be
      * more than one chunk in a JDWP packet.
-     *
+     * <p>
      * On exit, "position" points to the end of the data.
      */
     void finishPacket(int payloadLength) {
@@ -111,7 +111,7 @@ final class JdwpPacket {
      * Get the next serial number.  This creates a unique serial number
      * across all connections, not just for the current connection.  This
      * is a useful property when debugging, but isn't necessary.
-     *
+     * <p>
      * We can't synchronize on an int, so we use a sync method.
      */
     private static synchronized int getNextSerial() {
@@ -124,7 +124,7 @@ final class JdwpPacket {
      * to the size of the payload if the size is known; if this is a
      * packet under construction the limit will be set to the end of the
      * buffer.
-     *
+     * <p>
      * Doesn't examine the packet at all -- works on empty buffers.
      */
     ByteBuffer getPayload() {
@@ -145,13 +145,13 @@ final class JdwpPacket {
 
     /**
      * Returns "true" if this JDWP packet has a JDWP command type.
-     *
+     * <p>
      * This never returns "true" for reply packets.
      */
     boolean isDdmPacket() {
         return (mFlags & REPLY_PACKET) == 0 &&
-               mCmdSet == DDMS_CMD_SET &&
-               mCmd == DDMS_CMD;
+                mCmdSet == DDMS_CMD_SET &&
+                mCmd == DDMS_CMD;
     }
 
     /**
@@ -195,7 +195,7 @@ final class JdwpPacket {
     /**
      * Write our packet to "chan".  Consumes the packet as part of the
      * write.
-     *
+     * <p>
      * The JDWP packet starts at offset 0 and ends at mBuffer.position().
      */
     void writeAndConsume(SocketChannel chan) throws IOException {
@@ -240,11 +240,10 @@ final class JdwpPacket {
 
     /**
      * Consume the JDWP packet.
-     *
+     * <p>
      * On entry and exit, "position" is the #of bytes in the buffer.
      */
-    void consume()
-    {
+    void consume() {
         //Log.d("ddms", "consuming " + mLength + " bytes");
         //Log.d("ddms", "  posn=" + mBuffer.position()
         //    + ", limit=" + mBuffer.limit());
@@ -273,11 +272,11 @@ final class JdwpPacket {
     /**
      * Find the JDWP packet at the start of "buf".  The start is known,
      * but the length has to be parsed out.
-     *
+     * <p>
      * On entry, the packet data in "buf" must start at offset 0 and end
      * at "position".  "limit" should be set to the buffer capacity.  This
      * method does not alter "buf"s attributes.
-     *
+     * <p>
      * Returns a new JdwpPacket if a full one is found in the buffer.  If
      * not, returns null.  Throws an exception if the data doesn't look like
      * a valid JDWP packet.
@@ -326,11 +325,11 @@ final class JdwpPacket {
 
     /**
      * Like findPacket(), but when we're expecting the JDWP handshake.
-     *
+     * <p>
      * Returns one of:
-     *   HANDSHAKE_GOOD   - found handshake, looks good
-     *   HANDSHAKE_BAD    - found enough data, but it's wrong
-     *   HANDSHAKE_NOTYET - not enough data has been read yet
+     * HANDSHAKE_GOOD   - found handshake, looks good
+     * HANDSHAKE_BAD    - found enough data, but it's wrong
+     * HANDSHAKE_NOTYET - not enough data has been read yet
      */
     static int findHandshake(ByteBuffer buf) {
         int count = buf.position();
@@ -339,7 +338,7 @@ final class JdwpPacket {
         if (count < mHandshake.length)
             return HANDSHAKE_NOTYET;
 
-        for (i = mHandshake.length -1; i >= 0; --i) {
+        for (i = mHandshake.length - 1; i >= 0; --i) {
             if (buf.get(i) != mHandshake[i])
                 return HANDSHAKE_BAD;
         }
@@ -349,7 +348,7 @@ final class JdwpPacket {
 
     /**
      * Remove the handshake string from the buffer.
-     *
+     * <p>
      * On entry and exit, "position" is the #of bytes in the buffer.
      */
     static void consumeHandshake(ByteBuffer buf) {
@@ -361,7 +360,7 @@ final class JdwpPacket {
 
     /**
      * Copy the handshake string into the output buffer.
-     *
+     * <p>
      * On exit, "buf"s position will be advanced.
      */
     static void putHandshake(ByteBuffer buf) {

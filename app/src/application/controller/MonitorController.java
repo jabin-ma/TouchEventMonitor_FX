@@ -65,22 +65,22 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
     }
 
     public void doStartMonitor(ActionEvent ev) {
-        InputDevice inputDev=choicebox_device.getSelectionModel().getSelectedItem();
+        InputDevice inputDev = choicebox_device.getSelectionModel().getSelectedItem();
 //        inputDev.getTouchEventObserver().setTouchEventListener(this);
 //        inputDev.getTouchEventObserver().monitor();
     }
+
     public void doPauseMonitor(ActionEvent ev) {
 
 
-
     }
+
     public void doStopMonitor(ActionEvent ev) {
 
 
-
     }
-    public void doReplayMonitor(ActionEvent ev) {
 
+    public void doReplayMonitor(ActionEvent ev) {
 
 
     }

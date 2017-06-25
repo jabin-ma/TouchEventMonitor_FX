@@ -17,12 +17,7 @@
 package com.android.ddmlib.testrunner;
 
 import com.android.annotations.NonNull;
-import com.android.ddmlib.AdbCommandRejectedException;
-import com.android.ddmlib.IDevice;
-import com.android.ddmlib.IShellEnabledDevice;
-import com.android.ddmlib.Log;
-import com.android.ddmlib.ShellCommandUnresponsiveException;
-import com.android.ddmlib.TimeoutException;
+import com.android.ddmlib.*;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -35,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Runs a Android test command remotely and reports results.
  */
-public class RemoteAndroidTestRunner implements IRemoteAndroidTestRunner  {
+public class RemoteAndroidTestRunner implements IRemoteAndroidTestRunner {
 
     private final String mPackageName;
     private final String mRunnerName;
@@ -45,7 +40,9 @@ public class RemoteAndroidTestRunner implements IRemoteAndroidTestRunner  {
     private TimeUnit mMaxTimeUnits = TimeUnit.MILLISECONDS;
     private String mRunName = null;
 
-    /** map of name-value instrumentation argument pairs */
+    /**
+     * map of name-value instrumentation argument pairs
+     */
     private Map<String, String> mArgMap;
     private InstrumentationResultParser mParser;
 
@@ -71,9 +68,9 @@ public class RemoteAndroidTestRunner implements IRemoteAndroidTestRunner  {
     /**
      * Creates a remote Android test runner.
      *
-     * @param packageName the Android application package that contains the tests to run
-     * @param runnerName the instrumentation test runner to execute. If null, will use default
-     *   runner
+     * @param packageName  the Android application package that contains the tests to run
+     * @param runnerName   the instrumentation test runner to execute. If null, will use default
+     *                     runner
      * @param remoteDevice the Android device to execute tests on
      */
     public RemoteAndroidTestRunner(String packageName,
@@ -89,7 +86,7 @@ public class RemoteAndroidTestRunner implements IRemoteAndroidTestRunner  {
     /**
      * Alternate constructor. Uses default instrumentation runner.
      *
-     * @param packageName the Android application package that contains the tests to run
+     * @param packageName  the Android application package that contains the tests to run
      * @param remoteDevice the Android device to execute tests on
      */
     public RemoteAndroidTestRunner(String packageName,
@@ -193,7 +190,7 @@ public class RemoteAndroidTestRunner implements IRemoteAndroidTestRunner  {
             setLogOnly(true);
             // force a timeout for test collection
             setMaxTimeToOutputResponse(TEST_COLLECTION_TIMEOUT, TimeUnit.MILLISECONDS);
-            if (getApiLevel() < 16 ) {
+            if (getApiLevel() < 16) {
                 // On older platforms, collecting tests can fail for large volume of tests.
                 // Insert a small delay between each test to prevent this
                 addInstrumentationArg(DELAY_MSEC_ARG_NAME, "15" /* ms */);
@@ -202,7 +199,7 @@ public class RemoteAndroidTestRunner implements IRemoteAndroidTestRunner  {
             setLogOnly(false);
             // restore timeout to its original set value
             setMaxTimeToOutputResponse(mMaxTimeToOutputResponse, mMaxTimeUnits);
-            if (getApiLevel() < 16 ) {
+            if (getApiLevel() < 16) {
                 // remove delay
                 removeInstrumentationArg(DELAY_MSEC_ARG_NAME);
             }
@@ -211,6 +208,7 @@ public class RemoteAndroidTestRunner implements IRemoteAndroidTestRunner  {
 
     /**
      * Attempts to retrieve the Api level of the Android device
+     *
      * @return the api level or -1 if the communication with the device wasn't successful
      */
     private int getApiLevel() {
@@ -257,8 +255,8 @@ public class RemoteAndroidTestRunner implements IRemoteAndroidTestRunner  {
         mParser = new InstrumentationResultParser(runName, listeners);
 
         try {
-            mRemoteDevice.executeShellCommand( mParser, mMaxTimeToOutputResponse,
-                    mMaxTimeUnits,runCaseCommandStr);
+            mRemoteDevice.executeShellCommand(mParser, mMaxTimeToOutputResponse,
+                    mMaxTimeUnits, runCaseCommandStr);
         } catch (IOException e) {
             Log.w(LOG_TAG, String.format("IOException %1$s when running tests %2$s on %3$s",
                     e.toString(), getPackageName(), mRemoteDevice.getName()));
@@ -271,7 +269,7 @@ public class RemoteAndroidTestRunner implements IRemoteAndroidTestRunner  {
                     e.toString(), getPackageName(), mRemoteDevice.getName()));
             mParser.handleTestRunFailed(String.format(
                     "Failed to receive adb shell test output within %1$d ms. " +
-                    "Test may have timed out, or adb connection to device became unresponsive",
+                            "Test may have timed out, or adb connection to device became unresponsive",
                     mMaxTimeToOutputResponse));
             throw e;
         } catch (TimeoutException e) {
@@ -292,7 +290,8 @@ public class RemoteAndroidTestRunner implements IRemoteAndroidTestRunner  {
     /**
      * Returns options for the am instrument command.
      */
-    @NonNull public String getRunOptions() {
+    @NonNull
+    public String getRunOptions() {
         return mRunOptions;
     }
 

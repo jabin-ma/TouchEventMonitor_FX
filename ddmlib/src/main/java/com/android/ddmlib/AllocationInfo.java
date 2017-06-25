@@ -56,8 +56,8 @@ public class AllocationInfo implements IStackTraceInfo {
         }
 
         public void setSortMode(@NonNull SortMode mode, boolean descending) {
-          mSortMode = mode;
-          mDescending = descending;
+            mSortMode = mode;
+            mDescending = descending;
         }
 
         @NonNull
@@ -115,7 +115,9 @@ public class AllocationInfo implements IStackTraceInfo {
             return diff;
         }
 
-        /** compares two strings that could be null */
+        /**
+         * compares two strings that could be null
+         */
         private static int compareOptionalString(String str1, String str2) {
             if (str1 != null) {
                 if (str2 == null) {
@@ -137,7 +139,7 @@ public class AllocationInfo implements IStackTraceInfo {
      * Simple constructor.
      */
     AllocationInfo(int allocNumber, String allocatedClass, int allocationSize,
-        short threadId, StackTraceElement[] stackTrace) {
+                   short threadId, StackTraceElement[] stackTrace) {
         mAllocNumber = allocNumber;
         mAllocatedClass = allocatedClass;
         mAllocationSize = allocationSize;
@@ -189,10 +191,10 @@ public class AllocationInfo implements IStackTraceInfo {
 
     @Nullable
     public String getAllocationSite() {
-      if (mStackTrace.length > 0) {
-        return mStackTrace[0].toString();
-      }
-      return null;
+        if (mStackTrace.length > 0) {
+            return mStackTrace[0].toString();
+        }
+        return null;
     }
 
     public String getFirstTraceClassName() {
@@ -220,25 +222,25 @@ public class AllocationInfo implements IStackTraceInfo {
     }
 
     public boolean allocatedClassMatches(@NonNull String pattern, @NonNull Locale locale) {
-      return mAllocatedClass.toLowerCase(locale).contains(pattern.toLowerCase(locale));
+        return mAllocatedClass.toLowerCase(locale).contains(pattern.toLowerCase(locale));
     }
 
     @NonNull
     public List<String> getMatchingStackFrames(@NonNull String filter, boolean fullTrace, @NonNull Locale locale) {
-      filter = filter.toLowerCase(locale);
-      // check the top of the stack trace always
-      if (mStackTrace.length > 0) {
-        final int length = fullTrace ? mStackTrace.length : 1;
-        List<String> matchingFrames = Lists.newArrayListWithExpectedSize(length);
-        for (int i = 0; i < length; ++i) {
-          String frameString = mStackTrace[i].toString();
-          if (frameString.toLowerCase(locale).contains(filter)) {
-            matchingFrames.add(frameString);
-          }
+        filter = filter.toLowerCase(locale);
+        // check the top of the stack trace always
+        if (mStackTrace.length > 0) {
+            final int length = fullTrace ? mStackTrace.length : 1;
+            List<String> matchingFrames = Lists.newArrayListWithExpectedSize(length);
+            for (int i = 0; i < length; ++i) {
+                String frameString = mStackTrace[i].toString();
+                if (frameString.toLowerCase(locale).contains(filter)) {
+                    matchingFrames.add(frameString);
+                }
+            }
+            return matchingFrames;
+        } else {
+            return Collections.emptyList();
         }
-        return matchingFrames;
-      } else {
-        return Collections.emptyList();
-      }
     }
 }

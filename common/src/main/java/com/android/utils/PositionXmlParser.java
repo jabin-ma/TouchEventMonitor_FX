@@ -16,40 +16,21 @@
 
 package com.android.utils;
 
-import static com.android.SdkConstants.UTF_8;
-
 import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
 import com.android.ide.common.blame.SourcePosition;
-
-import org.w3c.dom.Attr;
-import org.w3c.dom.Comment;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import org.w3c.dom.*;
+import org.xml.sax.*;
 import org.xml.sax.ext.DefaultHandler2;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
+import javax.xml.parsers.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import static com.android.SdkConstants.UTF_8;
 
 /**
  * A simple DOM XML parser which can retrieve exact beginning and end offsets
@@ -66,23 +47,26 @@ public class PositionXmlParser {
             "http://xml.org/sax/features/namespaces";            //$NON-NLS-1$
     private static final String PROVIDE_XMLNS_URIS =
             "http://xml.org/sax/features/xmlns-uris";            //$NON-NLS-1$
-    /** See http://www.w3.org/TR/REC-xml/#NT-EncodingDecl */
+    /**
+     * See http://www.w3.org/TR/REC-xml/#NT-EncodingDecl
+     */
     private static final Pattern ENCODING_PATTERN =
             Pattern.compile("encoding=['\"](\\S*)['\"]");        //$NON-NLS-1$
     private static final String LOAD_EXTERNAL_DTD =
-            "http://apache.org/xml/features/nonvalidating/load-external-dtd";; //$NON-NLS-1$
+            "http://apache.org/xml/features/nonvalidating/load-external-dtd";
+    ; //$NON-NLS-1$
 
     /**
      * Parses the XML content from the given input stream.
      *
-     * @param input the input stream containing the XML to be parsed
+     * @param input    the input stream containing the XML to be parsed
      * @param checkDtd whether or not download the DTD and validate it
      * @return the corresponding document
      * @throws ParserConfigurationException if a SAX parser is not available
-     * @throws SAXException if the document contains a parsing error
-     * @throws IOException if something is seriously wrong. This should not
-     *             happen since the input source is known to be constructed from
-     *             a string.
+     * @throws SAXException                 if the document contains a parsing error
+     * @throws IOException                  if something is seriously wrong. This should not
+     *                                      happen since the input source is known to be constructed from
+     *                                      a string.
      */
     @NonNull
     public static Document parse(@NonNull InputStream input, boolean checkDtd)
@@ -91,11 +75,11 @@ public class PositionXmlParser {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] buf = new byte[1024];
         while (true) {
-          int r = input.read(buf);
-          if (r == -1) {
-            break;
-          }
-          out.write(buf, 0, r);
+            int r = input.read(buf);
+            if (r == -1) {
+                break;
+            }
+            out.write(buf, 0, r);
         }
         input.close();
         return parse(out.toByteArray(), checkDtd);
@@ -122,18 +106,18 @@ public class PositionXmlParser {
     /**
      * Parses the XML content from the given byte array
      *
-     * @param data the raw XML data (with unknown encoding)
+     * @param data     the raw XML data (with unknown encoding)
      * @param checkDtd whether or not download the DTD and validate it
      * @return the corresponding document
      * @throws ParserConfigurationException if a SAX parser is not available
-     * @throws SAXException if the document contains a parsing error
-     * @throws IOException if something is seriously wrong. This should not
-     *             happen since the input source is known to be constructed from
-     *             a string.
+     * @throws SAXException                 if the document contains a parsing error
+     * @throws IOException                  if something is seriously wrong. This should not
+     *                                      happen since the input source is known to be constructed from
+     *                                      a string.
      */
     @NonNull
     public static Document parse(@NonNull byte[] data, boolean checkDtd)
-      throws ParserConfigurationException, SAXException, IOException {
+            throws ParserConfigurationException, SAXException, IOException {
         String xml = getXmlString(data);
         xml = XmlUtils.stripBom(xml);
         return parse(xml, new InputSource(new StringReader(xml)), true, checkDtd);
@@ -143,13 +127,13 @@ public class PositionXmlParser {
      * Parses the given XML content.
      *
      * @param xml the XML string to be parsed. This must be in the correct
-     *     encoding already.
+     *            encoding already.
      * @return the corresponding document
      * @throws ParserConfigurationException if a SAX parser is not available
-     * @throws SAXException if the document contains a parsing error
-     * @throws IOException if something is seriously wrong. This should not
-     *             happen since the input source is known to be constructed from
-     *             a string.
+     * @throws SAXException                 if the document contains a parsing error
+     * @throws IOException                  if something is seriously wrong. This should not
+     *                                      happen since the input source is known to be constructed from
+     *                                      a string.
      */
     @NonNull
     public static Document parse(@NonNull String xml)
@@ -185,7 +169,7 @@ public class PositionXmlParser {
                 // Byte order mark in the string? Skip it. There are many markers
                 // (see http://en.wikipedia.org/wiki/Byte_order_mark) so here we'll
                 // just skip those up to the XML prolog beginning character, <
-                xml = xml.replaceFirst("^([\\W]+)<","<");  //$NON-NLS-1$ //$NON-NLS-2$
+                xml = xml.replaceFirst("^([\\W]+)<", "<");  //$NON-NLS-1$ //$NON-NLS-2$
                 return parse(xml, new InputSource(new StringReader(xml)), false, checkDtd);
             }
             throw e;
@@ -196,6 +180,7 @@ public class PositionXmlParser {
      * Returns the String corresponding to the given byte array of XML data
      * (with unknown encoding). This method attempts to guess the encoding based
      * on the XML prologue.
+     *
      * @param data the XML data to be decoded into a string
      * @return a string corresponding to the XML data
      */
@@ -208,7 +193,8 @@ public class PositionXmlParser {
      * Returns the String corresponding to the given byte array of XML data
      * (with unknown encoding). This method attempts to guess the encoding based
      * on the XML prologue.
-     * @param data the XML data to be decoded into a string
+     *
+     * @param data           the XML data to be decoded into a string
      * @param defaultCharset the default charset to use if not specified by an encoding prologue
      *                       attribute or a byte order mark
      * @return a string corresponding to the XML data
@@ -223,26 +209,26 @@ public class PositionXmlParser {
         // for files which do not specify the encoding.
         // See http://unicode.org/faq/utf_bom.html#BOM for more.
         if (data.length > 4) {
-            if (data[0] == (byte)0xef && data[1] == (byte)0xbb && data[2] == (byte)0xbf) {
+            if (data[0] == (byte) 0xef && data[1] == (byte) 0xbb && data[2] == (byte) 0xbf) {
                 // UTF-8
                 defaultCharset = charset = UTF_8;
                 offset += 3;
-            } else if (data[0] == (byte)0xfe && data[1] == (byte)0xff) {
+            } else if (data[0] == (byte) 0xfe && data[1] == (byte) 0xff) {
                 //  UTF-16, big-endian
                 defaultCharset = charset = UTF_16;
                 offset += 2;
-            } else if (data[0] == (byte)0x0 && data[1] == (byte)0x0
-                    && data[2] == (byte)0xfe && data[3] == (byte)0xff) {
+            } else if (data[0] == (byte) 0x0 && data[1] == (byte) 0x0
+                    && data[2] == (byte) 0xfe && data[3] == (byte) 0xff) {
                 // UTF-32, big-endian
                 defaultCharset = charset = "UTF_32";    //$NON-NLS-1$
                 offset += 4;
-            } else if (data[0] == (byte)0xff && data[1] == (byte)0xfe
-                    && data[2] == (byte)0x0 && data[3] == (byte)0x0) {
+            } else if (data[0] == (byte) 0xff && data[1] == (byte) 0xfe
+                    && data[2] == (byte) 0x0 && data[3] == (byte) 0x0) {
                 // UTF-32, little-endian. We must check for this *before* looking for
                 // UTF_16LE since UTF_32LE has the same prefix!
                 defaultCharset = charset = "UTF_32LE";  //$NON-NLS-1$
                 offset += 4;
-            } else if (data[0] == (byte)0xff && data[1] == (byte)0xfe) {
+            } else if (data[0] == (byte) 0xff && data[1] == (byte) 0xfe) {
                 //  UTF-16, little-endian
                 defaultCharset = charset = UTF_16LE;
                 offset += 2;
@@ -337,7 +323,7 @@ public class PositionXmlParser {
      *
      * @param node the node to look up position for
      * @return the position, or null if the node type is not supported for
-     *         position info
+     * position info
      */
     @NonNull
     public static SourcePosition getPosition(@NonNull Node node) {
@@ -350,13 +336,13 @@ public class PositionXmlParser {
      * range within the node can be specified with the {@code start} and
      * {@code end} parameters.
      *
-     * @param node the node to look up position for
+     * @param node  the node to look up position for
      * @param start the relative offset within the node range to use as the
-     *            starting position, inclusive, or -1 to not limit the range
-     * @param end the relative offset within the node range to use as the ending
-     *            position, or -1 to not limit the range
+     *              starting position, inclusive, or -1 to not limit the range
+     * @param end   the relative offset within the node range to use as the ending
+     *              position, or -1 to not limit the range
      * @return the position, or null if the node type is not supported for
-     *         position info
+     * position info
      */
 
     @NonNull
@@ -399,8 +385,8 @@ public class PositionXmlParser {
                 // Fast string check first for the common occurrence
                 String name = attr.getName();
                 Pattern pattern = Pattern.compile(attr.getPrefix() != null
-                    ? String.format("(%1$s\\s*=\\s*[\"'].*?[\"'])", name) //$NON-NLS-1$
-                    : String.format("[^:](%1$s\\s*=\\s*[\"'].*?[\"'])", name));//$NON-NLS-1$
+                        ? String.format("(%1$s\\s*=\\s*[\"'].*?[\"'])", name) //$NON-NLS-1$
+                        : String.format("[^:](%1$s\\s*=\\s*[\"'].*?[\"'])", name));//$NON-NLS-1$
                 Matcher matcher = pattern.matcher(contents);
                 if (matcher.find(startOffset) && matcher.start(1) <= endOffset) {
                     int index = matcher.start(1);
@@ -550,7 +536,9 @@ public class PositionXmlParser {
             mDocument.setUserData(CONTENT_KEY, xml, null);
         }
 
-        /** Returns the document parsed by the handler */
+        /**
+         * Returns the document parsed by the handler
+         */
         Document getDocument() {
             return mDocument;
         }
@@ -562,7 +550,7 @@ public class PositionXmlParser {
 
         @Override
         public void startElement(String uri, String localName, String qName,
-                Attributes attributes) throws SAXException {
+                                 Attributes attributes) throws SAXException {
             try {
                 flushText();
                 Element element = mDocument.createElementNS(uri, qName);
@@ -629,10 +617,11 @@ public class PositionXmlParser {
         /**
          * Adds a node to the current parent element being visited, or to the document if there is
          * no parent in context.
+         *
          * @param nodeToAdd xml node to add.
          */
         private void addNodeToParent(Node nodeToAdd) {
-            if (mStack.isEmpty()){
+            if (mStack.isEmpty()) {
                 mDocument.appendChild(nodeToAdd);
             } else {
                 Element parent = mStack.get(mStack.size() - 1);
@@ -647,6 +636,7 @@ public class PositionXmlParser {
          * element start
          * For comments, it is not legal to put < in a comment, however we are not
          * validating so we will return an invalid column in that case.
+         *
          * @param startingPosition the position to walk backwards until < is reached.
          * @return the opening tag position or startPosition if cannot be found.
          */
@@ -678,7 +668,7 @@ public class PositionXmlParser {
             return startingPosition;
         }
 
-            /**
+        /**
          * Returns a position holder for the current position. The most
          * important part of this function is to incrementally compute the
          * offset as well, by counting forwards until it reaches the new line
@@ -735,7 +725,9 @@ public class PositionXmlParser {
     }
 
     private static class Position {
-        /** The line number (0-based where the first line is line 0) */
+        /**
+         * The line number (0-based where the first line is line 0)
+         */
         private final int mLine;
         private final int mColumn;
         private final int mOffset;
@@ -744,7 +736,7 @@ public class PositionXmlParser {
         /**
          * Creates a new {@link Position}
          *
-         * @param line the 0-based line number, or -1 if unknown
+         * @param line   the 0-based line number, or -1 if unknown
          * @param column the 0-based column number, or -1 if unknown
          * @param offset the offset, or -1 if unknown
          */
@@ -775,7 +767,7 @@ public class PositionXmlParser {
         }
 
         public SourcePosition toSourcePosition() {
-           int endLine = mLine, endColumn = mColumn, endOffset = mOffset;
+            int endLine = mLine, endColumn = mColumn, endOffset = mOffset;
 
             if (mEnd != null) {
                 endLine = mEnd.getLine();
@@ -787,5 +779,6 @@ public class PositionXmlParser {
         }
     }
 
-    private PositionXmlParser() { }
+    private PositionXmlParser() {
+    }
 }

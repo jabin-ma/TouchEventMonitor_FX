@@ -22,16 +22,7 @@ import com.android.ddmlib.HeapSegment.HeapSegmentElement;
 
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 
 /**
@@ -50,21 +41,30 @@ public class ClientData {
     */
 
 
-    /** Temporary name of VM to be ignored. */
+    /**
+     * Temporary name of VM to be ignored.
+     */
     private static final String PRE_INITIALIZED = "<pre-initialized>"; //$NON-NLS-1$
 
     public enum DebuggerStatus {
-        /** Debugger connection status: not waiting on one, not connected to one, but accepting
-         * new connections. This is the default value. */
+        /**
+         * Debugger connection status: not waiting on one, not connected to one, but accepting
+         * new connections. This is the default value.
+         */
         DEFAULT,
         /**
          * Debugger connection status: the application's VM is paused, waiting for a debugger to
-         * connect to it before resuming. */
+         * connect to it before resuming.
+         */
         WAITING,
-        /** Debugger connection status : Debugger is connected */
+        /**
+         * Debugger connection status : Debugger is connected
+         */
         ATTACHED,
-        /** Debugger connection status: The listening port for debugger connection failed to listen.
-         * No debugger will be able to connect. */
+        /**
+         * Debugger connection status: The listening port for debugger connection failed to listen.
+         * No debugger will be able to connect.
+         */
         ERROR
     }
 
@@ -74,12 +74,17 @@ public class ClientData {
          * <p/>This happens right after a {@link Client} is discovered
          * by the {@link AndroidDebugBridge}, and before the {@link Client} answered the query
          * regarding its allocation tracking status.
+         *
          * @see Client#requestAllocationStatus()
          */
         UNKNOWN,
-        /** Allocation tracking status: the {@link Client} is not tracking allocations. */
+        /**
+         * Allocation tracking status: the {@link Client} is not tracking allocations.
+         */
         OFF,
-        /** Allocation tracking status: the {@link Client} is tracking allocations. */
+        /**
+         * Allocation tracking status: the {@link Client} is tracking allocations.
+         */
         ON
     }
 
@@ -89,55 +94,69 @@ public class ClientData {
          * <p/>This happens right after a {@link Client} is discovered
          * by the {@link AndroidDebugBridge}, and before the {@link Client} answered the query
          * regarding its method profiling status.
+         *
          * @see Client#requestMethodProfilingStatus()
          */
         UNKNOWN,
-        /** Method profiling status: the {@link Client} is not profiling method calls. */
+        /**
+         * Method profiling status: the {@link Client} is not profiling method calls.
+         */
         OFF,
-        /** Method profiling status: the {@link Client} is tracing method calls. */
+        /**
+         * Method profiling status: the {@link Client} is tracing method calls.
+         */
         TRACER_ON,
-        /** Method profiling status: the {@link Client} is being profiled via sampling. */
+        /**
+         * Method profiling status: the {@link Client} is being profiled via sampling.
+         */
         SAMPLER_ON
     }
 
     /**
      * String for feature enabling starting/stopping method profiling
+     *
      * @see #hasFeature(String)
      */
     public static final String FEATURE_PROFILING = "method-trace-profiling"; //$NON-NLS-1$
 
     /**
      * String for feature enabling direct streaming of method profiling data
+     *
      * @see #hasFeature(String)
      */
     public static final String FEATURE_PROFILING_STREAMING = "method-trace-profiling-streaming"; //$NON-NLS-1$
 
     /**
      * String for feature enabling sampling profiler.
+     *
      * @see #hasFeature(String)
      */
     public static final String FEATURE_SAMPLING_PROFILER = "method-sample-profiling"; //$NON-NLS-1$
 
     /**
      * String for feature indicating support for tracing OpenGL calls.
+     *
      * @see #hasFeature(String)
      */
     public static final String FEATURE_OPENGL_TRACING = "opengl-tracing"; //$NON-NLS-1$
 
     /**
      * String for feature indicating support for providing view hierarchy.
+     *
      * @see #hasFeature(String)
      */
     public static final String FEATURE_VIEW_HIERARCHY = "view-hierarchy"; //$NON-NLS-1$
 
     /**
      * String for feature allowing to dump hprof files
+     *
      * @see #hasFeature(String)
      */
     public static final String FEATURE_HPROF = "hprof-heap-dump"; //$NON-NLS-1$
 
     /**
      * String for feature allowing direct streaming of hprof dumps
+     *
      * @see #hasFeature(String)
      */
     public static final String FEATURE_HPROF_STREAMING = "hprof-heap-dump-streaming"; //$NON-NLS-1$
@@ -178,27 +197,36 @@ public class ClientData {
     private final HashSet<String> mFeatures = new HashSet<String>();
 
     // Thread tracking (THCR, THDE).
-    private TreeMap<Integer,ThreadInfo> mThreadMap;
+    private TreeMap<Integer, ThreadInfo> mThreadMap;
 
-    /** VM Heap data */
+    /**
+     * VM Heap data
+     */
     private final HeapData mHeapData = new HeapData();
-    /** Native Heap data */
+    /**
+     * Native Heap data
+     */
     private final HeapData mNativeHeapData = new HeapData();
 
-    /** Hprof data */
+    /**
+     * Hprof data
+     */
     private HprofData mHprofData = null;
 
     private HashMap<Integer, HeapInfo> mHeapInfoMap = new HashMap<Integer, HeapInfo>();
 
-    /** library map info. Stored here since the backtrace data
+    /**
+     * library map info. Stored here since the backtrace data
      * is computed on a need to display basis.
      */
     private ArrayList<NativeLibraryMapInfo> mNativeLibMapInfo =
-        new ArrayList<NativeLibraryMapInfo>();
+            new ArrayList<NativeLibraryMapInfo>();
 
-    /** Native Alloc info list */
+    /**
+     * Native Alloc info list
+     */
     private ArrayList<NativeAllocationInfo> mNativeAllocationList =
-        new ArrayList<NativeAllocationInfo>();
+            new ArrayList<NativeAllocationInfo>();
     private int mNativeTotalMemory;
 
     private AllocationInfo[] mAllocations;
@@ -361,21 +389,24 @@ public class ClientData {
     public interface IHprofDumpHandler {
         /**
          * Called when a HPROF dump succeeded.
+         *
          * @param remoteFilePath the device-side path of the HPROF file.
-         * @param client the client for which the HPROF file was.
+         * @param client         the client for which the HPROF file was.
          */
         void onSuccess(String remoteFilePath, Client client);
 
         /**
          * Called when a HPROF dump was successful.
-         * @param data the data containing the HPROF file, streamed from the VM
+         *
+         * @param data   the data containing the HPROF file, streamed from the VM
          * @param client the client that was profiled.
          */
         void onSuccess(byte[] data, Client client);
 
         /**
          * Called when a hprof dump failed to end on the VM side
-         * @param client the client that was profiled.
+         *
+         * @param client  the client that was profiled.
          * @param message an optional (<code>null<code> ok) error message to be displayed.
          */
         void onEndFailure(Client client, String message);
@@ -387,28 +418,32 @@ public class ClientData {
     public interface IMethodProfilingHandler {
         /**
          * Called when a method tracing was successful.
+         *
          * @param remoteFilePath the device-side path of the trace file.
-         * @param client the client that was profiled.
+         * @param client         the client that was profiled.
          */
         void onSuccess(String remoteFilePath, Client client);
 
         /**
          * Called when a method tracing was successful.
-         * @param data the data containing the trace file, streamed from the VM
+         *
+         * @param data   the data containing the trace file, streamed from the VM
          * @param client the client that was profiled.
          */
         void onSuccess(byte[] data, Client client);
 
         /**
          * Called when method tracing failed to start
-         * @param client the client that was profiled.
+         *
+         * @param client  the client that was profiled.
          * @param message an optional (<code>null<code> ok) error message to be displayed.
          */
         void onStartFailure(Client client, String message);
 
         /**
          * Called when method tracing failed to end on the VM side
-         * @param client the client that was profiled.
+         *
+         * @param client  the client that was profiled.
          * @param message an optional (<code>null<code> ok) error message to be displayed.
          */
         void onEndFailure(Client client, String message);
@@ -418,13 +453,14 @@ public class ClientData {
      * Handlers able to act on allocation tracking info
      */
     public interface IAllocationTrackingHandler {
-      /**
-       * Called when an allocation tracking was successful.
-       * @param data the data containing the encoded allocations.
-       *             See {@link AllocationsParser#parse(java.nio.ByteBuffer)} for parsing this data.
-       * @param client the client for which allocations were tracked.
-       */
-      void onSuccess(@NonNull byte[] data, @NonNull Client client);
+        /**
+         * Called when an allocation tracking was successful.
+         *
+         * @param data   the data containing the encoded allocations.
+         *               See {@link AllocationsParser#parse(java.nio.ByteBuffer)} for parsing this data.
+         * @param client the client for which allocations were tracked.
+         */
+        void onSuccess(@NonNull byte[] data, @NonNull Client client);
     }
 
     public void setHprofData(byte[] data) {
@@ -470,12 +506,12 @@ public class ClientData {
     }
 
     public static void setAllocationTrackingHandler(@NonNull IAllocationTrackingHandler handler) {
-      sAllocationTrackingHandler = handler;
+        sAllocationTrackingHandler = handler;
     }
 
     @Nullable
     static IAllocationTrackingHandler getAllocationTrackingHandler() {
-      return sAllocationTrackingHandler;
+        return sAllocationTrackingHandler;
     }
 
     /**
@@ -485,7 +521,7 @@ public class ClientData {
         mPid = pid;
 
         mDebuggerInterest = DebuggerStatus.DEFAULT;
-        mThreadMap = new TreeMap<Integer,ThreadInfo>();
+        mThreadMap = new TreeMap<Integer, ThreadInfo>();
     }
 
     /**
@@ -537,6 +573,7 @@ public class ClientData {
 
     /**
      * Returns the client's user id.
+     *
      * @return user id if set, -1 otherwise
      */
     public int getUserId() {
@@ -552,20 +589,24 @@ public class ClientData {
         return mValidUserId;
     }
 
-    /** Returns the abi flavor (32-bit or 64-bit) of the application, null if unknown or not set. */
+    /**
+     * Returns the abi flavor (32-bit or 64-bit) of the application, null if unknown or not set.
+     */
     @Nullable
     public String getAbi() {
         return mAbi;
     }
 
-    /** Returns the VM flags in use, or null if unknown. */
+    /**
+     * Returns the VM flags in use, or null if unknown.
+     */
     public String getJvmFlags() {
         return mJvmFlags;
     }
 
     /**
      * Sets client description.
-     *
+     * <p>
      * There may be a race between HELO and APNM.  Rather than try
      * to enforce ordering on the device, we just don't allow an empty
      * name to replace a specified one.
@@ -614,9 +655,10 @@ public class ClientData {
 
     /**
      * Sets the current heap info values for the specified heap.
-     *  @param heapId The heap whose info to update
-     * @param sizeInBytes The size of the heap, in bytes
-     * @param bytesAllocated The number of bytes currently allocated in the heap
+     *
+     * @param heapId           The heap whose info to update
+     * @param sizeInBytes      The size of the heap, in bytes
+     * @param bytesAllocated   The number of bytes currently allocated in the heap
      * @param objectsAllocated The number of objects currently allocated in
      * @param timeStamp
      * @param reason
@@ -662,7 +704,7 @@ public class ClientData {
      *
      * @param heapId The heap whose info should be returned
      * @return a map containing the info values for the specified heap.
-     *         Returns <code>null</code> if the heap ID is unknown.
+     * Returns <code>null</code> if the heap ID is unknown.
      */
     public synchronized HeapInfo getVmHeapInfo(int heapId) {
         return mHeapInfoMap.get(heapId);
@@ -706,6 +748,7 @@ public class ClientData {
 
     /**
      * Returns the list of {@link NativeAllocationInfo}.
+     *
      * @see Client#requestNativeHeapInformation()
      */
     public synchronized List<NativeAllocationInfo> getNativeAllocationList() {
@@ -714,6 +757,7 @@ public class ClientData {
 
     /**
      * adds a new {@link NativeAllocationInfo} to the {@link Client}
+     *
      * @param allocInfo The {@link NativeAllocationInfo} to add.
      */
     synchronized void addNativeAllocation(NativeAllocationInfo allocInfo) {
@@ -729,6 +773,7 @@ public class ClientData {
 
     /**
      * Returns the total native memory.
+     *
      * @see Client#requestNativeHeapInformation()
      */
     public synchronized int getTotalNativeMemory() {
@@ -756,6 +801,7 @@ public class ClientData {
 
     /**
      * Returns the allocation tracking status.
+     *
      * @see Client#requestAllocationStatus()
      */
     public synchronized AllocationTrackingStatus getAllocationStatus() {
@@ -768,11 +814,12 @@ public class ClientData {
 
     /**
      * Returns the list of tracked allocations.
+     *
      * @see Client#requestAllocationDetails()
      */
     @Nullable
     public synchronized AllocationInfo[] getAllocations() {
-      return mAllocations;
+        return mAllocations;
     }
 
     void addFeature(String feature) {
@@ -781,9 +828,9 @@ public class ClientData {
 
     /**
      * Returns true if the {@link Client} supports the given <var>feature</var>
+     *
      * @param feature The feature to test.
      * @return true if the feature is supported
-     *
      * @see ClientData#FEATURE_PROFILING
      * @see ClientData#FEATURE_HPROF
      */
@@ -793,6 +840,7 @@ public class ClientData {
 
     /**
      * Sets the device-side path to the hprof file being written
+     *
      * @param pendingHprofDump the file to the hprof file
      */
     @Deprecated
@@ -819,6 +867,7 @@ public class ClientData {
 
     /**
      * Returns the method profiling status.
+     *
      * @see Client#requestMethodProfilingStatus()
      */
     public synchronized MethodProfilingStatus getMethodProfilingStatus() {
@@ -827,6 +876,7 @@ public class ClientData {
 
     /**
      * Sets the device-side path to the method profile file being written
+     *
      * @param pendingMethodProfiling the file being written
      */
     void setPendingMethodProfiling(String pendingMethodProfiling) {

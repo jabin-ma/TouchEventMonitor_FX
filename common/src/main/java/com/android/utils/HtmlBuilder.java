@@ -21,7 +21,8 @@ import com.android.annotations.Nullable;
 import java.net.URL;
 
 public class HtmlBuilder {
-    @NonNull private final StringBuilder mStringBuilder;
+    @NonNull
+    private final StringBuilder mStringBuilder;
     private String mTableDataExtra;
 
     public HtmlBuilder(@NonNull StringBuilder stringBuilder) {
@@ -79,9 +80,9 @@ public class HtmlBuilder {
     }
 
     public HtmlBuilder addLink(@Nullable String textBefore,
-            @NonNull String linkText,
-            @Nullable String textAfter,
-            @NonNull String url) {
+                               @NonNull String linkText,
+                               @Nullable String textAfter,
+                               @NonNull String url) {
         if (textBefore != null) {
             add(textBefore);
         }
@@ -246,8 +247,7 @@ public class HtmlBuilder {
         String link = "";
         try {
             link = url.toURI().toURL().toExternalForm();
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             // pass
         }
         mStringBuilder.append("<img src='");

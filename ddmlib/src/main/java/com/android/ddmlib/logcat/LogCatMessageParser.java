@@ -44,21 +44,22 @@ public final class LogCatMessageParser {
      * {@code "[ 00-00 00:00:00.000 <pid>:0x<???> <severity>/<tag>]"}
      * <br>
      * Note: severity is one of V, D, I, W, E, A? or F. However, there doesn't seem to be
-     *       a way to actually generate an A (assert) message. Log.wtf is supposed to generate
-     *       a message with severity A, however it generates the undocumented F level. In
-     *       such a case, the parser will change the level from F to A.<br>
+     * a way to actually generate an A (assert) message. Log.wtf is supposed to generate
+     * a message with severity A, however it generates the undocumented F level. In
+     * such a case, the parser will change the level from F to A.<br>
      * Note: the fraction of second value can have any number of digit.<br>
      * Note: the tag should be trimmed as it may have spaces at the end.
      */
     private static final Pattern sLogHeaderPattern = Pattern.compile(
             "^\\[\\s(\\d\\d-\\d\\d\\s\\d\\d:\\d\\d:\\d\\d\\.\\d+)"
-          + "\\s+(\\d*):\\s*(\\S+)\\s([VDIWEAF])/(.*)\\]$");
+                    + "\\s+(\\d*):\\s*(\\S+)\\s([VDIWEAF])/(.*)\\]$");
 
     /**
      * Parse a list of strings into {@link LogCatMessage} objects. This method
      * maintains state from previous calls regarding the last seen header of
      * logcat messages.
-     * @param lines list of raw strings obtained from logcat -v long
+     *
+     * @param lines  list of raw strings obtained from logcat -v long
      * @param device device from which these log messages have been received
      * @return list of LogMessage objects parsed from the input
      */

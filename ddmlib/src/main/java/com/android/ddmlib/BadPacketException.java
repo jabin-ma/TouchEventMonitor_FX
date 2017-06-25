@@ -22,13 +22,11 @@ package com.android.ddmlib;
  */
 @SuppressWarnings("serial")
 class BadPacketException extends RuntimeException {
-    public BadPacketException()
-    {
+    public BadPacketException() {
         super();
     }
 
-    public BadPacketException(String msg)
-    {
+    public BadPacketException(String msg) {
         super(msg);
     }
 }

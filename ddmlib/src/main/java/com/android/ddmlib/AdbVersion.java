@@ -24,7 +24,9 @@ import java.util.regex.Pattern;
 public class AdbVersion implements Comparable<AdbVersion> {
     public static final AdbVersion UNKNOWN = new AdbVersion(-1, -1, -1);
 
-    /** Matches e.g. ".... 1.0.32" */
+    /**
+     * Matches e.g. ".... 1.0.32"
+     */
     private static final Pattern ADB_VERSION_PATTERN = Pattern.compile(
             "^.*(\\d+)\\.(\\d+)\\.(\\d+).*");
 

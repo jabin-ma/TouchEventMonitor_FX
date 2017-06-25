@@ -25,22 +25,34 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public final class HandleViewDebug extends ChunkHandler {
-    /** Enable/Disable tracing of OpenGL calls. */
+    /**
+     * Enable/Disable tracing of OpenGL calls.
+     */
     public static final int CHUNK_VUGL = type("VUGL");
 
-    /** List {@link ViewRootImpl}'s of this process. */
+    /**
+     * List {@link ViewRootImpl}'s of this process.
+     */
     public static final int CHUNK_VULW = type("VULW");
 
-    /** Operation on view root, first parameter in packet should be one of VURT_* constants */
+    /**
+     * Operation on view root, first parameter in packet should be one of VURT_* constants
+     */
     public static final int CHUNK_VURT = type("VURT");
 
-    /** Dump view hierarchy. */
+    /**
+     * Dump view hierarchy.
+     */
     private static final int VURT_DUMP_HIERARCHY = 1;
 
-    /** Capture View Layers. */
+    /**
+     * Capture View Layers.
+     */
     private static final int VURT_CAPTURE_LAYERS = 2;
 
-    /** Dump View Theme. */
+    /**
+     * Dump View Theme.
+     */
     private static final int VURT_DUMP_THEME = 3;
 
     /**
@@ -49,19 +61,29 @@ public final class HandleViewDebug extends ChunkHandler {
      */
     public static final int CHUNK_VUOP = type("VUOP");
 
-    /** Capture View. */
+    /**
+     * Capture View.
+     */
     private static final int VUOP_CAPTURE_VIEW = 1;
 
-    /** Obtain the Display List corresponding to the view. */
+    /**
+     * Obtain the Display List corresponding to the view.
+     */
     private static final int VUOP_DUMP_DISPLAYLIST = 2;
 
-    /** Profile a view. */
+    /**
+     * Profile a view.
+     */
     private static final int VUOP_PROFILE_VIEW = 3;
 
-    /** Invoke a method on the view. */
+    /**
+     * Invoke a method on the view.
+     */
     private static final int VUOP_INVOKE_VIEW_METHOD = 4;
 
-    /** Set layout parameter. */
+    /**
+     * Set layout parameter.
+     */
     private static final int VUOP_SET_LAYOUT_PARAMETER = 5;
 
     private static final String TAG = "ddmlib"; //$NON-NLS-1$
@@ -71,7 +93,8 @@ public final class HandleViewDebug extends ChunkHandler {
     private static final ViewDumpHandler sViewOpNullChunkHandler =
             new NullChunkHandler(CHUNK_VUOP);
 
-    private HandleViewDebug() {}
+    private HandleViewDebug() {
+    }
 
     public static void register(MonitorThread mt) {
         // TODO: add chunk type for auto window updates
@@ -83,10 +106,12 @@ public final class HandleViewDebug extends ChunkHandler {
     }
 
     @Override
-    public void clientReady(Client client) throws IOException {}
+    public void clientReady(Client client) throws IOException {
+    }
 
     @Override
-    public void clientDisconnected(Client client) {}
+    public void clientDisconnected(Client client) {
+    }
 
     public abstract static class ViewDumpHandler extends ChunkHandler {
         private final CountDownLatch mLatch = new CountDownLatch(1);
@@ -106,7 +131,7 @@ public final class HandleViewDebug extends ChunkHandler {
 
         @Override
         void handleChunk(Client client, int type, ByteBuffer data,
-                boolean isReply, int msgId) {
+                         boolean isReply, int msgId) {
             if (type != mChunkType) {
                 handleUnknownChunk(client, type, data, isReply, msgId);
                 return;
@@ -138,8 +163,8 @@ public final class HandleViewDebug extends ChunkHandler {
     }
 
     public static void dumpViewHierarchy(@NonNull Client client, @NonNull String viewRoot,
-            boolean skipChildren, boolean includeProperties, @NonNull ViewDumpHandler handler)
-                    throws IOException {
+                                         boolean skipChildren, boolean includeProperties, @NonNull ViewDumpHandler handler)
+            throws IOException {
         ByteBuffer buf = allocBuffer(4      // opcode
                 + 4                         // view root length
                 + viewRoot.length() * 2     // view root
@@ -159,7 +184,7 @@ public final class HandleViewDebug extends ChunkHandler {
     }
 
     public static void captureLayers(@NonNull Client client, @NonNull String viewRoot,
-            @NonNull ViewDumpHandler handler) throws IOException {
+                                     @NonNull ViewDumpHandler handler) throws IOException {
         int bufLen = 8 + viewRoot.length() * 2;
 
         ByteBuffer buf = allocBuffer(bufLen);
@@ -175,8 +200,8 @@ public final class HandleViewDebug extends ChunkHandler {
     }
 
     private static void sendViewOpPacket(@NonNull Client client, int op, @NonNull String viewRoot,
-            @NonNull String view, @Nullable byte[] extra, @Nullable ViewDumpHandler handler)
-                    throws IOException {
+                                         @NonNull String view, @Nullable byte[] extra, @Nullable ViewDumpHandler handler)
+            throws IOException {
         int bufLen = 4 +                        // opcode
                 4 + viewRoot.length() * 2 +     // view root strlen + view root
                 4 + view.length() * 2;          // view strlen + view
@@ -209,33 +234,33 @@ public final class HandleViewDebug extends ChunkHandler {
     }
 
     public static void profileView(@NonNull Client client, @NonNull String viewRoot,
-            @NonNull String view, @NonNull ViewDumpHandler handler) throws IOException {
+                                   @NonNull String view, @NonNull ViewDumpHandler handler) throws IOException {
         sendViewOpPacket(client, VUOP_PROFILE_VIEW, viewRoot, view, null, handler);
     }
 
     public static void captureView(@NonNull Client client, @NonNull String viewRoot,
-            @NonNull String view, @NonNull ViewDumpHandler handler) throws IOException {
+                                   @NonNull String view, @NonNull ViewDumpHandler handler) throws IOException {
         sendViewOpPacket(client, VUOP_CAPTURE_VIEW, viewRoot, view, null, handler);
     }
 
     public static void invalidateView(@NonNull Client client, @NonNull String viewRoot,
-            @NonNull String view) throws IOException {
+                                      @NonNull String view) throws IOException {
         invokeMethod(client, viewRoot, view, "invalidate");
     }
 
     public static void requestLayout(@NonNull Client client, @NonNull String viewRoot,
-            @NonNull String view) throws IOException {
+                                     @NonNull String view) throws IOException {
         invokeMethod(client, viewRoot, view, "requestLayout");
     }
 
     public static void dumpDisplayList(@NonNull Client client, @NonNull String viewRoot,
-            @NonNull String view) throws IOException {
+                                       @NonNull String view) throws IOException {
         sendViewOpPacket(client, VUOP_DUMP_DISPLAYLIST, viewRoot, view, null,
                 sViewOpNullChunkHandler);
     }
 
     public static void dumpTheme(@NonNull Client client, @NonNull String viewRoot,
-            @NonNull ViewDumpHandler handler)
+                                 @NonNull ViewDumpHandler handler)
             throws IOException {
         ByteBuffer buf = allocBuffer(4      // opcode
                 + 4                         // view root length
@@ -251,7 +276,9 @@ public final class HandleViewDebug extends ChunkHandler {
         client.sendAndConsume(packet, handler);
     }
 
-    /** A {@link ViewDumpHandler} to use when no response is expected. */
+    /**
+     * A {@link ViewDumpHandler} to use when no response is expected.
+     */
     private static class NullChunkHandler extends ViewDumpHandler {
         public NullChunkHandler(int chunkType) {
             super(chunkType);
@@ -263,7 +290,7 @@ public final class HandleViewDebug extends ChunkHandler {
     }
 
     public static void invokeMethod(@NonNull Client client, @NonNull String viewRoot,
-            @NonNull String view, @NonNull String method, Object... args) throws IOException {
+                                    @NonNull String view, @NonNull String method, Object... args) throws IOException {
         int len = 4 + method.length() * 2;
         if (args != null) {
             // # of args
@@ -317,11 +344,11 @@ public final class HandleViewDebug extends ChunkHandler {
         }
 
         sendViewOpPacket(client, VUOP_INVOKE_VIEW_METHOD, viewRoot, view, extra,
-                sViewOpNullChunkHandler );
+                sViewOpNullChunkHandler);
     }
 
     public static void setLayoutParameter(@NonNull Client client, @NonNull String viewRoot,
-            @NonNull String view, @NonNull String parameter, int value) throws IOException {
+                                          @NonNull String view, @NonNull String parameter, int value) throws IOException {
         int len = 4 + parameter.length() * 2 + 4;
         byte[] extra = new byte[len];
         ByteBuffer b = ByteBuffer.wrap(extra);
@@ -335,7 +362,7 @@ public final class HandleViewDebug extends ChunkHandler {
 
     @Override
     public void handleChunk(Client client, int type, ByteBuffer data,
-            boolean isReply, int msgId) {
+                            boolean isReply, int msgId) {
     }
 
     public static void sendStartGlTracing(Client client) throws IOException {

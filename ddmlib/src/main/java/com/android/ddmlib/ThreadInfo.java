@@ -60,6 +60,7 @@ public final class ThreadInfo implements IStackTraceInfo {
 
     /**
      * Sets the stack call of the thread.
+     *
      * @param trace stackcall information.
      */
     void setStackCall(StackTraceElement[] trace) {
@@ -131,6 +132,7 @@ public final class ThreadInfo implements IStackTraceInfo {
 
     /**
      * Returns the approximate time of the stacktrace data.
+     *
      * @see #getStackTrace()
      */
     public long getStackCallTime() {

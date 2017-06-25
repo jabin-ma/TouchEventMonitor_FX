@@ -35,13 +35,13 @@ public final class SourceFilePosition {
     private final SourcePosition mSourcePosition;
 
     public SourceFilePosition(@NonNull SourceFile sourceFile,
-            @NonNull SourcePosition sourcePosition) {
+                              @NonNull SourcePosition sourcePosition) {
         mSourceFile = sourceFile;
         mSourcePosition = sourcePosition;
     }
 
     public SourceFilePosition(@NonNull File file,
-            @NonNull SourcePosition sourcePosition) {
+                              @NonNull SourcePosition sourcePosition) {
         this(new SourceFile(file), sourcePosition);
     }
 
