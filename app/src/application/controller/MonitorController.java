@@ -22,8 +22,6 @@ import java.util.ResourceBundle;
 
 public class MonitorController implements Initializable, AndroidDebugBridge.IDeviceChangeListener, OnTouchEventListener {
     @FXML
-    ChoiceBox<InputDevice> choicebox_device;
-    @FXML
     ToolBar toolbar_main;
     @FXML
     Button toolbtn_start, toolbtn_pause, toolbtn_stop, toolbtn_replay;
@@ -35,9 +33,7 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
     Pane root;
 
 
-    IDevice curDev;
-//    private TouchEventObserver mEventObserver;
-
+    private IDevice curDev;
 
     private StringConverter inputDevConverter = new StringConverter<InputDevice>() {
         @Override
@@ -63,13 +59,9 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
         observableList.get(3).setCellValueFactory(new PropertyValueFactory("eventDur"));
         ObservableList<EventData> data = FXCollections.observableArrayList();
         tableview_events.setItems(data);
-        choicebox_device.setTooltip(new Tooltip("Select..."));
-        choicebox_device.setConverter(inputDevConverter);
     }
 
     public void doStartMonitor(ActionEvent ev) {
-        InputDevice inputDev = choicebox_device.getSelectionModel().getSelectedItem();
-        curDev.getInputManager().addOnTouchEventListener(this);
     }
 
     public void doPauseMonitor(ActionEvent ev) {
@@ -119,15 +111,7 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
             curDev = device;
             setDisable(false);
             MainController.Companion.getCurrent().setStatus("已连接:" + device.getName());
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    choicebox_device.getItems().clear();
-                    choicebox_device.getItems().addAll(device.getInputManager().getDevices());
-                    //更新JavaFX的主线程的代码放在此处
-                    choicebox_device.getSelectionModel().select(0);
-                }
-            });
+            curDev.getInputManager().addOnTouchEventListener(this);
         } else {
             curDev = null;
         }

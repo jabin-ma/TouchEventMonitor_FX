@@ -17,5 +17,7 @@ ignore EV_KEY       BTN_TOOL_FINGER      UP         4
 ignore ignore       SYN_REPORT           ignore     5
 #power key
 
-ignore EV_KEY       KEY_POWER            DOWN       1   com.android.ddmlib.input.android.PowerEvent
-ignore EV_KEY       KEY_POWER            UP         4
+ignore EV_KEY       ignore            DOWN       1   com.android.ddmlib.input.android.KeyEvent
+ignore EV_KEY       ignore            UP         4
+
+

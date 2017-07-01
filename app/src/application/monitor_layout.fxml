@@ -9,11 +9,11 @@
             fx:controller="application.controller.MonitorController">
     <top>
         <VBox>
-            <ChoiceBox fx:id="choicebox_device" prefHeight="27.0" prefWidth="282.0">
-                <VBox.margin>
-                    <Insets left="10.0" top="10.0"/>
-                </VBox.margin>
-            </ChoiceBox>
+            <!--<ChoiceBox fx:id="choicebox_device" prefHeight="27.0" prefWidth="282.0">-->
+                <!--<VBox.margin>-->
+                    <!--<Insets left="10.0" top="10.0"/>-->
+                <!--</VBox.margin>-->
+            <!--</ChoiceBox>-->
             <ToolBar fx:id="toolbar_main">
                 <items>
                     <Button fx:id="toolbtn_start" mnemonicParsing="false" onAction="#doStartMonitor" text="录制"/>
