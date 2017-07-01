@@ -562,7 +562,7 @@ final class DeviceMonitor {
             client.requestAllocationStatus();
         } else {
             Log.e("ddms", "Handshake with " + client + " failed!");
-			/*
+            /*
 			 * The handshake send failed. We could remove it now, but if the
 			 * failure is "permanent" we'll just keep banging on it and getting
 			 * the same result. Keep it in the list with its "error" state so we

@@ -89,7 +89,7 @@ public final class Message implements Delayed {
     /**
      * If set message is asynchronous
      */
-	/* package */ static final int FLAG_ASYNCHRONOUS = 1 << 1;
+    /* package */ static final int FLAG_ASYNCHRONOUS = 1 << 1;
 
     /**
      * Flags to clear in the copyFrom method

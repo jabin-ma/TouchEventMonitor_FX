@@ -8,6 +8,8 @@ public class RawEvent implements IEvent {
     private String type = null, code = null, value = null, devFile;
     private HandleType handleType;
 
+    private String eventClass;
+
 
     public RawEvent(String str, String devFile) {
         String[] args = str.replaceAll("[\\[\\]]", "").replaceAll(" +", " ").trim().split(" ");
@@ -35,6 +37,8 @@ public class RawEvent implements IEvent {
             case 4:
                 setHandleType(HandleType.get(Integer.valueOf(v)));
                 break;
+            case 5:
+                setEventClass(v);
             default:
                 break;
         }
@@ -87,6 +91,15 @@ public class RawEvent implements IEvent {
                 return false;
         }
         return true;
+    }
+
+
+    public String getEventClass() {
+        return eventClass;
+    }
+
+    public void setEventClass(String eventClass) {
+        this.eventClass = eventClass;
     }
 
     @Override

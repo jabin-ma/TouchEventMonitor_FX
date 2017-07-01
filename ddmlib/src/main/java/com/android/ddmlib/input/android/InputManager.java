@@ -2,6 +2,8 @@ package com.android.ddmlib.input.android;
 
 import com.android.ddmlib.IDevice;
 
+import java.util.ArrayList;
+
 /**
  * Created by majipeng on 2017/6/19.
  */
@@ -26,6 +28,7 @@ public class InputManager {
         inputDispatcherThread.start();
     }
 
+
     public IDevice getAndroidDevice() {
         return mAndroidDevice;
     }
@@ -41,4 +44,20 @@ public class InputManager {
     public InputDispatcher getInputDispatcher() {
         return inputDispatcher;
     }
+
+    public ArrayList<InputDevice> getDevices() {
+        return eventHub.getDevices();
+    }
+
+
+    public boolean addOnTouchEventListener(OnTouchEventListener listener) {
+        return inputDispatcherThread.addOnTouchEventListener(listener);
+    }
+
+
+    public boolean unregisterTouchEventListener(OnTouchEventListener listener) {
+        return inputDispatcherThread.unregisterTouchEventListener(listener);
+    }
+
+
 }

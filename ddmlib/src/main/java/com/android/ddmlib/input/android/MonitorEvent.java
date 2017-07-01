@@ -1,5 +1,8 @@
 package com.android.ddmlib.input.android;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 /**
  * Created by majipeng on 2017/6/21.
  */
@@ -12,9 +15,17 @@ public interface MonitorEvent {
 
     void onArgs(RawEvent rawEvent);
 
-    boolean isClosed();
+    void setDispatched();
 
-    void setInputDevice(String inputDevice);
+    int dispatchCount();
 
-    String getInputDevice();
+    SimpleBooleanProperty closedProperty();
+
+    SimpleStringProperty eventTypeProperty();
+
+    SimpleStringProperty eventDescProperty();
+
+    SimpleStringProperty eventDurProperty();
+
+    SimpleStringProperty inputDeviceProperty();
 }

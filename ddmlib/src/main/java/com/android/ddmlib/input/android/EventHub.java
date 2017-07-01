@@ -119,4 +119,9 @@ class EventHub {
     RawEvent getEvent() throws InterruptedException {
         return rawEvents.take();
     }
+
+
+    public ArrayList<InputDevice> getDevices() {
+        return new ArrayList<>(mDevices.values());
+    }
 }

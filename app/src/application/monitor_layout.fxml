@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+            disable="true"
             fx:controller="application.controller.MonitorController">
     <top>
         <VBox>
@@ -29,10 +30,10 @@
             <center>
                 <TableView fx:id="tableview_events" editable="true">
                     <columns>
+                        <TableColumn prefWidth="75.0" text="事件源"/>
                         <TableColumn prefWidth="75.0" text="事件类型"/>
                         <TableColumn prefWidth="75.0" text="事件描述"/>
                         <TableColumn prefWidth="75.0" text="事件耗时"/>
-                        <TableColumn prefWidth="75.0" text="当前进度"/>
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>

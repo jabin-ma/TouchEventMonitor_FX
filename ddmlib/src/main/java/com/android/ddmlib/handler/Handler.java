@@ -441,7 +441,7 @@ public class Handler {
      * 'object' that are in the message queue. If <var>object</var> is null, all
      * messages will be removed.
      *//*
-	public final void removeMessages(int what, Object object) {
+    public final void removeMessages(int what, Object object) {
 		mQueue.removeMessages(this, what, object);
 	}
 

@@ -50,7 +50,7 @@ package com.android.ddmlib.handler;
  */
 public final class Looper {
     /*
-	 * API Implementation Note:
+     * API Implementation Note:
 	 *
 	 * This class contains the code required to set up and manage an event loop
 	 * based on MessageQueue. APIs that affect the state of the queue should be

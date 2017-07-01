@@ -4,13 +4,15 @@ import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
 import com.android.ddmlib.input.EventData;
 import com.android.ddmlib.input.android.InputDevice;
+import com.android.ddmlib.input.android.MonitorEvent;
+import com.android.ddmlib.input.android.OnTouchEventListener;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ProgressBarTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
@@ -18,7 +20,7 @@ import javafx.util.StringConverter;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MonitorController implements Initializable, AndroidDebugBridge.IDeviceChangeListener {
+public class MonitorController implements Initializable, AndroidDebugBridge.IDeviceChangeListener, OnTouchEventListener {
     @FXML
     ChoiceBox<InputDevice> choicebox_device;
     @FXML
@@ -32,6 +34,8 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
     @FXML
     Pane root;
 
+
+    IDevice curDev;
 //    private TouchEventObserver mEventObserver;
 
 
@@ -53,11 +57,10 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
     public void initialize(URL url, ResourceBundle rb) {
         AndroidDebugBridge.addDeviceChangeListener(this);
         ObservableList<TableColumn> observableList = tableview_events.getColumns();
-        observableList.get(0).setCellValueFactory(new PropertyValueFactory("eventType"));
-        observableList.get(1).setCellValueFactory(new PropertyValueFactory("eventDesc"));
-        observableList.get(2).setCellValueFactory(new PropertyValueFactory("eventDur"));
-        observableList.get(3).setCellValueFactory(new PropertyValueFactory("progress"));
-        observableList.get(3).setCellFactory(ProgressBarTableCell.forTableColumn());
+        observableList.get(0).setCellValueFactory(new PropertyValueFactory("inputDevice"));
+        observableList.get(1).setCellValueFactory(new PropertyValueFactory("eventType"));
+        observableList.get(2).setCellValueFactory(new PropertyValueFactory("eventDesc"));
+        observableList.get(3).setCellValueFactory(new PropertyValueFactory("eventDur"));
         ObservableList<EventData> data = FXCollections.observableArrayList();
         tableview_events.setItems(data);
         choicebox_device.setTooltip(new Tooltip("Select..."));
@@ -66,8 +69,7 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
 
     public void doStartMonitor(ActionEvent ev) {
         InputDevice inputDev = choicebox_device.getSelectionModel().getSelectedItem();
-//        inputDev.getTouchEventObserver().setTouchEventListener(this);
-//        inputDev.getTouchEventObserver().monitor();
+        curDev.getInputManager().addOnTouchEventListener(this);
     }
 
     public void doPauseMonitor(ActionEvent ev) {
@@ -92,44 +94,48 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
 
     @Override
     public void deviceDisconnected(IDevice device) {
-
+        setDisable(true);
     }
+
+
+    public void setDisable(boolean disable) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                root.disableProperty().setValue(disable);
+                if (disable) MainController.Companion.getCurrent().setStatus("请连接你的手机");
+            }
+        });
+    }
+
 
     @Override
     public void deviceChanged(IDevice device, int changeMask) {
         updateInputDeviceList(device);
     }
 
-    private void updateInputDeviceList(IDevice device) {/*
-        choicebox_device.getItems().addAll(device.getInputDeviceManager().getDevice(false));
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                //更新JavaFX的主线程的代码放在此处
-                choicebox_device.getSelectionModel().select(0);
-            }
-        });
-        MainController.Companion.getCurrent().setStatus("请选择输入设备");*/
-
-        device.getInputManager();
-
-
+    private void updateInputDeviceList(IDevice device) {
+        if (device.isOnline()) {
+            curDev = device;
+            setDisable(false);
+            MainController.Companion.getCurrent().setStatus("已连接:" + device.getName());
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    choicebox_device.getItems().clear();
+                    choicebox_device.getItems().addAll(device.getInputManager().getDevices());
+                    //更新JavaFX的主线程的代码放在此处
+                    choicebox_device.getSelectionModel().select(0);
+                }
+            });
+        } else {
+            curDev = null;
+        }
     }
 
-
-//    @Override
-//    public void onMonitorStarted() {
-//
-//    }
-//
-//    @Override
-//    public void onMonitorStoped() {
-//
-//    }
-//
-//    @Override
-//    public void onTouchEvent(TouchEvent event) {
-//           System.out.println("onTouchEvent");
-//           tableview_events.getItems().add(event);
-//    }
+    @Override
+    public boolean onTouchEvent(MonitorEvent monitorEvent) {
+        tableview_events.getItems().add(monitorEvent);
+        return false;
+    }
 }

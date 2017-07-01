@@ -36,7 +36,7 @@ public class KnownEventList {
         read = new BufferedReader(ins);
         String line;
         while ((line = read.readLine()) != null) {
-            if (line.startsWith("#"))
+            if (line.startsWith("#") || line.isEmpty())
                 continue;
             needwhatch.add(new RawEvent(line, null));
         }
@@ -63,6 +63,16 @@ public class KnownEventList {
             }
         }
         return HandleType.UNKNOWN;
+    }
+
+
+    public String queryEventClass(RawEvent in) {
+        for (RawEvent def : needwhatch) {
+            if (def.equals(in)) {
+                return def.getEventClass();
+            }
+        }
+        return null;
     }
 
     public enum HandleType {

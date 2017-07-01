@@ -1,5 +1,6 @@
 package com.android.ddmlib.input;
 
+import com.android.ddmlib.Log;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -13,6 +14,7 @@ public class EventData {
      * @return the progress
      */
     public double getProgress() {
+        Log.d("eventData", "getProgress");
         return progress.get();
     }
 
@@ -24,18 +26,24 @@ public class EventData {
     }
 
     public SimpleDoubleProperty progressProperty() {
+        Log.d("eventData", "progressProperty");
         return progress;
     }
 
     public String getEventType() {
+
+        Log.d("eventData", "getEventType");
         return eventType.get();
     }
 
     public String getEventDesc() {
+
+        Log.d("eventData", "getEventDesc");
         return eventDesc.get();
     }
 
     public String getEventDur() {
+        Log.d("eventData", "getEventDur");
         return eventDur.get();
     }
 

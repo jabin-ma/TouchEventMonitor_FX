@@ -1,6 +1,7 @@
 package com.android.ddmlib.input.android
 
 import com.android.ddmlib.Log
+import com.android.ddmlib.utils.d
 
 /**
  * Created by majipeng on 2017/6/22.
@@ -17,10 +18,16 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
         //        KnownEventList.HandleType handleType=rawEvent.getHandleType();
         val handleType = knownEventList.queryHandleType(rawEvent)
         rawEvent.handleType = handleType
+        rawEvent.eventClass = knownEventList.queryEventClass(rawEvent)
         when (handleType) {
             KnownEventList.HandleType.EVENT_CREATE -> {
-                monitorEvent = MonitorEventItem();
-                monitorEvent?.inputDevice = rawEvent.devFile
+                monitorEvent = Class.forName(rawEvent.eventClass).newInstance() as MonitorEvent?;
+                if (monitorEvent == null) {
+                    d("create obj failed--${rawEvent.devFile}")
+                    return null;
+                }
+
+                monitorEvent?.inputDeviceProperty()?.value = rawEvent.devFile
                 monitorEvent?.onCreate(rawEvent)
             }
             KnownEventList.HandleType.EVENT_ARG_X, KnownEventList.HandleType.EVENT_ARG_Y -> {
@@ -28,7 +35,7 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
             }
             KnownEventList.HandleType.EVENT_SYNC -> {
                 monitorEvent?.onSync(rawEvent)
-                if (monitorEvent != null && monitorEvent!!.isClosed) {
+                if (monitorEvent != null && monitorEvent!!.closedProperty().value && monitorEvent!!.dispatchCount() == 0) {
                     return monitorEvent;
                 }
             }
@@ -39,7 +46,6 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
                 Log.d(TAG, "UnKnown event..$rawEvent")
             }
         }
-
 
         return null;
     }

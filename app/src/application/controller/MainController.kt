@@ -1,6 +1,7 @@
 package application.controller
 
 import com.android.ddmlib.AndroidDebugBridge
+import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
@@ -48,7 +49,7 @@ class MainController : Initializable {
     }
 
     fun setStatus(text: String) {
-        statusbar_text!!.text = text
+        Platform.runLater { statusbar_text!!.text = text }
     }
 
     companion object {
