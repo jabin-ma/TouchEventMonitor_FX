@@ -24,24 +24,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-
-
         launch(args);
-
-//        int state=0;
-//        int state_1=0x00000002;
-//        int state_2=0x00000020;
-//        int state_3=0x00000200;
-//
-//        state|=state_1;
-//        state|=state_2;
-//        state|=state_3;
-//        System.out.println(((state&state_1)==state_1));
-//        System.out.println(((state&state_2)==state_2));
-//        System.out.println(((state&state_3)==state_3));
-//        state &=~state_3;
-//        System.out.println(((state&state_1)==state_1));
-//        System.out.println(((state&state_2)==state_2));
-//        System.out.println(((state&state_3)==state_3));
     }
 }

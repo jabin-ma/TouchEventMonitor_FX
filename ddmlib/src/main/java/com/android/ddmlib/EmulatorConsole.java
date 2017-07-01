@@ -168,7 +168,7 @@ public final class EmulatorConsole {
 
     public static final String RESULT_OK = null;
 
-    private static final Pattern sEmulatorRegexp = Pattern.compile(Device.RE_EMULATOR_SN);
+    private static final Pattern sEmulatorRegexp = Pattern.compile(Device.Companion.getRE_EMULATOR_SN());
     private static final Pattern sVoiceStatusRegexp = Pattern.compile(
             "gsm\\s+voice\\s+state:\\s*([a-z]+)", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
     private static final Pattern sDataStatusRegexp = Pattern.compile(

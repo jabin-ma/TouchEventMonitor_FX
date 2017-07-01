@@ -214,7 +214,7 @@ public class RemoteAndroidTestRunner implements IRemoteAndroidTestRunner {
     private int getApiLevel() {
         try {
             return Integer.parseInt(mRemoteDevice.getSystemProperty(
-                    IDevice.PROP_BUILD_API_LEVEL).get());
+                    IDevice.Companion.getPROP_BUILD_API_LEVEL()).get());
         } catch (Exception e) {
             return -1;
         }
