@@ -2,6 +2,7 @@ package application.controller;
 
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
+import com.android.ddmlib.MonkeyTransport;
 import com.android.ddmlib.input.EventData;
 import com.android.ddmlib.input.android.InputDevice;
 import com.android.ddmlib.input.android.MonitorEvent;
@@ -12,7 +13,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.ToolBar;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
@@ -112,6 +116,8 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
             setDisable(false);
             MainController.Companion.getCurrent().setStatus("已连接:" + device.getName());
             curDev.getInputManager().addOnTouchEventListener(this);
+            MonkeyTransport monkeyTransport=new MonkeyTransport(1080,device);
+            monkeyTransport.createConnect();
         } else {
             curDev = null;
         }

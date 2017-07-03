@@ -42,7 +42,7 @@ public class TouchEvent extends AbsMonitorEvent {
                 if (DEBUG) Log.d(TAG, "onSync-->close");
                 closedProperty().setValue(true);
                 eventTypeProperty().setValue("触摸事件");
-                eventDescProperty().setValue("hhhh");
+                eventDescProperty().setValue(mTouchEventPath.getFirst()+"->"+mTouchEventPath.getLast());
                 break;
         }
         mCurState = 0;

@@ -187,4 +187,11 @@ public class NetworkMonkey implements Callable<Void> {
         }
         return null;
     }
+
+    public void touchUp(int x,int y){}
+    public void touchDown(int x,int y){}
+    public void touchMove(int x,int y){}
+    public void keyUp(String key){}
+    public void keyDown(String key){}
+
 }
