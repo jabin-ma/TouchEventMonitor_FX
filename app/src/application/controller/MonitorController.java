@@ -102,7 +102,6 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
         });
     }
 
-
     @Override
     public void deviceChanged(IDevice device, int changeMask) {
         updateInputDeviceList(device);

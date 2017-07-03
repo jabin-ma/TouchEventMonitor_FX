@@ -39,7 +39,7 @@
         </TabPane>
     </center>
     <bottom>
-        <HBox prefHeight="20" fx:id="pane_statusbar">
+        <HBox prefHeight="20" fx:id="pane_statusbar" alignment="CENTER_LEFT">
             <ProgressIndicator prefWidth="20"/>
             <Label text="Label" fx:id="statusbar_text"/>
 
