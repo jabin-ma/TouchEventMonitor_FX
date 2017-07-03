@@ -1,4 +1,4 @@
-package com.android.ddmlib.input.android;
+package com.android.ddmlib.input;
 
 import com.android.ddmlib.*;
 import com.android.ddmlib.TimeoutException;
@@ -39,7 +39,7 @@ class EventHub {
     void scanDevice(boolean force) {
         if (force || mDevices.isEmpty()) {
             try {
-                mContext.getAndroidDevice().executeShellCommand(new OneLineReceiver() {
+                mContext.getAndroidDevice().executeShellCommand(new SingleLineReceiver() {
                     ArrayList<String> sb = new ArrayList<>();
 
                     @Override
@@ -94,7 +94,7 @@ class EventHub {
 
         Future<Void> submitFuture = executorService.submit(() -> {
             try {
-                mContext.getAndroidDevice().executeShellCommand(new OneLineReceiver() {
+                mContext.getAndroidDevice().executeShellCommand(new SingleLineReceiver() {
                     @Override
                     public void processNewLines(String line) {
                         RawEvent rawEvent = new RawEvent(line, tempDev.getDevFile());

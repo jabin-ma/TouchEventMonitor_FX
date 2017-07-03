@@ -1,6 +1,4 @@
-package com.android.ddmlib.input.android;
-
-import com.android.ddmlib.Log;
+package com.android.ddmlib.input;
 
 public class KeyEvent extends AbsMonitorEvent {
 
@@ -26,5 +24,4 @@ public class KeyEvent extends AbsMonitorEvent {
     public void onArgs(RawEvent rawEvent) {
 
     }
-
 }

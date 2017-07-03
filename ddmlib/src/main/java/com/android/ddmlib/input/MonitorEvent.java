@@ -1,4 +1,4 @@
-package com.android.ddmlib.input.android;
+package com.android.ddmlib.input;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;

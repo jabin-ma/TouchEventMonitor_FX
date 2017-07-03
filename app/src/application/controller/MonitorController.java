@@ -2,13 +2,12 @@ package application.controller;
 
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
-import com.android.ddmlib.MonkeyTransport;
-import com.android.ddmlib.input.EventData;
-import com.android.ddmlib.input.android.InputDevice;
-import com.android.ddmlib.input.android.MonitorEvent;
-import com.android.ddmlib.input.android.OnTouchEventListener;
+import com.android.ddmlib.input.InputDevice;
+import com.android.ddmlib.input.MonitorEvent;
+import com.android.ddmlib.input.OnTouchEventListener;
+import com.android.ddmlib.remotecontrol.KeyCode;
+import com.android.ddmlib.remotecontrol.Type;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -61,8 +60,6 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
         observableList.get(1).setCellValueFactory(new PropertyValueFactory("eventType"));
         observableList.get(2).setCellValueFactory(new PropertyValueFactory("eventDesc"));
         observableList.get(3).setCellValueFactory(new PropertyValueFactory("eventDur"));
-        ObservableList<EventData> data = FXCollections.observableArrayList();
-        tableview_events.setItems(data);
     }
 
     public void doStartMonitor(ActionEvent ev) {
@@ -79,8 +76,9 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
     }
 
     public void doReplayMonitor(ActionEvent ev) {
-
-
+        curDev.getRemoteControler(Type.MONKEY).keyDown(KeyCode.BACK);
+        curDev.getRemoteControler(Type.MONKEY).sleep(100);
+        curDev.getRemoteControler(Type.MONKEY).keyUp(KeyCode.BACK);
     }
 
     @Override
@@ -116,8 +114,6 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
             setDisable(false);
             MainController.Companion.getCurrent().setStatus("已连接:" + device.getName());
             curDev.getInputManager().addOnTouchEventListener(this);
-            MonkeyTransport monkeyTransport=new MonkeyTransport(1080,device);
-            monkeyTransport.createConnect();
         } else {
             curDev = null;
         }

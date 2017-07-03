@@ -20,10 +20,13 @@ import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
 import com.android.annotations.VisibleForTesting;
 import com.android.annotations.concurrency.GuardedBy;
-import com.android.ddmlib.input.android.Command;
-import com.android.ddmlib.input.android.InputManager;
+import com.android.ddmlib.input.Command;
+import com.android.ddmlib.input.InputManager;
 import com.android.ddmlib.log.LogReceiver;
+import com.android.ddmlib.monkey.MonkeyTransport;
 import com.android.ddmlib.monkey.NetworkMonkey;
+import com.android.ddmlib.remotecontrol.Controler;
+import com.android.ddmlib.remotecontrol.Type;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -1327,12 +1330,32 @@ final class Device implements IDevice {
         return NetworkMonkey.create(this);
     }
 
-    InputManager inputManager;
+    private InputManager inputManager;
 
     public InputManager getInputManager() {
         if (inputManager == null) {
             inputManager = new InputManager(this);
         }
         return inputManager;
+    }
+
+    private HashMap<Type, Controler> controlerHashMap = new HashMap<>();
+
+    @Override
+    public Controler getRemoteControler(Type type) {
+        Controler controler = controlerHashMap.get(type);
+        if (controler != null) {
+        } else {
+            switch (type) {
+                case MONKEY:
+                    controler = new MonkeyTransport(1080, this);
+                    controler.create();
+                    break;
+                default:
+                    controler = null;
+            }
+            controlerHashMap.put(type, controler);
+        }
+        return controler;
     }
 }

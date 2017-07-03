@@ -17,7 +17,7 @@
 package com.android.ddmlib;
 
 import com.android.annotations.NonNull;
-import com.android.ddmlib.input.android.Command;
+import com.android.ddmlib.input.Command;
 
 import java.io.IOException;
 import java.util.concurrent.Future;

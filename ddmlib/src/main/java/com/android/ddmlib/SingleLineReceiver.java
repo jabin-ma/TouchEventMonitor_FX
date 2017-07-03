@@ -20,9 +20,9 @@ package com.android.ddmlib;
  * Classes which implement this interface provide methods that deal with out from a remote shell
  * command on a device/emulator.
  */
-public abstract class OneLineReceiver extends MultiLineReceiver {
+public abstract class SingleLineReceiver extends MultiLineReceiver {
 
-    public OneLineReceiver() {
+    public SingleLineReceiver() {
         setReportOneLine(true);
     }
 

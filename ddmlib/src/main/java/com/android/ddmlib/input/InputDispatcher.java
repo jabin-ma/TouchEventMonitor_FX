@@ -1,4 +1,4 @@
-package com.android.ddmlib.input.android;
+package com.android.ddmlib.input;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

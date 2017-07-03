@@ -1,12 +1,10 @@
-package com.android.ddmlib.input.android;
-
-import com.android.ddmlib.input.android.KnownEventList.HandleType;
+package com.android.ddmlib.input;
 
 public class RawEvent implements IEvent {
 
     private Time time = null;
     private String type = null, code = null, value = null, devFile;
-    private HandleType handleType;
+    private KnownEventList.HandleType handleType;
 
     private String eventClass;
 
@@ -35,7 +33,7 @@ public class RawEvent implements IEvent {
                 setValue(value);
                 break;
             case 4:
-                setHandleType(HandleType.get(Integer.valueOf(v)));
+                setHandleType(KnownEventList.HandleType.get(Integer.valueOf(v)));
                 break;
             case 5:
                 setEventClass(v);
@@ -137,11 +135,11 @@ public class RawEvent implements IEvent {
         this.value = value;
     }
 
-    public HandleType getHandleType() {
+    public KnownEventList.HandleType getHandleType() {
         return handleType;
     }
 
-    public void setHandleType(HandleType handleType) {
+    public void setHandleType(KnownEventList.HandleType handleType) {
         this.handleType = handleType;
     }
 

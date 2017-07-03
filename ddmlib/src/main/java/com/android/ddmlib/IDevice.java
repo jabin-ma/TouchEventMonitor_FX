@@ -18,10 +18,12 @@ package com.android.ddmlib;
 
 import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
-import com.android.ddmlib.input.android.Command;
-import com.android.ddmlib.input.android.InputManager;
+import com.android.ddmlib.input.Command;
+import com.android.ddmlib.input.InputManager;
 import com.android.ddmlib.log.LogReceiver;
 import com.android.ddmlib.monkey.NetworkMonkey;
+import com.android.ddmlib.remotecontrol.Controler;
+import com.android.ddmlib.remotecontrol.Type;
 
 import java.io.IOException;
 import java.util.List;
@@ -674,6 +676,8 @@ public interface IDevice extends IShellEnabledDevice {
     NetworkMonkey getMonkey() throws IOException;
 
 
-    public InputManager getInputManager();
+    InputManager getInputManager();
+
+    Controler getRemoteControler(Type type);
 
 }
