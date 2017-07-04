@@ -81,11 +81,7 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
             cur.processController(curDev.getRemoteControler(Type.MONKEY));
             if (i + 1 < olist.size()) {
                 MonitorEvent next = olist.get(i + 1);
-                try {
-                    Thread.sleep(next.beginTime() - cur.endTime());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                curDev.getRemoteControler(Type.MONKEY).sleep(next.beginTime() - cur.endTime());
             }
         }
 
