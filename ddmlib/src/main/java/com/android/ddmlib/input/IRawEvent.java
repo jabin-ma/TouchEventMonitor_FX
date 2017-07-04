@@ -1,8 +1,8 @@
 package com.android.ddmlib.input;
 
-public interface IEvent {
+public interface IRawEvent {
 
-    public Time getTime();
+    public When getWhen();
 
 
     public String getType();

@@ -1,23 +1,26 @@
 package com.android.ddmlib.input;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
  * Created by majipeng on 2017/6/21.
  */
 public interface MonitorEvent {
-    void onCreate(RawEvent rawEvent);
 
-    void onSync(RawEvent rawEvent);
+    void onCreate(PlainTextRawEvent rawEvent);
 
-    void onPublish(RawEvent rawEvent);
+    void onSync(PlainTextRawEvent rawEvent);
 
-    void onArgs(RawEvent rawEvent);
+    void onPublish(PlainTextRawEvent rawEvent);
+
+    void onArgs(PlainTextRawEvent rawEvent);
 
     void setDispatched();
 
     int dispatchCount();
+
 
     SimpleBooleanProperty closedProperty();
 
@@ -25,7 +28,15 @@ public interface MonitorEvent {
 
     SimpleStringProperty eventDescProperty();
 
-    SimpleStringProperty eventDurProperty();
+    SimpleLongProperty eventDurProperty();
 
     SimpleStringProperty inputDeviceProperty();
+
+    TouchEvent.Type getEventType();
+
+    long beginTime();
+
+    long endTime();
+
+
 }

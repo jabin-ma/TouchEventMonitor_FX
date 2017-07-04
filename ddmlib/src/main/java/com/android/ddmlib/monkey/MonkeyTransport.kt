@@ -3,8 +3,9 @@ package com.android.ddmlib.monkey
 import com.android.ddmlib.AdbHelper
 import com.android.ddmlib.IDevice
 import com.android.ddmlib.ShellCommandUnresponsiveException
-import com.android.ddmlib.remotecontrol.Controler
-import com.android.ddmlib.remotecontrol.KeyCode
+import com.android.ddmlib.controller.IRemoteController
+import com.android.ddmlib.controller.KeyCode
+import com.android.ddmlib.controller.SimpleRemoteController
 import com.android.ddmlib.utils.d
 import java.io.IOException
 import java.net.InetSocketAddress
@@ -14,7 +15,15 @@ import java.nio.channels.Selector
 import java.nio.channels.SocketChannel
 import java.util.concurrent.*
 
-class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Controler {
+class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : SimpleRemoteController() {
+    override fun quit() {
+        connect!!.writeSync("quit")
+    }
+
+    override fun done() {
+        connect!!.writeSync("done")
+    }
+
     override fun create() {
         if (connect != null && connect!!.state == State.STOP) {
             d("connect is arealdy connected")

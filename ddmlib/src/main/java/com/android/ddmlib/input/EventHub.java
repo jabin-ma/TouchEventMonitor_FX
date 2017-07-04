@@ -25,7 +25,7 @@ class EventHub {
 
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
-    private BlockingQueue<RawEvent> rawEvents = new LinkedBlockingQueue<>();
+    private BlockingQueue<PlainTextRawEvent> rawEvents = new LinkedBlockingQueue<>();
 
     private HashMap<String, Future> futureHashMap = new HashMap<>();
 
@@ -97,7 +97,7 @@ class EventHub {
                 mContext.getAndroidDevice().executeShellCommand(new SingleLineReceiver() {
                     @Override
                     public void processNewLines(String line) {
-                        RawEvent rawEvent = new RawEvent(line, tempDev.getDevFile());
+                        PlainTextRawEvent rawEvent = new PlainTextRawEvent(line, tempDev.getDevFile());
                         rawEvents.add(rawEvent);
                     }
                 }, -1, Command.GETEVENT_WHATCH_TEXT_EVENT, tempDev.getDevFile());
@@ -116,7 +116,7 @@ class EventHub {
         return false;
     }
 
-    RawEvent getEvent() throws InterruptedException {
+    PlainTextRawEvent getEvent() throws InterruptedException {
         return rawEvents.take();
     }
 

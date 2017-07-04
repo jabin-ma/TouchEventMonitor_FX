@@ -1,18 +1,18 @@
 package com.android.ddmlib.input;
 
 
-public class Time {
+public class When {
     long ms;
 
-    public Time(String str) {
+    public When(String str) {
         str = str.trim().replace(" +", "");
-        if (RawEvent.ignore(str) || !str.contains("."))
+        if (PlainTextRawEvent.ignore(str) || !str.contains("."))
             return;
         String[] sms = str.split("\\.");
         ms = Long.parseLong(sms[0] + sms[1].substring(0, 3));
     }
 
-    public long math(Time other) {
+    public long math(When other) {
         return 0;
     }
 

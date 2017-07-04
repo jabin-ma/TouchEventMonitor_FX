@@ -44,4 +44,10 @@ public class Main extends Application {
 //        System.out.println(((state&state_2)==state_2));
 //        System.out.println(((state&state_3)==state_3));
     }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        System.exit(0);
+    }
 }

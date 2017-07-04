@@ -1,4 +1,4 @@
-package com.android.ddmlib.remotecontrol;
+package com.android.ddmlib.controller;
 
 /**
  * Created by majipeng on 2017/7/3.

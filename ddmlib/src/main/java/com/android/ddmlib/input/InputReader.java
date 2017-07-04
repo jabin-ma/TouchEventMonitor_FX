@@ -22,7 +22,7 @@ public class InputReader {
      */
     public MonitorEvent readBySync() {
         try {
-            RawEvent rawEvent = eventHub.getEvent();
+            PlainTextRawEvent rawEvent = eventHub.getEvent();
             EventMapper mapper = mappers.get(rawEvent.getDevFile());
             if (mapper == null) {
                 mapper = new EventMapperImpl(knownEventList);

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class KnownEventList {
 
-    public List<RawEvent> needwhatch = new ArrayList<RawEvent>();
+    public List<PlainTextRawEvent> needwhatch = new ArrayList<PlainTextRawEvent>();
 
     public KnownEventList(String file) {
         InputStream in = null;
@@ -38,7 +38,7 @@ public class KnownEventList {
         while ((line = read.readLine()) != null) {
             if (line.startsWith("#") || line.isEmpty())
                 continue;
-            needwhatch.add(new RawEvent(line, null));
+            needwhatch.add(new PlainTextRawEvent(line, null));
         }
         read.close();
         ins.close();
@@ -52,12 +52,12 @@ public class KnownEventList {
         }
     }
 
-    public boolean need(RawEvent e) {
+    public boolean need(PlainTextRawEvent e) {
         return false;
     }
 
-    public HandleType queryHandleType(RawEvent in) {
-        for (RawEvent def : needwhatch) {
+    public HandleType queryHandleType(PlainTextRawEvent in) {
+        for (PlainTextRawEvent def : needwhatch) {
             if (def.equals(in)) {
                 return def.getHandleType();
             }
@@ -66,8 +66,8 @@ public class KnownEventList {
     }
 
 
-    public String queryEventClass(RawEvent in) {
-        for (RawEvent def : needwhatch) {
+    public String queryEventClass(PlainTextRawEvent in) {
+        for (PlainTextRawEvent def : needwhatch) {
             if (def.equals(in)) {
                 return def.getEventClass();
             }

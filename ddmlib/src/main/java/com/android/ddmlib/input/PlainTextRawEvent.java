@@ -1,15 +1,15 @@
 package com.android.ddmlib.input;
 
-public class RawEvent implements IEvent {
+public class PlainTextRawEvent implements IRawEvent {
 
-    private Time time = null;
+    private When when = null;
     private String type = null, code = null, value = null, devFile;
     private KnownEventList.HandleType handleType;
 
     private String eventClass;
 
 
-    public RawEvent(String str, String devFile) {
+    public PlainTextRawEvent(String str, String devFile) {
         String[] args = str.replaceAll("[\\[\\]]", "").replaceAll(" +", " ").trim().split(" ");
         for (int i = 0; i < args.length; i++) {
             set(i, args[i]);
@@ -20,7 +20,7 @@ public class RawEvent implements IEvent {
     public void set(int index, String v) {
         switch (index) {
             case 0:
-                setTime(new Time(v));
+                setWhen(new When(v));
                 break;
             case 1:
                 setType(v);
@@ -52,7 +52,7 @@ public class RawEvent implements IEvent {
 
     @Override
     public String toString() {
-        return "devfile=" + devFile + " time=" + time + " type=" + type + " code=" + code + " value=" + value;
+        return "devfile=" + devFile + " when=" + when + " type=" + type + " code=" + code + " value=" + value;
     }
 
     static boolean ignore(String str) {
@@ -67,10 +67,10 @@ public class RawEvent implements IEvent {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        RawEvent other = (RawEvent) obj;
-        // // time
-        // if (!ignore(time.toString()) && !ignore(other.time.toString())) {
-        // if (!time.equals(other.time))
+        PlainTextRawEvent other = (PlainTextRawEvent) obj;
+        // // when
+        // if (!ignore(when.toString()) && !ignore(other.when.toString())) {
+        // if (!when.equals(other.when))
         // return false;
         // }
         // type
@@ -101,8 +101,8 @@ public class RawEvent implements IEvent {
     }
 
     @Override
-    public Time getTime() {
-        return time;
+    public When getWhen() {
+        return when;
     }
 
     @Override
@@ -143,8 +143,8 @@ public class RawEvent implements IEvent {
         this.handleType = handleType;
     }
 
-    public void setTime(Time time) {
-        this.time = time;
+     void setWhen(When when) {
+        this.when = when;
     }
 
     @Override

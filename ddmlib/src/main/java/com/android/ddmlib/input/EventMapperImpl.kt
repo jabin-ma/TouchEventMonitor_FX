@@ -14,7 +14,7 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
     /**
      * 处理rawevent，当完整记录一次事件时，将返回该完整的事件
      */
-    override fun processEvent(rawEvent: RawEvent): MonitorEvent? {
+    override fun processEvent(rawEvent: PlainTextRawEvent): MonitorEvent? {
         //        KnownEventList.HandleType handleType=rawEvent.getHandleType();
         val handleType = knownEventList.queryHandleType(rawEvent)
         rawEvent.handleType = handleType

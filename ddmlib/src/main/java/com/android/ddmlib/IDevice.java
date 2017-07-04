@@ -22,8 +22,8 @@ import com.android.ddmlib.input.Command;
 import com.android.ddmlib.input.InputManager;
 import com.android.ddmlib.log.LogReceiver;
 import com.android.ddmlib.monkey.NetworkMonkey;
-import com.android.ddmlib.remotecontrol.Controler;
-import com.android.ddmlib.remotecontrol.Type;
+import com.android.ddmlib.controller.IRemoteController;
+import com.android.ddmlib.controller.Type;
 
 import java.io.IOException;
 import java.util.List;
@@ -678,6 +678,6 @@ public interface IDevice extends IShellEnabledDevice {
 
     InputManager getInputManager();
 
-    Controler getRemoteControler(Type type);
+    IRemoteController getRemoteControler(Type type);
 
 }

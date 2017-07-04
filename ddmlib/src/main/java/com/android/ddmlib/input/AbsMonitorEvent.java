@@ -2,6 +2,7 @@ package com.android.ddmlib.input;
 
 import com.android.ddmlib.Log;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -13,35 +14,36 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
     private int dispatchCount = 0;
     private final SimpleStringProperty eventType = new SimpleStringProperty();
     private final SimpleStringProperty eventDesc = new SimpleStringProperty();
-    private final SimpleStringProperty eventDur = new SimpleStringProperty();
+    private final SimpleLongProperty eventDur = new SimpleLongProperty();
     private final SimpleStringProperty inputDevice = new SimpleStringProperty();
     private final SimpleBooleanProperty closed = new SimpleBooleanProperty();
-    private RawEvent begin, end;
+    private IRawEvent begin, end;
+
+
 
     @Override
-    public void onCreate(RawEvent rawEvent) {
+    public void onCreate(PlainTextRawEvent rawEvent) {
         begin = rawEvent;
         closed.addListener(this);
-        Log.d("absMonitor", "create:" + begin.getTime().ms);
+        Log.d("absMonitor", "create:" + begin.getWhen().ms);
     }
 
-
     @Override
-    public void onPublish(RawEvent rawEvent) {
+    public void onPublish(PlainTextRawEvent rawEvent) {
         end = rawEvent;
-        Log.d("absMonitor", "onPublish:" + end.getTime().ms);
+        Log.d("absMonitor", "onPublish:" + end.getWhen().ms);
     }
 
     @Override
     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
         //closed
-        Log.d("absMonitor", "close change:" + (end.getTime().ms - begin.getTime().ms));
+        Log.d("absMonitor", "close change:" + (end.getWhen().ms - begin.getWhen().ms));
         closed.removeListener(this);
-        eventDur.setValue((end.getTime().ms - begin.getTime().ms) + "ms");
+        eventDur.setValue((end.getWhen().ms - begin.getWhen().ms));
     }
 
-    public String getEventType() {
-        return eventType.get();
+    public TouchEvent.Type getEventType() {
+        return TouchEvent.Type.valueOf(eventType.get());
     }
 
     @Override
@@ -55,7 +57,7 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
     }
 
     @Override
-    public SimpleStringProperty eventDurProperty() {
+    public SimpleLongProperty eventDurProperty() {
         return eventDur;
     }
 
@@ -76,5 +78,16 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
     @Override
     public int dispatchCount() {
         return dispatchCount;
+    }
+
+
+    @Override
+    public long beginTime() {
+        return begin.getWhen().ms;
+    }
+
+    @Override
+    public long endTime() {
+        return end.getWhen().ms;
     }
 }

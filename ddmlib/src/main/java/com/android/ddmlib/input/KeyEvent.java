@@ -3,25 +3,26 @@ package com.android.ddmlib.input;
 public class KeyEvent extends AbsMonitorEvent {
 
     @Override
-    public void onCreate(RawEvent rawEvent) {
+    public void onCreate(PlainTextRawEvent rawEvent) {
            super.onCreate(rawEvent);
            eventTypeProperty().setValue("实体按键");
            eventDescProperty().setValue(rawEvent.getCode());
     }
 
     @Override
-    public void onSync(RawEvent rawEvent) {
+    public void onSync(PlainTextRawEvent rawEvent) {
 
     }
 
     @Override
-    public void onPublish(RawEvent rawEvent) {
+    public void onPublish(PlainTextRawEvent rawEvent) {
         super.onPublish(rawEvent);
         closedProperty().setValue(true);
     }
 
     @Override
-    public void onArgs(RawEvent rawEvent) {
+    public void onArgs(PlainTextRawEvent rawEvent) {
 
     }
+
 }

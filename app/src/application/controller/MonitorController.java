@@ -2,11 +2,11 @@ package application.controller;
 
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
+import com.android.ddmlib.controller.Type;
 import com.android.ddmlib.input.InputDevice;
 import com.android.ddmlib.input.MonitorEvent;
 import com.android.ddmlib.input.OnTouchEventListener;
-import com.android.ddmlib.remotecontrol.KeyCode;
-import com.android.ddmlib.remotecontrol.Type;
+import com.android.ddmlib.input.TouchEvent;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -76,9 +76,38 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
     }
 
     public void doReplayMonitor(ActionEvent ev) {
-        curDev.getRemoteControler(Type.MONKEY).keyDown(KeyCode.BACK);
-        curDev.getRemoteControler(Type.MONKEY).sleep(100);
-        curDev.getRemoteControler(Type.MONKEY).keyUp(KeyCode.BACK);
+//        curDev.getRemoteControler(Type.MONKEY).keyDown(KeyCode.BACK);
+//        curDev.getRemoteControler(Type.MONKEY).sleep(100);
+//        curDev.getRemoteControler(Type.MONKEY).keyUp(KeyCode.BACK);
+//        for (Object o : tableview_events.getItems()) {
+//            if (o instanceof TouchEvent) {
+//                ((TouchEvent) o).processController(curDev.getRemoteControler(Type.MONKEY));
+//                try {
+//                    Thread.sleep(200);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+
+        ObservableList olist=tableview_events.getItems();
+        for (int i = 0; i < olist.size(); i++) {
+             Object o=olist.get(i);
+             if(o instanceof TouchEvent){
+                 ((TouchEvent) o).processController(curDev.getRemoteControler(Type.MONKEY));
+                 if(i+1<olist.size()){
+                     Object oo=olist.get(i+1);
+                     if(oo instanceof TouchEvent){
+                         try {
+                             Thread.sleep(((TouchEvent) oo).beginTime()-((TouchEvent) o).endTime());
+                         } catch (InterruptedException e) {
+                             e.printStackTrace();
+                         }
+                     }
+                 }
+             }
+        }
+
     }
 
     @Override

@@ -25,8 +25,8 @@ import com.android.ddmlib.input.InputManager;
 import com.android.ddmlib.log.LogReceiver;
 import com.android.ddmlib.monkey.MonkeyTransport;
 import com.android.ddmlib.monkey.NetworkMonkey;
-import com.android.ddmlib.remotecontrol.Controler;
-import com.android.ddmlib.remotecontrol.Type;
+import com.android.ddmlib.controller.IRemoteController;
+import com.android.ddmlib.controller.Type;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -1339,11 +1339,11 @@ final class Device implements IDevice {
         return inputManager;
     }
 
-    private HashMap<Type, Controler> controlerHashMap = new HashMap<>();
+    private HashMap<Type, IRemoteController> controlerHashMap = new HashMap<>();
 
     @Override
-    public Controler getRemoteControler(Type type) {
-        Controler controler = controlerHashMap.get(type);
+    public IRemoteController getRemoteControler(Type type) {
+        IRemoteController controler = controlerHashMap.get(type);
         if (controler != null) {
         } else {
             switch (type) {
