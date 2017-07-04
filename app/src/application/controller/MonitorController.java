@@ -6,7 +6,6 @@ import com.android.ddmlib.controller.Type;
 import com.android.ddmlib.input.InputDevice;
 import com.android.ddmlib.input.MonitorEvent;
 import com.android.ddmlib.input.OnTouchEventListener;
-import com.android.ddmlib.input.TouchEvent;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,7 +30,7 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
     @FXML
     Pane panel_table;
     @FXML
-    TableView tableview_events;
+    TableView<MonitorEvent> tableview_events;
     @FXML
     Pane root;
 
@@ -55,7 +54,7 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         AndroidDebugBridge.addDeviceChangeListener(this);
-        ObservableList<TableColumn> observableList = tableview_events.getColumns();
+        ObservableList<TableColumn<MonitorEvent, ?>> observableList = tableview_events.getColumns();
         observableList.get(0).setCellValueFactory(new PropertyValueFactory("inputDevice"));
         observableList.get(1).setCellValueFactory(new PropertyValueFactory("eventType"));
         observableList.get(2).setCellValueFactory(new PropertyValueFactory("eventDesc"));
@@ -76,36 +75,18 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
     }
 
     public void doReplayMonitor(ActionEvent ev) {
-//        curDev.getRemoteControler(Type.MONKEY).keyDown(KeyCode.BACK);
-//        curDev.getRemoteControler(Type.MONKEY).sleep(100);
-//        curDev.getRemoteControler(Type.MONKEY).keyUp(KeyCode.BACK);
-//        for (Object o : tableview_events.getItems()) {
-//            if (o instanceof TouchEvent) {
-//                ((TouchEvent) o).processController(curDev.getRemoteControler(Type.MONKEY));
-//                try {
-//                    Thread.sleep(200);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-
-        ObservableList olist=tableview_events.getItems();
+        ObservableList<MonitorEvent> olist = tableview_events.getItems();
         for (int i = 0; i < olist.size(); i++) {
-             Object o=olist.get(i);
-             if(o instanceof TouchEvent){
-                 ((TouchEvent) o).processController(curDev.getRemoteControler(Type.MONKEY));
-                 if(i+1<olist.size()){
-                     Object oo=olist.get(i+1);
-                     if(oo instanceof TouchEvent){
-                         try {
-                             Thread.sleep(((TouchEvent) oo).beginTime()-((TouchEvent) o).endTime());
-                         } catch (InterruptedException e) {
-                             e.printStackTrace();
-                         }
-                     }
-                 }
-             }
+            MonitorEvent cur = olist.get(i);
+            cur.processController(curDev.getRemoteControler(Type.MONKEY));
+            if (i + 1 < olist.size()) {
+                MonitorEvent next = olist.get(i + 1);
+                try {
+                    Thread.sleep(next.beginTime() - cur.endTime());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
     }

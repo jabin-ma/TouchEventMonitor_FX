@@ -3,7 +3,6 @@ package com.android.ddmlib.monkey
 import com.android.ddmlib.AdbHelper
 import com.android.ddmlib.IDevice
 import com.android.ddmlib.ShellCommandUnresponsiveException
-import com.android.ddmlib.controller.IRemoteController
 import com.android.ddmlib.controller.KeyCode
 import com.android.ddmlib.controller.SimpleRemoteController
 import com.android.ddmlib.utils.d
@@ -97,17 +96,19 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
 
         var state = State.STOP
 
+        var mRetry: (() -> Boolean)? = null
+
         @Throws(IOException::class)
         fun autoCreateSocket(retry: () -> Boolean) {
             d("autoCreateSocket")
+            mRetry = retry
             if (createSocket(2)) {
                 //                Log.d(TAG, "连接成功");
-
                 d("createSocket ok")
             } else {
-                if (retry.invoke()) {
+                if (mRetry!!.invoke()) {
                     d("retry true")
-                    autoCreateSocket(retry);
+                    autoCreateSocket(mRetry!!);
                 } else {
 
                 }
@@ -142,6 +143,9 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
         @Throws(InterruptedException::class)
         fun writeSync(text: String): Response {
             d("write $text")
+            if (socketChannel == null) {
+                autoCreateSocket(mRetry!!)
+            }
             AdbHelper.write(socketChannel, String.format("%s\n", text).toByteArray())
             d("write $text finish waiting for response")
             return responseQueue.take()

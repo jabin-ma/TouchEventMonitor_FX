@@ -10,14 +10,14 @@ public abstract class SimpleRemoteController implements IRemoteController {
     @Override
     public void keyClick(@NotNull KeyCode key) {
         keyDown(key);
-        sleep(100);
+        sleep(40);
         keyUp(key);
     }
 
     @Override
     public void touchClick(int x, int y) {
         touchDown(x, y);
-        sleep(100);
+        sleep(40);
         touchUp(x, y);
     }
 }

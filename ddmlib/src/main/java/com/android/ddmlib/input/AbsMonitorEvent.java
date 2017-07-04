@@ -19,8 +19,6 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
     private final SimpleBooleanProperty closed = new SimpleBooleanProperty();
     private IRawEvent begin, end;
 
-
-
     @Override
     public void onCreate(PlainTextRawEvent rawEvent) {
         begin = rawEvent;
