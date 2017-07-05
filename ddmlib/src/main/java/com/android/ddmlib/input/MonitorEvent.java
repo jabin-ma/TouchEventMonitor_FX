@@ -12,13 +12,13 @@ import java.util.ListIterator;
  */
 public interface MonitorEvent {
 
-    void onCreate(PlainTextRawEvent rawEvent);
+    void onCreate(IRawEvent rawEvent);
 
-    void onSync(PlainTextRawEvent rawEvent);
+    void onSync(IRawEvent rawEvent);
 
-    void onPublish(PlainTextRawEvent rawEvent);
+    void onPublish(IRawEvent rawEvent);
 
-    void onArgs(PlainTextRawEvent rawEvent);
+    void onArgs(IRawEvent rawEvent);
 
     void setDispatched();
 

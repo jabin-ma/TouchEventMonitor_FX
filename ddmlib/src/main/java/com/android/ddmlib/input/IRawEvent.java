@@ -21,4 +21,7 @@ public interface IRawEvent {
 
 
     public void setValue(String value);
+
+
+    public KnownEventList.HandleType getHandleType();
 }

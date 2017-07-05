@@ -6,25 +6,25 @@ import com.android.ddmlib.controller.KeyCode;
 public class KeyEvent extends AbsMonitorEvent {
 
     @Override
-    public void onCreate(PlainTextRawEvent rawEvent) {
+    public void onCreate(IRawEvent rawEvent) {
         super.onCreate(rawEvent);
         eventTypeProperty().setValue("实体按键");
         eventDescProperty().setValue(rawEvent.getCode());
     }
 
     @Override
-    public void onSync(PlainTextRawEvent rawEvent) {
+    public void onSync(IRawEvent rawEvent) {
 
     }
 
     @Override
-    public void onPublish(PlainTextRawEvent rawEvent) {
+    public void onPublish(IRawEvent rawEvent) {
         super.onPublish(rawEvent);
         closedProperty().setValue(true);
     }
 
     @Override
-    public void onArgs(PlainTextRawEvent rawEvent) {
+    public void onArgs(IRawEvent rawEvent) {
 
     }
 

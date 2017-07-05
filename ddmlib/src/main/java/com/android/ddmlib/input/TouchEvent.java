@@ -18,14 +18,14 @@ public class TouchEvent extends AbsMonitorEvent {
     private TouchRegion region = new TouchRegion();
 
     @Override
-    public void onCreate(PlainTextRawEvent rawEvent) {
+    public void onCreate(IRawEvent rawEvent) {
         super.onCreate(rawEvent);
         if (DEBUG) Log.d(TAG, "Create-->" + rawEvent);
         mCurState = STATE_CREATE;
     }
 
     @Override
-    public void onSync(PlainTextRawEvent rawEvent) {
+    public void onSync(IRawEvent rawEvent) {
         if (DEBUG) Log.d(TAG, "onSync-->" + rawEvent);
         switch (mCurState) {
             case STATE_ARG:
@@ -52,7 +52,7 @@ public class TouchEvent extends AbsMonitorEvent {
     }
 
     @Override
-    public void onPublish(PlainTextRawEvent rawEvent) {
+    public void onPublish(IRawEvent rawEvent) {
         super.onPublish(rawEvent);
         if (DEBUG) Log.d(TAG, "onPublish-->" + rawEvent);
         if (mCurState == STATE_CREATE) {
@@ -62,7 +62,7 @@ public class TouchEvent extends AbsMonitorEvent {
 
 
     @Override
-    public void onArgs(PlainTextRawEvent rawEvent) {
+    public void onArgs(IRawEvent rawEvent) {
         if (DEBUG) Log.d(TAG, "onArgs-->" + rawEvent);
         mCurState = STATE_ARG;
         if (touchPoint == null) touchPoint = new TouchPoint();

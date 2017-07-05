@@ -20,14 +20,14 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
     private IRawEvent begin, end;
 
     @Override
-    public void onCreate(PlainTextRawEvent rawEvent) {
+    public void onCreate(IRawEvent rawEvent) {
         begin = rawEvent;
         closed.addListener(this);
         Log.d("absMonitor", "create:" + begin.getWhen().ms);
     }
 
     @Override
-    public void onPublish(PlainTextRawEvent rawEvent) {
+    public void onPublish(IRawEvent rawEvent) {
         end = rawEvent;
         Log.d("absMonitor", "onPublish:" + end.getWhen().ms);
     }
