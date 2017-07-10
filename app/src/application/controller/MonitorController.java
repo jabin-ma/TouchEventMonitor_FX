@@ -11,10 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
@@ -53,6 +50,7 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        tableview_events.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         AndroidDebugBridge.addDeviceChangeListener(this);
         ObservableList<TableColumn<MonitorEvent, ?>> observableList = tableview_events.getColumns();
         observableList.get(0).setCellValueFactory(new PropertyValueFactory("inputDevice"));
@@ -61,15 +59,16 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
         observableList.get(3).setCellValueFactory(new PropertyValueFactory("eventDur"));
     }
 
-    public void doStartMonitor(ActionEvent ev) {
+    public void doClean(ActionEvent ev) {
+        tableview_events.getItems().clear();
     }
 
-    public void doPauseMonitor(ActionEvent ev) {
+    public void doMoveup(ActionEvent ev) {
 
 
     }
 
-    public void doStopMonitor(ActionEvent ev) {
+    public void doMoveDown(ActionEvent ev) {
 
 
     }

@@ -16,9 +16,9 @@
             <!--</ChoiceBox>-->
             <ToolBar fx:id="toolbar_main">
                 <items>
-                    <Button fx:id="toolbtn_start" mnemonicParsing="false" onAction="#doStartMonitor" text="录制"/>
-                    <Button fx:id="toolbtn_pause" mnemonicParsing="false" onAction="#doPauseMonitor" text="暂停"/>
-                    <Button fx:id="toolbtn_stop" mnemonicParsing="false" onAction="#doStopMonitor" text="停止"/>
+                    <Button fx:id="toolbtn_start" mnemonicParsing="false" onAction="#doClean" text="清空"/>
+                    <Button fx:id="toolbtn_pause" mnemonicParsing="false" onAction="#doMoveup" text="上移"/>
+                    <Button fx:id="toolbtn_stop" mnemonicParsing="false" onAction="#doMoveDown" text="下移"/>
                     <Button fx:id="toolbtn_replay" mnemonicParsing="false" onAction="#doReplayMonitor" text="回放"/>
                 </items>
             </ToolBar>

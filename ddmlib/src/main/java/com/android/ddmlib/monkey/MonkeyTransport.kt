@@ -44,19 +44,23 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
     }
 
     override fun touchDown(x: Int, y: Int) {
+        if (x < 0 || y < 0) d("touchDown!!!!!!")
         connect!!.writeSync("touch down $x $y")
     }
 
     override fun touchMove(x: Int, y: Int) {
+        if (x < 0 || y < 0) d("touchMove!!!!!!")
+
         connect!!.writeSync("touch move $x $y")
     }
 
     override fun touchUp(x: Int, y: Int) {
-        connect!!.writeSync("touch up $x $y")
+        if (x < 0 || y < 0) d("touchUp!!!!!!")
+        connect!!.writeSync("touch up $x $y", true)
     }
 
     override fun sleep(ms: Long) {
-        connect!!.writeSync("sleep $ms")
+        connect!!.writeSync("sleep ${ms}")
     }
 
     override fun keyDown(key: KeyCode) {
@@ -64,7 +68,7 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
     }
 
     override fun keyUp(key: KeyCode) {
-        connect!!.writeSync("key up ${key.code}")
+        connect!!.writeSync("key up ${key.code}", true)
     }
 
     private var connect: Connect? = null;
@@ -136,21 +140,32 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
 
         }
 
-
         private val responseQueue = LinkedBlockingQueue<Response>()
-
-
         @Throws(InterruptedException::class)
-        fun writeSync(text: String): Response {
+        fun writeSync(text: String, flush: Boolean = false): Response {
             d("write $text")
             if (socketChannel == null) {
                 autoCreateSocket(mRetry!!)
             }
-            AdbHelper.write(socketChannel, String.format("%s\n", text).toByteArray())
-            d("write $text finish waiting for response")
-            return responseQueue.take()
+            stringbuilder.append(String.format("%s\n", text))
+            //
+            if (flush && !stringbuilder.isEmpty()) {
+                AdbHelper.write(socketChannel, stringbuilder.toString().toByteArray())
+                var line = stringbuilder.count { it == '\n' }
+                d("write ${stringbuilder.toString()}-----> waiting response count $line")
+                stringbuilder.delete(0, stringbuilder.length)
+                for (i in 0..line - 1) {
+                    d("handle response $i")
+                    responseQueue.take();
+                }
+                d("finish return")
+                return writeSync@ Response.OK
+            }
+            return Response.FAIL
         }
 
+
+        var stringbuilder = StringBuilder()
 
         @Throws(Exception::class)
         override fun call(): Void? {
