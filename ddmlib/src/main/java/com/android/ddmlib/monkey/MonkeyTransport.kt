@@ -100,6 +100,7 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
 
         var state = State.STOP
 
+        var mEventBuffer = StringBuilder()
         var mRetry: (() -> Boolean)? = null
 
         @Throws(IOException::class)
@@ -147,13 +148,13 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
             if (socketChannel == null) {
                 autoCreateSocket(mRetry!!)
             }
-            stringbuilder.append(String.format("%s\n", text))
+            mEventBuffer.append(String.format("%s\n", text))
             //
-            if (flush && !stringbuilder.isEmpty()) {
-                AdbHelper.write(socketChannel, stringbuilder.toString().toByteArray())
-                var line = stringbuilder.count { it == '\n' }
-                d("write ${stringbuilder.toString()}-----> waiting response count $line")
-                stringbuilder.delete(0, stringbuilder.length)
+            if (flush && !mEventBuffer.isEmpty()) {
+                AdbHelper.write(socketChannel, mEventBuffer.toString().toByteArray())
+                var line = mEventBuffer.count { it == '\n' }
+                d("write ${mEventBuffer.toString()}-----> waiting response count $line")
+                mEventBuffer.delete(0, mEventBuffer.length)
                 for (i in 0..line - 1) {
                     d("handle response $i")
                     responseQueue.take();
@@ -165,7 +166,7 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
         }
 
 
-        var stringbuilder = StringBuilder()
+
 
         @Throws(Exception::class)
         override fun call(): Void? {
