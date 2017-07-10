@@ -84,9 +84,11 @@ public class TouchEvent extends AbsMonitorEvent {
         controller.touchDown(tp.getX(), tp.getY());
         while (listIterator.hasNext()) {
             tp = listIterator.next();
-            controller.sleep(tp.getTimestamp() - listIterator.previous().getTimestamp());
-            listIterator.next();
-            controller.touchMove(tp.getX(), tp.getY());
+            if (listIterator.hasNext()) {
+                TouchPoint next = listIterator.next();
+                controller.sleep(next.getTimestamp() - tp.getTimestamp());
+                listIterator.previous();
+            }
         }
         tp = listIterator.hasPrevious() ? listIterator.previous() : tp;
         controller.touchUp(tp.getX(), tp.getY());
