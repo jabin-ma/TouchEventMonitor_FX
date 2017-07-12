@@ -77,23 +77,5 @@ public class KnownEventList {
 
     public enum HandleType {
         EVENT_CREATE, EVENT_ARG_X, EVENT_ARG_Y, EVENT_PUBLISH, EVENT_SYNC, UNKNOWN;
-
-        public static HandleType get(int type) {
-            switch (type) {
-                case 1:
-                    return EVENT_CREATE;
-                case 2:
-                    return EVENT_ARG_X;
-                case 3:
-                    return EVENT_ARG_Y;
-                case 4:
-                    return EVENT_PUBLISH;
-                case 5:
-                    return HandleType.EVENT_SYNC;
-                default:
-                    Log.d("HandleType", "UnKnown HandleType:" + type);
-                    return UNKNOWN;
-            }
-        }
     }
 }

@@ -44,18 +44,17 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
     }
 
     override fun touchDown(x: Int, y: Int) {
-        if (x < 0 || y < 0) d("touchDown!!!!!!")
+        if (x <= 0 || y <= 0) d("touchDown!!!!!!")
         connect!!.writeSync("touch down $x $y")
     }
 
     override fun touchMove(x: Int, y: Int) {
-        if (x < 0 || y < 0) d("touchMove!!!!!!")
-
+        if (x <= 0 || y <= 0) d("touchMove!!!!!!")
         connect!!.writeSync("touch move $x $y")
     }
 
     override fun touchUp(x: Int, y: Int) {
-        if (x < 0 || y < 0) d("touchUp!!!!!!")
+        if (x <= 0 || y <= 0) d("touchUp!!!!!!")
         connect!!.writeSync("touch up $x $y", true)
     }
 
@@ -88,6 +87,10 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
         RUN, STOP, CONNECTED, DISCONNECTED
     }
 
+    companion object {
+        val DEBUG = false
+    }
+
     internal inner class Connect(val port: Int = 1080) : Callable<Void> {
 
         private var socketChannel: SocketChannel? = null
@@ -105,14 +108,14 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
 
         @Throws(IOException::class)
         fun autoCreateSocket(retry: () -> Boolean) {
-            d("autoCreateSocket")
+            if (DEBUG) d("autoCreateSocket")
             mRetry = retry
             if (createSocket(2)) {
                 //                Log.d(TAG, "连接成功");
-                d("createSocket ok")
+                if (DEBUG) d("createSocket ok")
             } else {
                 if (mRetry!!.invoke()) {
-                    d("retry true")
+                    if (DEBUG) d("retry true")
                     autoCreateSocket(mRetry!!);
                 } else {
 
@@ -141,16 +144,18 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
 
         }
 
+        val buff: Boolean = true;
+
         private val responseQueue = LinkedBlockingQueue<Response>()
         @Throws(InterruptedException::class)
         fun writeSync(text: String, flush: Boolean = false): Response {
-            d("write $text")
+            if (DEBUG) d("write $text")
             if (socketChannel == null) {
                 autoCreateSocket(mRetry!!)
             }
             mEventBuffer.append(String.format("%s\n", text))
             //
-            if (flush && !mEventBuffer.isEmpty()) {
+            if ((!buff || flush) && !mEventBuffer.isEmpty()) {
                 AdbHelper.write(socketChannel, mEventBuffer.toString().toByteArray())
                 var line = mEventBuffer.count { it == '\n' }
                 d("write ${mEventBuffer.toString()}-----> waiting response count $line")
@@ -165,15 +170,12 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
             return Response.FAIL
         }
 
-
-
-
         @Throws(Exception::class)
         override fun call(): Void? {
             var key: SelectionKey? = null
             try {
                 state = State.RUN
-                d("while begin")
+                if (DEBUG) d("while begin")
                 while (selector != null && selector!!.select() > 0) {
                     val keys = selector!!.selectedKeys()
                     val iterator = keys.iterator()
@@ -185,7 +187,7 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
                                 socketchannel.finishConnect()
                                 //连接成功
                                 state = State.CONNECTED
-                                d("state --> $state")
+                                if (DEBUG) d("state --> $state")
                             }
                             key.interestOps(SelectionKey.OP_READ)
                         } else if (key.isReadable) {
@@ -195,10 +197,10 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
                                 if (count == -1) {
                                     closeKey(key);
                                     //关闭通道
-                                    d("closekey")
+                                    if (DEBUG) d("closekey")
                                     break
                                 }
-                                d("response :" + String(buffer.array(), buffer.arrayOffset(), buffer.position()))
+                                if (DEBUG) d("response :" + String(buffer.array(), buffer.arrayOffset(), buffer.position()))
                                 //                                addOutput(buffer.array(), buffer.arrayOffset(), buffer.position());
                                 responseQueue.add(Response.OK)
                                 //接受到一次返回
@@ -218,7 +220,7 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
             } finally {
                 state = State.STOP
             }
-            d("while end")
+            if (DEBUG) d("while end")
             return null
         }
 

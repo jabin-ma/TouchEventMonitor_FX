@@ -1,24 +1,14 @@
-# time type name value 
-#handletype:
-#            case 1:
-#				return EVENT_CREATE;
-#				return EVENT_ARG_X;
-#			case 3:
-#				return EVENT_ARG_Y;
-#			case 4:
-#				return EVENT_PUBLISH;
-#			case 5:
-#				return HandleType.EVENT_SYNC;
-# eventClass
-ignore EV_KEY       BTN_TOOL_FINGER      DOWN       1    com.android.ddmlib.input.TouchEvent
-ignore EV_ABS       ABS_MT_POSITION_X    ignore     2
-ignore EV_ABS       ABS_MT_POSITION_Y    ignore     3        
-ignore EV_KEY       BTN_TOOL_FINGER      UP         4
-ignore ignore       SYN_REPORT           ignore     5
-
+# time    type            name             value      handletype     eventClass
+ignore EV_KEY       BTN_TOOL_FINGER      DOWN       EVENT_CREATE    com.android.ddmlib.input.TouchEvent
+ignore EV_ABS       ABS_MT_POSITION_X    ignore     EVENT_ARG_X
+ignore EV_ABS       ABS_MT_POSITION_Y    ignore     EVENT_ARG_Y
+ignore EV_KEY       BTN_TOOL_FINGER      UP         EVENT_PUBLISH
+ignore ignore       SYN_REPORT           ignore     EVENT_SYNC
+#mtk
+ignore EV_KEY       BTN_TOUCH            DOWN       EVENT_CREATE   com.android.ddmlib.input.TouchEvent
+ignore EV_KEY       BTN_TOUCH            UP         EVENT_PUBLISH
 #power key
-
-ignore EV_KEY       ignore            DOWN       1   com.android.ddmlib.input.KeyEvent
-ignore EV_KEY       ignore            UP         4
+ignore EV_KEY       ignore            DOWN       EVENT_CREATE   com.android.ddmlib.input.KeyEvent
+ignore EV_KEY       ignore            UP         EVENT_PUBLISH
 
 

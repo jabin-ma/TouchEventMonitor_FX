@@ -17,26 +17,26 @@ public class PlainTextRawEvent implements IRawEvent {
         setDevFile(devFile);
     }
 
-    public void set(int index, String v) {
+    public void set(int index, String value) {
         switch (index) {
             case 0:
-                setWhen(new When(v));
+                setWhen(new When(value));
                 break;
             case 1:
-                setType(v);
+                setType(value);
                 break;
             case 2:
-                setCode(v);
+                setCode(value);
                 break;
             case 3:
-                value = v;
-                setValue(value);
+                this.value = value;
+                setValue(this.value);
                 break;
             case 4:
-                setHandleType(KnownEventList.HandleType.get(Integer.valueOf(v)));
+                setHandleType(KnownEventList.HandleType.valueOf(value));
                 break;
             case 5:
-                setEventClass(v);
+                setEventClass(value);
             default:
                 break;
         }

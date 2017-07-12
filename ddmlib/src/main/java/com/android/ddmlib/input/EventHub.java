@@ -41,7 +41,6 @@ class EventHub {
             try {
                 mContext.getAndroidDevice().executeShellCommand(new SingleLineReceiver() {
                     ArrayList<String> sb = new ArrayList<>();
-
                     @Override
                     public void processNewLines(String line) {
                         if (DEBUG) Log.d(getClass().getName(), line);

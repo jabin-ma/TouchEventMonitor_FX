@@ -1,6 +1,7 @@
 package com.android.ddmlib.input;
 
 import com.android.ddmlib.IDevice;
+import com.android.ddmlib.Log;
 
 import java.util.ArrayList;
 
@@ -17,13 +18,13 @@ public class InputManager {
     InputDispatcherThread inputDispatcherThread;
 
     public InputManager(IDevice mAndroidDevice) {
+        Log.d("inputmanager","new ");
         this.mAndroidDevice = mAndroidDevice;
         eventHub = new EventHub(this);
         inputReader = new InputReader(eventHub);
         inputReaderThread = new InputReaderThread(this);
         inputDispatcher = new InputDispatcher(this);
         inputDispatcherThread = new InputDispatcherThread(this);
-
         inputReaderThread.start();
         inputDispatcherThread.start();
     }
