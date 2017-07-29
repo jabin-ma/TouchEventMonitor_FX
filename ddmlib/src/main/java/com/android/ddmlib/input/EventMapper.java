@@ -5,5 +5,4 @@ package com.android.ddmlib.input;
  */
 public interface EventMapper {
     public MonitorEvent processEvent(PlainTextRawEvent rawEvent);
-
 }

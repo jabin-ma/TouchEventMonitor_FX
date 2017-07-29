@@ -90,7 +90,6 @@ class EventHub {
                 return;
             }
         }
-
         Future<Void> submitFuture = executorService.submit(() -> {
             try {
                 mContext.getAndroidDevice().executeShellCommand(new SingleLineReceiver() {
@@ -116,11 +115,16 @@ class EventHub {
     }
 
     PlainTextRawEvent getEvent() throws InterruptedException {
-        return rawEvents.take();
+        return rawEvents.poll(200,TimeUnit.MILLISECONDS);
     }
-
 
     public ArrayList<InputDevice> getDevices() {
         return new ArrayList<>(mDevices.values());
+    }
+
+    public void onFinish() {
+        executorService.shutdownNow();
+        rawEvents.clear();
+        Log.d(TAG, "finish..");
     }
 }

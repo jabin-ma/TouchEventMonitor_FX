@@ -887,6 +887,7 @@ public final class AndroidDebugBridge {
             // thread
             try {
                 listener.deviceDisconnected(device);
+                device.onShutDown();
             } catch (Exception e) {
                 Log.e(DDMS, e);
             }

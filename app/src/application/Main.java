@@ -1,5 +1,9 @@
 package application;
 
+import com.android.ddmlib.Log;
+import com.android.ddmlib.handler.Handler;
+import com.android.ddmlib.handler.Looper;
+import com.android.ddmlib.handler.Message;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -43,6 +47,18 @@ public class Main extends Application {
 //        System.out.println(((state&state_1)==state_1));
 //        System.out.println(((state&state_2)==state_2));
 //        System.out.println(((state&state_3)==state_3));
+//
+//
+//        Looper.prepare();
+//        Handler<String> stringHandler = new Handler<>(new Handler.Callback<String>() {
+//            @Override
+//            public boolean handleMessage(Message<String> msg) {
+//                Log.d("main",msg.obj);
+//                return false;
+//            }
+//        });
+//        stringHandler.obtainMessage(1000, "！！！！").sendToTarget();
+//        Looper.loop();
     }
 
     @Override

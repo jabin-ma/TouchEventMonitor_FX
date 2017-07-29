@@ -20,13 +20,13 @@ import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
 import com.android.annotations.VisibleForTesting;
 import com.android.annotations.concurrency.GuardedBy;
+import com.android.ddmlib.controller.IRemoteController;
+import com.android.ddmlib.controller.Type;
 import com.android.ddmlib.input.Command;
 import com.android.ddmlib.input.InputManager;
 import com.android.ddmlib.log.LogReceiver;
 import com.android.ddmlib.monkey.MonkeyTransport;
 import com.android.ddmlib.monkey.NetworkMonkey;
-import com.android.ddmlib.controller.IRemoteController;
-import com.android.ddmlib.controller.Type;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -1357,5 +1357,11 @@ final class Device implements IDevice {
             controlerHashMap.put(type, controler);
         }
         return controler;
+    }
+
+    @Override
+    public void onShutDown() {
+        Log.d(LOG_TAG, "ShutDown!!" + getName());
+        inputManager.onShutDown();
     }
 }

@@ -18,12 +18,12 @@ package com.android.ddmlib;
 
 import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
+import com.android.ddmlib.controller.IRemoteController;
+import com.android.ddmlib.controller.Type;
 import com.android.ddmlib.input.Command;
 import com.android.ddmlib.input.InputManager;
 import com.android.ddmlib.log.LogReceiver;
 import com.android.ddmlib.monkey.NetworkMonkey;
-import com.android.ddmlib.controller.IRemoteController;
-import com.android.ddmlib.controller.Type;
 
 import java.io.IOException;
 import java.util.List;
@@ -680,4 +680,5 @@ public interface IDevice extends IShellEnabledDevice {
 
     IRemoteController getRemoteControler(Type type);
 
+    void onShutDown();
 }

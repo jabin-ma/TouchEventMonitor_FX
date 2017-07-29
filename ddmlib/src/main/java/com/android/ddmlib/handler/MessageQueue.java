@@ -27,9 +27,9 @@ import java.util.concurrent.DelayQueue;
  * You can retrieve the MessageQueue for the current thread with
  * {@link Looper#myQueue() Looper.myQueue()}.
  */
-public final class MessageQueue extends DelayQueue<Message> {
+public final class MessageQueue<T> extends DelayQueue<Message<T>> {
 
-    private static final Message MESSAGE_QUIT = Message.obtain();
+    public  static final Message MESSAGE_QUIT = Message.obtain();
 
     public MessageQueue(boolean quitAllowed) {
 
@@ -48,8 +48,7 @@ public final class MessageQueue extends DelayQueue<Message> {
         enqueueMessage(MESSAGE_QUIT, 0);
     }
 
-
-    public boolean enqueueMessage(Message msg, long delayMillis) {
+    public boolean enqueueMessage(Message<T> msg, long delayMillis) {
         msg.submit(delayMillis);
         return add(msg);
     }

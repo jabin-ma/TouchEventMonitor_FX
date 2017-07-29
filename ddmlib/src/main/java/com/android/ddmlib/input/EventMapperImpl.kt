@@ -23,7 +23,7 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
             KnownEventList.HandleType.EVENT_CREATE -> {
                 monitorEvent = Class.forName(rawEvent.eventClass).newInstance() as MonitorEvent?;
                 if (monitorEvent == null) {
-                    if(DEBUG) d("create obj failed--${rawEvent.devFile}")
+                    if (DEBUG) d("create obj failed--${rawEvent.devFile}")
                     return null;
                 }
 
@@ -43,7 +43,7 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
                 monitorEvent?.onPublish(rawEvent)
             }
             KnownEventList.HandleType.UNKNOWN -> {
-                if(DEBUG)Log.d(TAG, "UnKnown event..$rawEvent")
+                if (DEBUG) Log.d(TAG, "UnKnown event..$rawEvent")
             }
         }
 

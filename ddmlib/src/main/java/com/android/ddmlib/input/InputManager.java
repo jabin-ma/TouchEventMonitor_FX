@@ -61,4 +61,9 @@ public class InputManager {
     }
 
 
+    public void onShutDown(){
+        eventHub.onFinish();
+        inputReaderThread.onFinish();
+        inputDispatcherThread.onFinish();
+    }
 }

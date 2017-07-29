@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  * pull them from a pool of recycled objects.
  * </p>
  */
-public final class Message implements Delayed {
+public final class Message<T> implements Delayed {
     /**
      * User-defined message code so that the recipient can identify what this
      * message is about. Each {@link Handler} has its own name-space for message
@@ -65,7 +65,7 @@ public final class Message implements Delayed {
      * Note that Parcelable objects here are not supported prior to the
      * {@link android.os.Build.VERSION_CODES#FROYO} release.
      */
-    public Object obj;
+    public T obj;
 
     /**
      * Optional field indicating the uid that sent the message. This is only
@@ -295,7 +295,7 @@ public final class Message implements Delayed {
      * not copy the linked list fields, nor the timestamp or target/callback of
      * the original message.
      */
-    public void copyFrom(Message o) {
+    public void copyFrom(Message<T> o) {
         this.flags = o.flags & ~FLAGS_TO_CLEAR_ON_COPY_FROM;
         this.what = o.what;
         this.arg1 = o.arg1;

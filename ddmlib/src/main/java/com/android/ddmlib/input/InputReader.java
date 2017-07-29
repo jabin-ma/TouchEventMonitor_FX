@@ -23,6 +23,9 @@ public class InputReader {
     public MonitorEvent readBySync() {
         try {
             PlainTextRawEvent rawEvent = eventHub.getEvent();
+            if(rawEvent==null){
+                return null;
+            }
             EventMapper mapper = mappers.get(rawEvent.getDevFile());
             if (mapper == null) {
                 mapper = new EventMapperImpl(knownEventList);
@@ -34,6 +37,4 @@ public class InputReader {
         }
         return null;
     }
-
-
 }

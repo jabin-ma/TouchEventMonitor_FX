@@ -20,77 +20,24 @@ import com.android.ddmlib.Log;
 
 import java.lang.reflect.Modifier;
 
-/**
- * A Handler allows you to send and process {@link Message} and Runnable objects
- * associated with a thread's {@link MessageQueue}. Each Handler instance is
- * associated with a single thread and that thread's message queue. When you
- * create a new Handler, it is bound to the thread / message queue of the thread
- * that is creating it -- from that point on, it will deliver messages and
- * runnables to that message queue and execute them as they come out of the
- * message queue.
- * <p>
- * <p>
- * There are two main uses for a Handler: (1) to schedule messages and runnables
- * to be executed as some point in the future; and (2) to enqueue an action to
- * be performed on a different thread than your own.
- * <p>
- * <p>
- * Scheduling messages is accomplished with the {@link #post},
- * {@link #postAtTime(Runnable, long)}, {@link #postDelayed},
- * {@link #sendEmptyMessage}, {@link #sendMessage}, {@link #sendMessageAtTime},
- * and {@link #sendMessageDelayed} methods. The <em>post</em> versions allow you
- * to enqueue Runnable objects to be called by the message queue when they are
- * received; the <em>sendMessage</em> versions allow you to enqueue a
- * {@link Message} object containing a bundle of data that will be processed by
- * the Handler's {@link #handleMessage} method (requiring that you implement a
- * subclass of Handler).
- * <p>
- * <p>
- * When posting or sending to a Handler, you can either allow the item to be
- * processed as soon as the message queue is ready to do so, or specify a delay
- * before it gets processed or absolute time for it to be processed. The latter
- * two allow you to implement timeouts, ticks, and other timing-based behavior.
- * <p>
- * <p>
- * When a process is created for your application, its main thread is dedicated
- * to running a message queue that takes care of managing the top-level
- * application objects (activities, broadcast receivers, etc) and any windows
- * they create. You can create your own threads, and communicate back with the
- * main application thread through a Handler. This is done by calling the same
- * <em>post</em> or <em>sendMessage</em> methods as before, but from your new
- * thread. The given Runnable or Message will then be scheduled in the Handler's
- * message queue and processed when appropriate.
- */
-public class Handler {
-    /*
-     * Set this flag to true to detect anonymous, local or member classes that
-     * extend this Handler class and that are not static. These kind of classes
-     * can potentially create leaks.
-     */
+public class Handler<T> {
+
     private static final boolean FIND_POTENTIAL_LEAKS = false;
     private static final String TAG = "Handler";
 
-    /**
-     * Callback interface you can use when instantiating a Handler to avoid
-     * having to implement your own subclass of Handler.
-     *
-     * @param msg A {@link android.os.Message Message} object
-     * @return True if no further handling is desired
-     */
-    public interface Callback {
-        public boolean handleMessage(Message msg);
+
+    public interface Callback<T> {
+        public boolean handleMessage(Message<T> msg);
     }
 
-    /**
-     * Subclasses must implement this to receive messages.
-     */
-    public void handleMessage(Message msg) {
+
+    public void handleMessage(Message<T> msg) {
     }
 
     /**
      * Handle system messages here.
      */
-    public void dispatchMessage(Message msg) {
+     void dispatchMessage(Message<T> msg) {
         if (msg.callback != null) {
             handleCallback(msg);
         } else {
@@ -124,7 +71,7 @@ public class Handler {
      *
      * @param callback The callback interface in which to handle messages, or null.
      */
-    public Handler(Callback callback) {
+    public Handler(Callback<T> callback) {
         this(callback, false);
     }
 
@@ -258,7 +205,7 @@ public class Handler {
      *
      * @param message The message whose name is being queried
      */
-    public String getMessageName(Message message) {
+    public String getMessageName(Message<T> message) {
         if (message.callback != null) {
             return message.callback.getClass().getName();
         }
@@ -295,7 +242,7 @@ public class Handler {
      * @param obj  Value to assign to the returned Message.obj field.
      * @return A Message from the global message pool.
      */
-    public final Message obtainMessage(int what, Object obj) {
+    public final Message obtainMessage(int what, T obj) {
         return Message.obtain(this, what, obj);
     }
 
@@ -322,7 +269,7 @@ public class Handler {
      * @param obj  Value to assign to the returned Message.obj field.
      * @return A Message from the global message pool.
      */
-    public final Message obtainMessage(int what, int arg1, int arg2, Object obj) {
+    public final Message obtainMessage(int what, int arg1, int arg2, T obj) {
         return Message.obtain(this, what, arg1, arg2, obj);
     }
 
@@ -369,7 +316,7 @@ public class Handler {
      * message queue. Returns false on failure, usually because the
      * looper processing the message queue is exiting.
      */
-    public final boolean sendMessage(Message msg) {
+    public final boolean sendMessage(Message<T> msg) {
         return sendMessageDelayed(msg, 0);
     }
 
@@ -412,7 +359,7 @@ public class Handler {
      * the looper is quit before the delivery time of the message occurs
      * then the message will be dropped.
      */
-    public final boolean sendMessageDelayed(Message msg, long delayMillis) {
+    public final boolean sendMessageDelayed(Message<T> msg, long delayMillis) {
         if (delayMillis < 0) {
             delayMillis = 0;
         }
@@ -420,7 +367,7 @@ public class Handler {
     }
 
 
-    private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) {
+    private boolean enqueueMessage(MessageQueue<T> queue, Message<T> msg, long uptimeMillis) {
         msg.target = this;
         if (mAsynchronous) {
             msg.setAsynchronous(true);
@@ -505,7 +452,12 @@ public class Handler {
 
 
     final Looper mLooper;
-    final MessageQueue mQueue;
+    final MessageQueue<T> mQueue;
     final Callback mCallback;
     final boolean mAsynchronous;
+
+
+
+
+
 }
