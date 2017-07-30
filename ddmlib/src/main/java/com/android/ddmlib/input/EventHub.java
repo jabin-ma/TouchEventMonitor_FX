@@ -113,10 +113,6 @@ class EventHub {
     }
 
 
-    boolean removeMonitorDevice() {
-        return false;
-    }
-
     PlainTextRawEvent getEvent() {
         if (executorService.isShutdown()) {
             return null;
