@@ -101,7 +101,7 @@ public final class AndroidLocation {
 
         // make sure the folder exists!
         File f = new File(sPrefsLocation);
-        if (f.exists() == false) {
+        if (!f.exists()) {
             try {
                 f.mkdir();
             } catch (SecurityException e) {
@@ -124,7 +124,7 @@ public final class AndroidLocation {
     /**
      * Resets the folder used to store android related files. For testing.
      */
-    public static final void resetFolder() {
+    public static void resetFolder() {
         sPrefsLocation = null;
     }
 

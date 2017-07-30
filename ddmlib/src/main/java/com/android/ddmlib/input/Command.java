@@ -14,13 +14,13 @@ public enum Command {
     String[] args;
     String desc;
 
-    private Command(String desc, String cmd, String... args) {
+    Command(String desc, String cmd, String... args) {
         this.cmd = cmd;
         this.args = args;
         this.desc = desc;
     }
 
-    private Command(String desc, Command command, String... args) {
+    Command(String desc, Command command, String... args) {
         this.cmd = command.cmd;
         this.args = args;
         this.desc = desc;

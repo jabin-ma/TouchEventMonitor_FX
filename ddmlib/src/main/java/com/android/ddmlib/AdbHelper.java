@@ -234,6 +234,7 @@ public final class AdbHelper {
      * @throws TimeoutException in case of timeout on the connection.
      * @throws IOException      in case of I/O error on the connection.
      */
+    @SuppressWarnings("LoopStatementThatDoesntLoop")
     static AdbResponse readAdbResponse(SocketChannel chan, boolean readDiagString)
             throws TimeoutException, IOException {
 

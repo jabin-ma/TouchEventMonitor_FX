@@ -100,7 +100,7 @@ public final class Message<T> implements Delayed {
 
     /* package */ long when;
 
-    /* package */ Handler target;
+    /* package */ Handler<T> target;
 
     /* package */ Runnable callback;
 

@@ -74,6 +74,6 @@ public class KnownEventList {
     }
 
     public enum HandleType {
-        EVENT_CREATE, EVENT_ARG_X, EVENT_ARG_Y, EVENT_PUBLISH, EVENT_SYNC, UNKNOWN;
+        EVENT_CREATE, EVENT_ARG_X, EVENT_ARG_Y, EVENT_PUBLISH, EVENT_SYNC, UNKNOWN
     }
 }

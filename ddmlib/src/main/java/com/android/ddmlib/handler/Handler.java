@@ -20,6 +20,7 @@ import com.android.ddmlib.Log;
 
 import java.lang.reflect.Modifier;
 
+@SuppressWarnings("unchecked")
 public class Handler<T> {
 
     private static final boolean FIND_POTENTIAL_LEAKS = false;
@@ -27,7 +28,7 @@ public class Handler<T> {
 
 
     public interface Callback<T> {
-        public boolean handleMessage(Message<T> msg) throws InterruptedException;
+        boolean handleMessage(Message<T> msg) throws InterruptedException;
     }
 
 
@@ -206,7 +207,7 @@ public class Handler<T> {
 
     final Looper mLooper;
     final MessageQueue<T> mQueue;
-    final Callback mCallback;
+    final Callback<T> mCallback;
     final boolean mAsynchronous;
 
 

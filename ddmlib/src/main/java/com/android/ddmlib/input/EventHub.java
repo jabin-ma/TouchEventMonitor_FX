@@ -66,6 +66,7 @@ class EventHub {
         }
     }
 
+    @SuppressWarnings("unchecked")
     void putDevice(ArrayList<String> sb) {
         InputDevice tempDev = new InputDevice((List<String>) sb.clone());
         if (!mDevices.containsKey(tempDev.getDevFile())) {

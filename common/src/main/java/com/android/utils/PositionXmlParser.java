@@ -54,7 +54,7 @@ public class PositionXmlParser {
             Pattern.compile("encoding=['\"](\\S*)['\"]");        //$NON-NLS-1$
     private static final String LOAD_EXTERNAL_DTD =
             "http://apache.org/xml/features/nonvalidating/load-external-dtd";
-    ; //$NON-NLS-1$
+    //$NON-NLS-1$
 
     /**
      * Parses the XML content from the given input stream.

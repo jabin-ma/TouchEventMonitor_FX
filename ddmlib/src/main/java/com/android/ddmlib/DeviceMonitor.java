@@ -466,7 +466,6 @@ final class DeviceMonitor {
                     } catch (NumberFormatException nfe) {
                         // looks like this pid is not really a number. Lets
                         // ignore it.
-                        continue;
                     }
                 }
             }

@@ -15,7 +15,7 @@
  */
 
 package com.android.ddmlib.handler;
-
+@SuppressWarnings("unchecked")
 public final class Looper {
 
     static final ThreadLocal<Looper> sThreadLocal = new ThreadLocal<Looper>();
