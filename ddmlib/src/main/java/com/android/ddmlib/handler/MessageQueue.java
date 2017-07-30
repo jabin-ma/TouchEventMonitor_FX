@@ -29,9 +29,9 @@ import java.util.concurrent.DelayQueue;
  */
 public final class MessageQueue<T> extends DelayQueue<Message<T>> {
 
-    public  static final Message MESSAGE_QUIT = Message.obtain();
+    public static final Message MESSAGE_QUIT = Message.obtain();
 
-    public MessageQueue(boolean quitAllowed) {
+    public MessageQueue() {
 
     }
 

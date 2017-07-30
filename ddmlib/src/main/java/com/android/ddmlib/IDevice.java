@@ -23,7 +23,6 @@ import com.android.ddmlib.controller.Type;
 import com.android.ddmlib.input.Command;
 import com.android.ddmlib.input.InputManager;
 import com.android.ddmlib.log.LogReceiver;
-import com.android.ddmlib.monkey.NetworkMonkey;
 
 import java.io.IOException;
 import java.util.List;
@@ -671,9 +670,6 @@ public interface IDevice extends IShellEnabledDevice {
      * @return the user's region, or null if it's unknown
      */
     String getRegion();
-
-
-    NetworkMonkey getMonkey() throws IOException;
 
 
     InputManager getInputManager();

@@ -9,12 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.*;
 
+/**
+ * 负责从驱动文件中读出原始事件
+ */
 class EventHub {
 
-
-//    private LinkedHashMap<String>
-
-//    private IDevice mAndroidDevice;
 
     private static final String TAG = "EventHub";
     private static final boolean DEBUG = false;
@@ -41,6 +40,7 @@ class EventHub {
             try {
                 mContext.getAndroidDevice().executeShellCommand(new SingleLineReceiver() {
                     ArrayList<String> sb = new ArrayList<>();
+
                     @Override
                     public void processNewLines(String line) {
                         if (DEBUG) Log.d(getClass().getName(), line);
@@ -50,7 +50,7 @@ class EventHub {
                                 sb.clear();
                             }
                         }
-                        sb.add(line.trim());
+                        sb.add(line.trim())
 //                    if(DEBUG)Log.d(getClass().getName(), sb.toString());
                     }
 
@@ -104,8 +104,11 @@ class EventHub {
                     | IOException e) {
                 e.printStackTrace();
             }
+            Log.d(TAG, "stop :"+tempDev.getDevFile());
             return null;
-        });
+        }
+
+        );
         futureHashMap.put(tempDev.getDevFile(), submitFuture);
     }
 
@@ -114,17 +117,28 @@ class EventHub {
         return false;
     }
 
-    PlainTextRawEvent getEvent() throws InterruptedException {
-        return rawEvents.take();
+    PlainTextRawEvent getEvent() {
+        if (executorService.isShutdown()) {
+            return null;
+        }
+        try {
+            return rawEvents.take();
+        } catch (InterruptedException e) {
+            Log.d(TAG, "getEvent error  will return null");
+        }
+        return null;
     }
 
     public ArrayList<InputDevice> getDevices() {
         return new ArrayList<>(mDevices.values());
     }
 
-    public void onFinish() {
+    public void quit() {
         executorService.shutdownNow();
         rawEvents.clear();
-        Log.d(TAG, "finish..");
+
+
+
+        Log.d(TAG, "quit.."+executorService);
     }
 }

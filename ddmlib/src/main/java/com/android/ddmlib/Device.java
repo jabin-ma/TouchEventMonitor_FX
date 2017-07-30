@@ -26,7 +26,6 @@ import com.android.ddmlib.input.Command;
 import com.android.ddmlib.input.InputManager;
 import com.android.ddmlib.log.LogReceiver;
 import com.android.ddmlib.monkey.MonkeyTransport;
-import com.android.ddmlib.monkey.NetworkMonkey;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -1324,11 +1323,6 @@ final class Device implements IDevice {
         return getProperty(IDevice.PROP_DEVICE_REGION);
     }
 
-
-    @Override
-    public NetworkMonkey getMonkey() throws IOException {
-        return NetworkMonkey.create(this);
-    }
 
     private InputManager inputManager;
 

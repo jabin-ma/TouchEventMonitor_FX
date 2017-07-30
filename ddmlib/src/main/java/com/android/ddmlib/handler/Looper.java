@@ -19,38 +19,15 @@ package com.android.ddmlib.handler;
 public final class Looper {
 
     static final ThreadLocal<Looper> sThreadLocal = new ThreadLocal<Looper>();
-    private static Looper sMainLooper; // guarded by Looper.class
-
     final MessageQueue mQueue;
     final Thread mThread;
 
-    public static  void prepare() {
-        prepare(true);
-    }
 
-    private static void prepare(boolean quitAllowed) {
+    public static void prepare() {
         if (sThreadLocal.get() != null) {
             throw new RuntimeException("Only one Looper may be created per thread");
         }
-        sThreadLocal.set(new Looper(quitAllowed));
-    }
-
-
-    public static void prepareMainLooper() {
-        prepare(false);
-        synchronized (Looper.class) {
-            if (sMainLooper != null) {
-                throw new IllegalStateException("The main Looper has already been prepared.");
-            }
-            sMainLooper = myLooper();
-        }
-    }
-
-
-    public static Looper getMainLooper() {
-        synchronized (Looper.class) {
-            return sMainLooper;
-        }
+        sThreadLocal.set(new Looper());
     }
 
 
@@ -63,26 +40,28 @@ public final class Looper {
 
         // Make sure the identity of this thread is that of the local process,
         // and keep track of what that identity token actually is.
-        for (; ; ) {
+        for (; !Thread.interrupted() ; ) {
             Message msg = queue.next(); // might block
             if (msg == null) {
                 // No message indicates that the message queue is quitting.
-                return;
+                break;
             }
-            if(msg==MessageQueue.MESSAGE_QUIT)
-            {
+            if (msg == MessageQueue.MESSAGE_QUIT) {
                 //TODO message quit
                 break;
             }
             try {
                 msg.target.dispatchMessage(msg);
+            } catch (InterruptedException e) {
+                break;
             } finally {
-
+                msg.recycleUnchecked();
             }
             // Make sure that during the course of dispatching the
             // identity of the thread wasn't corrupted.
-            msg.recycleUnchecked();
+//            msg.recycleUnchecked();
         }
+        System.out.println("looper end");
     }
 
     public static Looper myLooper() {
@@ -93,8 +72,8 @@ public final class Looper {
         return myLooper().mQueue;
     }
 
-    private Looper(boolean quitAllowed) {
-        mQueue = new MessageQueue(quitAllowed);
+    private Looper() {
+        mQueue = new MessageQueue();
         mThread = Thread.currentThread();
     }
 
@@ -108,6 +87,11 @@ public final class Looper {
 
     public void quitSafely() {
         mQueue.quit();
+    }
+
+
+    public void quit(){
+        mThread.interrupt();
     }
 
     public Thread getThread() {

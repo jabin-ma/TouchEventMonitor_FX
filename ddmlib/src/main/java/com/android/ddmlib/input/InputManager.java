@@ -4,6 +4,8 @@ import com.android.ddmlib.IDevice;
 import com.android.ddmlib.Log;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Created by majipeng on 2017/6/19.
@@ -22,8 +24,8 @@ public class InputManager {
         this.mAndroidDevice = mAndroidDevice;
         eventHub = new EventHub(this);
         inputReader = new InputReader(eventHub);
-        inputReaderThread = new InputReaderThread(this);
         inputDispatcher = new InputDispatcher(this);
+        inputReaderThread = new InputReaderThread(inputReader,inputDispatcher);
         inputDispatcherThread = new InputDispatcherThread(this);
         inputReaderThread.start();
         inputDispatcherThread.start();
@@ -46,6 +48,8 @@ public class InputManager {
         return inputDispatcher;
     }
 
+
+
     public ArrayList<InputDevice> getDevices() {
         return eventHub.getDevices();
     }
@@ -62,7 +66,7 @@ public class InputManager {
 
 
     public void onShutDown() {
-        eventHub.onFinish();
+        eventHub.quit();
         try {
             inputReaderThread.interrupt();
             inputReaderThread.join();
