@@ -4,16 +4,16 @@ import com.android.ddmlib.Log;
 
 /**
  * Created by majipeng on 2017/6/23.
- *
+ * <p>
  * 驱动InputReader
  */
 public class InputReaderThread extends Thread {
     private static final String TAG = "InputReaderThread";
     private InputReader reader;
-    private InputDispatcher inputDispatcher;
+    private EventPool inputDispatcher;
 
 
-    public InputReaderThread(InputReader reader, InputDispatcher inputDispatcher) {
+    public InputReaderThread(InputReader reader, EventPool inputDispatcher) {
         setName("inputReader-Thread");
         this.reader = reader;
         this.inputDispatcher = inputDispatcher;
@@ -24,7 +24,7 @@ public class InputReaderThread extends Thread {
         while (!isInterrupted()) {
             MonitorEvent monitorEvent = reader.read();
             if (monitorEvent != null) {
-                Log.d(TAG, "read:"+monitorEvent);
+                Log.d(TAG, "read:" + monitorEvent);
                 inputDispatcher.dispatchEvent(monitorEvent);
             } else {
                 Log.d(TAG, "read null .. exit!!");

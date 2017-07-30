@@ -5,8 +5,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.util.ListIterator;
-
 /**
  * Created by majipeng on 2017/6/21.
  */
@@ -41,5 +39,5 @@ public interface MonitorEvent {
 
     long endTime();
 
-     void processController(IRemoteController controller);
+    void processController(IRemoteController controller);
 }

@@ -31,7 +31,7 @@ public class Handler<T> {
     }
 
 
-    public void handleMessage(Message<T> msg) throws InterruptedException{
+    public void handleMessage(Message<T> msg) throws InterruptedException {
     }
 
     void dispatchMessage(Message<T> msg) throws InterruptedException {
@@ -119,12 +119,12 @@ public class Handler<T> {
         return "0x" + Integer.toHexString(message.what);
     }
 
-    public final Message<T>  obtainMessage() {
+    public final Message<T> obtainMessage() {
         return Message.obtain(this);
     }
 
 
-    public final Message<T>  obtainMessage(int what) {
+    public final Message<T> obtainMessage(int what) {
         return Message.obtain(this, what);
     }
 

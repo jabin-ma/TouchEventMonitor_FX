@@ -40,7 +40,7 @@ public final class Looper {
 
         // Make sure the identity of this thread is that of the local process,
         // and keep track of what that identity token actually is.
-        for (; !Thread.interrupted() ; ) {
+        for (; !Thread.interrupted(); ) {
             Message msg = queue.next(); // might block
             if (msg == null) {
                 // No message indicates that the message queue is quitting.
@@ -90,7 +90,7 @@ public final class Looper {
     }
 
 
-    public void quit(){
+    public void quit() {
         mThread.interrupt();
     }
 

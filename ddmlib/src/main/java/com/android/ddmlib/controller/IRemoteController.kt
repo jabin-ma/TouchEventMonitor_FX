@@ -1,7 +1,5 @@
 package com.android.ddmlib.controller
 
-import java.security.Key
-
 /**
  * Created by majipeng on 2017/7/2.
  */
@@ -15,7 +13,7 @@ interface IRemoteController {
     fun keyUp(key: KeyCode)
     fun quit()
     fun done()
-    fun keyClick(key:KeyCode)
-    fun touchClick(x: Int,y: Int)
+    fun keyClick(key: KeyCode)
+    fun touchClick(x: Int, y: Int)
 
 }

@@ -143,7 +143,7 @@ public class PlainTextRawEvent implements IRawEvent {
         this.handleType = handleType;
     }
 
-     void setWhen(When when) {
+    void setWhen(When when) {
         this.when = when;
     }
 

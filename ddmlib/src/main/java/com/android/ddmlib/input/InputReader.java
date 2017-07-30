@@ -44,14 +44,11 @@ public class InputReader {
             }
             result = mapper.processEvent(rawEvent);
 
-            if (result == null) continue; else break;//不是一次完整的事件,继续读取
+            if (result == null) continue;
+            else break;//不是一次完整的事件,继续读取
         }
         return result;
     }
-
-
-
-
 
 
 }

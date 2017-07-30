@@ -4,7 +4,7 @@ package com.android.ddmlib.input;
  * Created by majipeng on 2017/7/4.
  */
 public class TouchRegion {
-    private  int max_x = Integer.MIN_VALUE, max_y = Integer.MIN_VALUE;
+    private int max_x = Integer.MIN_VALUE, max_y = Integer.MIN_VALUE;
 
     private int min_x = Integer.MAX_VALUE, min_y = Integer.MAX_VALUE;
 

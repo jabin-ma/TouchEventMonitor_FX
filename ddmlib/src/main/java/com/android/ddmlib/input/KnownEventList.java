@@ -1,7 +1,5 @@
 package com.android.ddmlib.input;
 
-import com.android.ddmlib.Log;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;

@@ -50,7 +50,7 @@ class EventHub {
                                 sb.clear();
                             }
                         }
-                        sb.add(line.trim())
+                        sb.add(line.trim());
 //                    if(DEBUG)Log.d(getClass().getName(), sb.toString());
                     }
 
@@ -91,22 +91,22 @@ class EventHub {
             }
         }
         Future<Void> submitFuture = executorService.submit(() -> {
-            try {
-                mContext.getAndroidDevice().executeShellCommand(new SingleLineReceiver() {
-                    @Override
-                    public void processNewLines(String line) {
-                        PlainTextRawEvent rawEvent = new PlainTextRawEvent(line, tempDev.getDevFile());
-                        rawEvents.add(rawEvent);
-                    }
-                }, -1, Command.GETEVENT_WHATCH_TEXT_EVENT, tempDev.getDevFile());
+                    try {
+                        mContext.getAndroidDevice().executeShellCommand(new SingleLineReceiver() {
+                            @Override
+                            public void processNewLines(String line) {
+                                PlainTextRawEvent rawEvent = new PlainTextRawEvent(line, tempDev.getDevFile());
+                                rawEvents.add(rawEvent);
+                            }
+                        }, -1, Command.GETEVENT_WHATCH_TEXT_EVENT, tempDev.getDevFile());
 
-            } catch (TimeoutException | AdbCommandRejectedException | ShellCommandUnresponsiveException
-                    | IOException e) {
-                e.printStackTrace();
-            }
-            Log.d(TAG, "stop :"+tempDev.getDevFile());
-            return null;
-        }
+                    } catch (TimeoutException | AdbCommandRejectedException | ShellCommandUnresponsiveException
+                            | IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d(TAG, "stop :" + tempDev.getDevFile());
+                    return null;
+                }
 
         );
         futureHashMap.put(tempDev.getDevFile(), submitFuture);
@@ -138,7 +138,6 @@ class EventHub {
         rawEvents.clear();
 
 
-
-        Log.d(TAG, "quit.."+executorService);
+        Log.d(TAG, "quit.." + executorService);
     }
 }

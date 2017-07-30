@@ -5,5 +5,5 @@ package com.android.ddmlib.controller;
  */
 public enum Type {
 
-      MONKEY
+    MONKEY
 }

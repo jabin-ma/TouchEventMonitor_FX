@@ -94,7 +94,7 @@ public final class Message<T> implements Delayed {
     /**
      * Flags to clear in the copyFrom method
      */
-	/* package */ static final int FLAGS_TO_CLEAR_ON_COPY_FROM = FLAG_IN_USE;
+    /* package */ static final int FLAGS_TO_CLEAR_ON_COPY_FROM = FLAG_IN_USE;
 
     /* package */ int flags;
 
