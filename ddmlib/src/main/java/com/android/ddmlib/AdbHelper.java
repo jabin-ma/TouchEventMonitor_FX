@@ -328,7 +328,7 @@ public final class AdbHelper {
             // get the header size (this is a count of int)
             int headerSize = RawImage.getHeaderSize(version);
 
-            // read the header
+            // mapping the header
             reply = new byte[headerSize * 4];
             read(adbChan, reply);
 
@@ -755,9 +755,9 @@ public final class AdbHelper {
      * <p/>
      * This uses the default time out value.
      *
-     * @param chan the opened socket to read from. It must be in non-blocking
+     * @param chan the opened socket to mapping from. It must be in non-blocking
      *             mode for timeouts to work
-     * @param data the buffer to store the read data into.
+     * @param data the buffer to store the mapping data into.
      * @throws TimeoutException in case of timeout on the connection.
      * @throws IOException      in case of I/O error on the connection.
      */
@@ -769,12 +769,12 @@ public final class AdbHelper {
      * Reads from the socket until the array is filled, the optional length is
      * reached, or no more data is coming (because the socket closed or the
      * timeout expired). After "timeout" milliseconds since the previous
-     * successful read, this will return whether or not new data has been found.
+     * successful mapping, this will return whether or not new data has been found.
      *
-     * @param chan    the opened socket to read from. It must be in non-blocking
+     * @param chan    the opened socket to mapping from. It must be in non-blocking
      *                mode for timeouts to work
-     * @param data    the buffer to store the read data into.
-     * @param length  the length to read or -1 to fill the data buffer completely
+     * @param data    the buffer to store the mapping data into.
+     * @param length  the length to mapping or -1 to fill the data buffer completely
      * @param timeout The timeout value in ms. A timeout of zero means "wait
      *                forever".
      */
@@ -786,12 +786,12 @@ public final class AdbHelper {
             int count;
             count = chan.read(buf);
             if (count < 0) {
-                Log.d("ddms", "read: channel EOF");
+                Log.d("ddms", "mapping: channel EOF");
                 throw new IOException("EOF");
             } else if (count == 0) {
                 // TODO: need more accurate timeout?
                 if (timeout != 0 && numWaits * WAIT_TIME > timeout) {
-                    Log.d("ddms", "read: timeout");
+                    Log.d("ddms", "mapping: timeout");
                     throw new TimeoutException();
                 }
                 // non-blocking spin

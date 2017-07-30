@@ -408,7 +408,7 @@ public interface IDevice extends IShellEnabledDevice {
      * Runs the log service for the given log and outputs the log to the {@link LogReceiver}.
      * <p/>This call is blocking until {@link LogReceiver#isCancelled()} returns true.
      *
-     * @param logname  the logname of the log to read from.
+     * @param logname  the logname of the log to mapping from.
      * @param receiver the receiver to receive the event log entries.
      * @throws TimeoutException            in case of timeout on the connection. This can only be thrown if the
      *                                     timeout happens during setup. Once logs start being received, no timeout will

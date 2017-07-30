@@ -587,7 +587,7 @@ final class DeviceMonitor {
     /**
      * Reads the length of the next message from a socket.
      *
-     * @param socket The {@link SocketChannel} to read from.
+     * @param socket The {@link SocketChannel} to mapping from.
      * @return the length, or 0 (zero) if no data is available from the socket.
      * @throws IOException if the connection failed.
      */
@@ -602,9 +602,9 @@ final class DeviceMonitor {
             }
         }
 
-        // we receive something we can't read. It's better to reset the
+        // we receive something we can't mapping. It's better to reset the
         // connection at this point.
-        throw new IOException("Unable to read length");
+        throw new IOException("Unable to mapping length");
     }
 
     /**
@@ -799,7 +799,7 @@ final class DeviceMonitor {
                         int length = readLength(mAdbConnection, mLengthBuffer);
 
                         if (length >= 0) {
-                            // read the incoming message
+                            // mapping the incoming message
                             processIncomingDeviceData(length);
 
                             // flag the fact that we have build the list at

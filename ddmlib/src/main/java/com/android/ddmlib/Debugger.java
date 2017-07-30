@@ -207,7 +207,7 @@ class Debugger {
             if (mReadBuffer.capacity() * 2 > MAX_BUF_SIZE) {
                 throw new BufferOverflowException();
             }
-            Log.d("ddms", "Expanding read buffer to "
+            Log.d("ddms", "Expanding mapping buffer to "
                     + mReadBuffer.capacity() * 2);
 
             ByteBuffer newBuffer =
@@ -220,7 +220,7 @@ class Debugger {
 
         count = mChannel.read(mReadBuffer);
         Log.v("ddms", "Read " + count + " bytes from " + this);
-        if (count < 0) throw new IOException("read failed");
+        if (count < 0) throw new IOException("mapping failed");
     }
 
     /**

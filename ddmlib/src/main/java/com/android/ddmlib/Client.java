@@ -755,7 +755,7 @@ public class Client {
                 Log.e("ddms", "Exceeded MAX_BUF_SIZE!");
                 throw new BufferOverflowException();
             }
-            Log.d("ddms", "Expanding read buffer to "
+            Log.d("ddms", "Expanding mapping buffer to "
                     + mReadBuffer.capacity() * 2);
 
             ByteBuffer newBuffer = ByteBuffer.allocate(mReadBuffer.capacity() * 2);
@@ -769,7 +769,7 @@ public class Client {
 
         count = mChan.read(mReadBuffer);
         if (count < 0)
-            throw new IOException("read failed");
+            throw new IOException("mapping failed");
 
         if (Log.Config.LOGV) Log.v("ddms", "Read " + count + " bytes from " + this);
         //Log.hexDump("ddms", Log.DEBUG, mReadBuffer.array(),

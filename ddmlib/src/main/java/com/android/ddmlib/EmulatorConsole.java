@@ -320,7 +320,7 @@ public final class EmulatorConsole {
                 socketAddr = new InetSocketAddress(hostAddr, mPort);
                 mSocketChannel = SocketChannel.open(socketAddr);
                 mSocketChannel.configureBlocking(false);
-                // read initial output from console
+                // mapping initial output from console
                 readLines();
             } catch (IOException e) {
                 Log.w(LOG_TAG, "Failed to start Emulator console for " + Integer.toString(mPort));
@@ -337,7 +337,7 @@ public final class EmulatorConsole {
      * @return true if the connection is alive.
      */
     private synchronized boolean ping() {
-        // it looks like we can send stuff, even when the emulator quit, but we can't read
+        // it looks like we can send stuff, even when the emulator quit, but we can't mapping
         // from the socket. So we check the return of readLines()
         if (sendCommand(COMMAND_PING)) {
             return readLines() != null;
@@ -671,13 +671,13 @@ public final class EmulatorConsole {
     }
 
     /**
-     * Reads line from the console socket. This call is blocking until we read the lines:
+     * Reads line from the console socket. This call is blocking until we mapping the lines:
      * <ul>
      * <li>OK\r\n</li>
      * <li>KO<msg>\r\n</li>
      * </ul>
      *
-     * @return the array of strings read from the emulator.
+     * @return the array of strings mapping from the emulator.
      */
     private String[] readLines() {
         try {

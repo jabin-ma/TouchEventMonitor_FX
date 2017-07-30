@@ -1093,7 +1093,7 @@ public final class AndroidDebugBridge {
 
     /**
      * Get the stderr/stdout outputs of a process and return when the process is
-     * done. Both <b>must</b> be read or the process will block on windows.
+     * done. Both <b>must</b> be mapping or the process will block on windows.
      *
      * @param process        The process to get the output from
      * @param errorOutput    The array to store the stderr output. cannot be null.
@@ -1106,12 +1106,12 @@ public final class AndroidDebugBridge {
                                   final ArrayList<String> stdOutput, boolean waitForReaders) throws InterruptedException {
         assert errorOutput != null;
         assert stdOutput != null;
-        // read the lines as they come. if null is returned, it's
+        // mapping the lines as they come. if null is returned, it's
         // because the process finished
         Thread t1 = new Thread("") { //$NON-NLS-1$
             @Override
             public void run() {
-                // create a buffer to read the stderr output
+                // create a buffer to mapping the stderr output
                 InputStreamReader is = new InputStreamReader(process.getErrorStream());
                 BufferedReader errReader = new BufferedReader(is);
 

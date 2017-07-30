@@ -3,6 +3,8 @@ package com.android.ddmlib.input;
 import com.android.ddmlib.IDevice;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by majipeng on 2017/6/19.
@@ -12,23 +14,19 @@ public class InputManager {
     //从驱动文件读取原始事件
     private EventHub eventHub;
     //将原始事件转换为本地事件
-    private InputReader inputReader;
-    //从eventhub读取event
-    private InputReaderThread inputReaderThread;
-    //待分发的event pool
-    private EventPool eventPool;
+    private EventHubReader eventHubReader;
+
     //驱动event pool
-    private InputDispatcherThread inputDispatcherThread;
+    private MappedEventDispatcher mappedEventDispatcher;
+    ExecutorService mThreads = Executors.newCachedThreadPool();
 
     public InputManager(IDevice mAndroidDevice) {
         this.mAndroidDevice = mAndroidDevice;
         eventHub = new EventHub(this);
-        inputReader = new InputReader(eventHub);
-        eventPool = new EventPool();
-        inputReaderThread = new InputReaderThread(inputReader, eventPool);
-        inputDispatcherThread = new InputDispatcherThread(eventPool);
-        inputReaderThread.start();
-        inputDispatcherThread.start();
+        eventHubReader = new EventHubReader(eventHub);
+        mappedEventDispatcher = new MappedEventDispatcher(eventHubReader);
+        mThreads.submit(eventHubReader);
+        mThreads.submit(mappedEventDispatcher);
     }
 
 
@@ -42,27 +40,21 @@ public class InputManager {
 
 
     public boolean addOnTouchEventListener(OnTouchEventListener listener) {
-        return inputDispatcherThread.addOnTouchEventListener(listener);
+        return mappedEventDispatcher.addOnTouchEventListener(listener);
     }
 
 
     public boolean unregisterTouchEventListener(OnTouchEventListener listener) {
-        return inputDispatcherThread.unregisterTouchEventListener(listener);
+        return mappedEventDispatcher.unregisterTouchEventListener(listener);
     }
 
     public void onShutDown() {
         eventHub.quit();
-        try {
-            inputReaderThread.interrupt();
-            inputReaderThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        try {
-            inputDispatcherThread.interrupt();
-            inputDispatcherThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        mThreads.shutdownNow();
+        mThreads=null;
+        eventHub=null;
+        mAndroidDevice=null;
+        eventHubReader=null;
+        mappedEventDispatcher=null;
     }
 }

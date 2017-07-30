@@ -3,18 +3,18 @@ package com.android.ddmlib.input;
 import com.android.ddmlib.Log;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 /**
  * Created by majipeng on 2017/6/19.
  */
-public class InputDispatcherThread extends Thread {
-    private final EventPool eventPool;
+public class MappedEventDispatcher implements Callable<Void> {
+    private final EventHubReader eventPool;
     private ArrayList<OnTouchEventListener> listeners = new ArrayList<>();
 
-    private static final String TAG = "InputDispatcherThread";
+    private static final String TAG = "MappedEventDispatcher";
 
-    public InputDispatcherThread(EventPool eventPool) {
-        setName("EventPool-Thread");
+    public MappedEventDispatcher(EventHubReader eventPool) {
         this.eventPool = eventPool;
     }
 
@@ -30,10 +30,10 @@ public class InputDispatcherThread extends Thread {
 
 
     @Override
-    public void run() {
-        while (!isInterrupted()) {
+    public Void call() {
+        while (!Thread.interrupted()) {
             try {
-                MonitorEvent event = eventPool.getWaitingForDispatchEvent();
+                MonitorEvent event = eventPool.takeMappedEvent();
                 if (event == null) continue;
                 Log.d("dispatch", event.inputDeviceProperty() + "---->" + event);
                 event.setDispatched();
@@ -44,6 +44,8 @@ public class InputDispatcherThread extends Thread {
                 break;
             }
         }
-        Log.d(TAG, "finish..");
+        Log.d(TAG,"run finish");
+        return null;
     }
 }
+

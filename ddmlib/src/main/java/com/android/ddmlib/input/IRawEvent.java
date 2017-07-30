@@ -2,26 +2,26 @@ package com.android.ddmlib.input;
 
 public interface IRawEvent {
 
-    public When getWhen();
+     When getWhen();
 
 
-    public String getType();
+     String getType();
 
 
-    public void setType(String type);
+     void setType(String type);
 
 
-    public String getCode();
+     String getCode();
 
 
-    public void setCode(String code);
+     void setCode(String code);
 
 
-    public String getValue();
+     String getValue();
 
 
-    public void setValue(String value);
+     void setValue(String value);
 
 
-    public KnownEventList.HandleType getHandleType();
+     KnownEventList.HandleType getHandleType();
 }

@@ -103,14 +103,14 @@ class EventHub {
     }
 
 
-    PlainTextRawEvent getEvent() {
+    PlainTextRawEvent takeRawEvent() {
         if (executorService.isShutdown()) {
             return null;
         }
         try {
             return rawEvents.take();
         } catch (InterruptedException e) {
-            Log.d(TAG, "getEvent error  will return null");
+            Log.d(TAG, "takeRawEvent error  will return null");
         }
         return null;
     }

@@ -61,15 +61,15 @@ public class SyncService {
     private final static int S_ISGID = 0x0400; // set-gid bit
     private final static int S_ISVTX = 0x0200; // sticky bit
     private final static int S_IRWXU = 0x01C0; // user permissions
-    private final static int S_IRUSR = 0x0100; // user: read
+    private final static int S_IRUSR = 0x0100; // user: mapping
     private final static int S_IWUSR = 0x0080; // user: write
     private final static int S_IXUSR = 0x0040; // user: execute
     private final static int S_IRWXG = 0x0038; // group permissions
-    private final static int S_IRGRP = 0x0020; // group: read
+    private final static int S_IRGRP = 0x0020; // group: mapping
     private final static int S_IWGRP = 0x0010; // group: write
     private final static int S_IXGRP = 0x0008; // group: execute
     private final static int S_IRWXO = 0x0007; // other permissions
-    private final static int S_IROTH = 0x0004; // other: read
+    private final static int S_IROTH = 0x0004; // other: mapping
     private final static int S_IWOTH = 0x0002; // other: write
     private final static int S_IXOTH = 0x0001; // other: execute
 */
@@ -539,7 +539,7 @@ public class SyncService {
             // and send it.
             AdbHelper.write(mChannel, msg, -1, timeOut);
 
-            // read the result, in a byte array containing 2 ints
+            // mapping the result, in a byte array containing 2 ints
             // (id, size)
             AdbHelper.read(mChannel, pullResult, -1, timeOut);
 
@@ -562,7 +562,7 @@ public class SyncService {
         try {
             fos = new FileOutputStream(f);
 
-            // the buffer to read the data
+            // the buffer to mapping the data
             byte[] data = new byte[SYNC_DATA_MAX];
 
             // loop to get data until we're done.
@@ -588,7 +588,7 @@ public class SyncService {
                     throw new SyncException(SyncError.BUFFER_OVERRUN);
                 }
 
-                // now read the length we received
+                // now mapping the length we received
                 AdbHelper.read(mChannel, data, length, timeOut);
 
                 // get the header for the next packet.
@@ -673,7 +673,7 @@ public class SyncService {
                 throw new SyncException(SyncError.REMOTE_PATH_LENGTH);
             }
 
-            // create the stream to read the file
+            // create the stream to mapping the file
             fis = new FileInputStream(f);
 
             // create the header for the action
@@ -685,14 +685,14 @@ public class SyncService {
 
             System.arraycopy(ID_DATA, 0, getBuffer(), 0, ID_DATA.length);
 
-            // look while there is something to read
+            // look while there is something to mapping
             while (true) {
                 // check if we're canceled
                 if (monitor.isCanceled()) {
                     throw new SyncException(SyncError.CANCELED);
                 }
 
-                // read up to SYNC_DATA_MAX
+                // mapping up to SYNC_DATA_MAX
                 int readCount = fis.read(getBuffer(), 8, SYNC_DATA_MAX);
 
                 if (readCount == -1) {
@@ -701,7 +701,7 @@ public class SyncService {
                 }
 
                 // now send the data to the device
-                // first write the amount read
+                // first write the amount mapping
                 ArrayHelper.swap32bitsToArray(readCount, getBuffer(), 4);
 
                 // now write it
@@ -726,7 +726,7 @@ public class SyncService {
         // and send it.
         AdbHelper.write(mChannel, msg, -1, timeOut);
 
-        // read the result, in a byte array containing 2 ints
+        // mapping the result, in a byte array containing 2 ints
         // (id, size)
         byte[] result = new byte[8];
         AdbHelper.read(mChannel, result, -1 /* full length */, timeOut);
@@ -780,7 +780,7 @@ public class SyncService {
 
         AdbHelper.write(mChannel, msg, -1 /* full length */, DdmPreferences.getTimeOut());
 
-        // read the result, in a byte array containing 4 ints
+        // mapping the result, in a byte array containing 4 ints
         // (id, mode, size, time)
         byte[] statResult = new byte[16];
         AdbHelper.read(mChannel, statResult, -1 /* full length */, DdmPreferences.getTimeOut());
@@ -925,8 +925,8 @@ public class SyncService {
      */
     private byte[] getBuffer() {
         if (mBuffer == null) {
-            // create the buffer used to read.
-            // we read max SYNC_DATA_MAX, but we need 2 4 bytes at the beginning.
+            // create the buffer used to mapping.
+            // we mapping max SYNC_DATA_MAX, but we need 2 4 bytes at the beginning.
             mBuffer = new byte[SYNC_DATA_MAX + 8];
         }
         return mBuffer;

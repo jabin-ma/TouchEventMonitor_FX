@@ -337,7 +337,7 @@ final class MonitorThread extends Thread {
             }
         } catch (CancelledKeyException e) {
             // key was canceled probably due to a disconnected client before we could
-            // read stuff coming from the client, so we drop it.
+            // mapping stuff coming from the client, so we drop it.
             dropClient(client, true /* notify */);
         } catch (IOException ex) {
             // something closed down, no need to print anything. The client is simply dropped.
