@@ -50,7 +50,6 @@ class EventHub {
                             }
                         }
                         sb.add(line.trim());
-//                    if(DEBUG)Log.d(getClass().getName(), sb.toString());
                     }
 
                     @Override
@@ -59,14 +58,8 @@ class EventHub {
                         sb.clear();
                     }
                 }, TIMEOUT_SEC, TimeUnit.SECONDS, Command.GETEVENT_GETDEVICE);
-            } catch (IOException e) {
+            } catch (IOException | TimeoutException | ShellCommandUnresponsiveException | AdbCommandRejectedException e) {
                 e.printStackTrace();
-            } catch (AdbCommandRejectedException e) {
-                e.printStackTrace();
-            } catch (ShellCommandUnresponsiveException e) {
-//            e.printStackTrace();
-            } catch (TimeoutException e) {
-//            e.printStackTrace();
             } finally {
 
             }
@@ -129,8 +122,6 @@ class EventHub {
     public void quit() {
         executorService.shutdownNow();
         rawEvents.clear();
-
-
         Log.d(TAG, "quit.." + executorService);
     }
 }
