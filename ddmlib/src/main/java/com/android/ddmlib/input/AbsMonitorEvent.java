@@ -19,23 +19,26 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
     private final SimpleBooleanProperty closed = new SimpleBooleanProperty();
     private IRawEvent begin, end;
 
+    
+    private static final String TAG="AbsMonitorEvent";
+    
     @Override
     public void onCreate(IRawEvent rawEvent) {
         begin = rawEvent;
         closed.addListener(this);
-        Log.d("absMonitor", "create:" + begin.getWhen().ms);
+        Log.d(TAG, "create:" + begin.getWhen().ms);
     }
 
     @Override
     public void onPublish(IRawEvent rawEvent) {
         end = rawEvent;
-        Log.d("absMonitor", "onPublish:" + end.getWhen().ms);
+        Log.d(TAG, "onPublish:" + end.getWhen().ms);
     }
 
     @Override
     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
         //closed
-        Log.d("absMonitor", "close change:" + (end.getWhen().ms - begin.getWhen().ms));
+        Log.d(TAG, "close change:" + (end.getWhen().ms - begin.getWhen().ms));
         closed.removeListener(this);
         eventDur.setValue((end.getWhen().ms - begin.getWhen().ms));
     }

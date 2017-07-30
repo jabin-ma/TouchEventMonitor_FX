@@ -5,6 +5,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by majipeng on 2017/6/19.
+ *
+ *
  */
 public class EventPool {
     private BlockingQueue<MonitorEvent> waitingForDispatch = new LinkedBlockingQueue<>(2);

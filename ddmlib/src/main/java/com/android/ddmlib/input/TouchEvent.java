@@ -79,8 +79,7 @@ public class TouchEvent extends AbsMonitorEvent {
 
     public void processController(IRemoteController controller) {
         ListIterator<TouchPoint> listIterator = mTouchEventPath.listIterator(0);
-        TouchPoint tp = null;
-        tp = listIterator.next();
+        TouchPoint tp = listIterator.next();
         controller.touchDown(tp.getX(), tp.getY());
         while (listIterator.hasNext()) {
             tp = listIterator.next();

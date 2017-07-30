@@ -10,10 +10,9 @@ import java.util.List;
 import java.util.concurrent.*;
 
 /**
- * 负责从驱动文件中读出原始事件
+ * 总线,负责从所有驱动文件中读出原始事件
  */
 class EventHub {
-
 
     private static final String TAG = "EventHub";
     private static final boolean DEBUG = false;
@@ -72,8 +71,6 @@ class EventHub {
 
             }
         }
-//        result.add(new InputDevice((List<String>) sb.clone(), dev));
-//        return new ArrayList<>(devList.values());
     }
 
     void putDevice(ArrayList<String> sb) {
