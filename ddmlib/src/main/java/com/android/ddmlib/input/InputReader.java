@@ -20,21 +20,16 @@ public class InputReader {
     /**
      * 非异步
      */
-    public MonitorEvent readBySync() {
-        try {
-            PlainTextRawEvent rawEvent = eventHub.getEvent();
-            if(rawEvent==null){
-                return null;
-            }
-            EventMapper mapper = mappers.get(rawEvent.getDevFile());
-            if (mapper == null) {
-                mapper = new EventMapperImpl(knownEventList);
-                mappers.put(rawEvent.getDevFile(), mapper);
-            }
-            return mapper.processEvent(rawEvent);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public MonitorEvent readBySync() throws InterruptedException {
+        PlainTextRawEvent rawEvent = eventHub.getEvent();
+        if (rawEvent == null) {
+            return null;
         }
-        return null;
+        EventMapper mapper = mappers.get(rawEvent.getDevFile());
+        if (mapper == null) {
+            mapper = new EventMapperImpl(knownEventList);
+            mappers.put(rawEvent.getDevFile(), mapper);
+        }
+        return mapper.processEvent(rawEvent);
     }
 }

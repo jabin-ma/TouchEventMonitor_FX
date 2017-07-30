@@ -18,7 +18,7 @@ public class InputManager {
     InputDispatcherThread inputDispatcherThread;
 
     public InputManager(IDevice mAndroidDevice) {
-        Log.d("inputmanager","new ");
+        Log.d("inputmanager", "new ");
         this.mAndroidDevice = mAndroidDevice;
         eventHub = new EventHub(this);
         inputReader = new InputReader(eventHub);
@@ -61,9 +61,19 @@ public class InputManager {
     }
 
 
-    public void onShutDown(){
+    public void onShutDown() {
         eventHub.onFinish();
-        inputReaderThread.onFinish();
-        inputDispatcherThread.onFinish();
+        try {
+            inputReaderThread.interrupt();
+            inputReaderThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            inputDispatcherThread.interrupt();
+            inputDispatcherThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

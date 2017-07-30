@@ -115,7 +115,7 @@ class EventHub {
     }
 
     PlainTextRawEvent getEvent() throws InterruptedException {
-        return rawEvents.poll(200,TimeUnit.MILLISECONDS);
+        return rawEvents.take();
     }
 
     public ArrayList<InputDevice> getDevices() {

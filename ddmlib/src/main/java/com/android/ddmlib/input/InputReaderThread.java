@@ -7,9 +7,6 @@ import com.android.ddmlib.Log;
  */
 public class InputReaderThread extends Thread {
     private InputManager mContext;
-
-    private boolean run = true;
-
     private static final String TAG = "InputReaderThread";
 
     public InputReaderThread(InputManager context) {
@@ -17,17 +14,17 @@ public class InputReaderThread extends Thread {
         this.mContext = context;
     }
 
-
-    public void onFinish() {
-        run = false;
-    }
-
     @Override
     public void run() {
-        while (run) {
-            MonitorEvent monitorEvent = mContext.inputReader.readBySync();
-            if (monitorEvent != null) {
-                mContext.getInputDispatcher().dispatchEvent(monitorEvent);
+        while (!isInterrupted()) {
+            MonitorEvent monitorEvent = null;
+            try {
+                monitorEvent = mContext.inputReader.readBySync();
+                if (monitorEvent != null) {
+                    mContext.getInputDispatcher().dispatchEvent(monitorEvent);
+                }
+            } catch (InterruptedException e) {
+                break;
             }
         }
         Log.d(TAG, "finish..");

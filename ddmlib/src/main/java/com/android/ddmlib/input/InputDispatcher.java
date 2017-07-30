@@ -18,6 +18,6 @@ public class InputDispatcher {
     }
 
     MonitorEvent getWaitingForDispatchEvent() throws InterruptedException {
-        return waitingForDispatch.poll(200, TimeUnit.MILLISECONDS);
+        return waitingForDispatch.take();
     }
 }

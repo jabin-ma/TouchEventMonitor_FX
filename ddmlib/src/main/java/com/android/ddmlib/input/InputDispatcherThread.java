@@ -14,8 +14,6 @@ public class InputDispatcherThread extends Thread {
 
 
     private static final String TAG = "InputDispatcherThread";
-    private boolean run = true;
-
     public InputDispatcherThread(InputManager mContext) {
         setName("InputDispatcher-Thread");
         this.mContext = mContext;
@@ -32,14 +30,10 @@ public class InputDispatcherThread extends Thread {
     }
 
 
-    public void onFinish() {
-        run = false;
-    }
-
 
     @Override
     public void run() {
-        while (run) {
+        while (!isInterrupted()) {
             try {
                 MonitorEvent event = mContext.getInputDispatcher().getWaitingForDispatchEvent();
                 if(event==null)continue;
@@ -49,7 +43,7 @@ public class InputDispatcherThread extends Thread {
                     listener.onTouchEvent(event);
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                break;
             }
         }
         Log.d(TAG, "finish..");
