@@ -6,6 +6,9 @@ import com.android.ddmlib.controller.IRemoteController;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+/**
+ * 触摸事件
+ */
 public class TouchEvent extends AbsMonitorEvent {
     private static final String TAG = "MonitorEventItem";
     private static final boolean DEBUG = false;

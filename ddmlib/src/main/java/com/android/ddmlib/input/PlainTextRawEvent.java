@@ -1,5 +1,8 @@
 package com.android.ddmlib.input;
 
+/**
+ * as such getevent -lt
+ */
 public class PlainTextRawEvent implements IRawEvent {
 
     private When when = null;

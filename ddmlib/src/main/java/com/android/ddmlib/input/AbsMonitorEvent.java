@@ -43,9 +43,9 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
         eventDur.setValue((end.getWhen().ms - begin.getWhen().ms));
     }
 
-    public TouchEvent.Type getEventType() {
-        return TouchEvent.Type.valueOf(eventType.get());
-    }
+//    public TouchEvent.Type getEventType() {
+//        return TouchEvent.Type.valueOf(eventType.get());
+//    }
 
     @Override
     public SimpleStringProperty eventTypeProperty() {

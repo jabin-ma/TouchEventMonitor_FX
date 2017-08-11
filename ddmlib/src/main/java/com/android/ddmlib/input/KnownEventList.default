@@ -4,9 +4,13 @@ ignore EV_ABS       ABS_MT_POSITION_X    ignore     EVENT_ARG_X
 ignore EV_ABS       ABS_MT_POSITION_Y    ignore     EVENT_ARG_Y
 ignore EV_KEY       BTN_TOOL_FINGER      UP         EVENT_PUBLISH
 ignore ignore       SYN_REPORT           ignore     EVENT_SYNC
+
+
 #mtk
 ignore EV_KEY       BTN_TOUCH            DOWN       EVENT_CREATE   com.android.ddmlib.input.TouchEvent
 ignore EV_KEY       BTN_TOUCH            UP         EVENT_PUBLISH
+
+
 #power key
 ignore EV_KEY       ignore            DOWN       EVENT_CREATE   com.android.ddmlib.input.KeyEvent
 ignore EV_KEY       ignore            UP         EVENT_PUBLISH

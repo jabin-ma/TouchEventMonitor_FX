@@ -3,6 +3,9 @@ package com.android.ddmlib.input;
 import com.android.ddmlib.controller.IRemoteController;
 import com.android.ddmlib.controller.KeyCode;
 
+/**
+ * 按键事件
+ */
 public class KeyEvent extends AbsMonitorEvent {
 
     @Override

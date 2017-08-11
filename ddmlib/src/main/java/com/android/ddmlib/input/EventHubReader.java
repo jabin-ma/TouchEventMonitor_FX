@@ -19,7 +19,7 @@ public class EventHubReader implements Callable<Void> {
 
     private EventHub eventHub;
 
-    private BlockingQueue<MonitorEvent> mMappedEvent = new LinkedBlockingQueue<>(2);
+    private BlockingQueue<MonitorEvent> mMappedEvent = new LinkedBlockingQueue<>(1024);
 
 
     private static final String TAG = "EventHubReader";
@@ -31,10 +31,9 @@ public class EventHubReader implements Callable<Void> {
 
     /**
      * 同步方法,从若干RawEvent中映射一个本地事件,调用此方法将会从eventhub中读取原始数据,直到出现一次完整本地事件
-     *
      * @return null eventHub出现问题  !null 解析到一次完整事件,返回
      */
-    MonitorEvent readAndMapping() {
+    private MonitorEvent readAndMapping() {
         MonitorEvent result = null;
         while (!Thread.interrupted()) {
             PlainTextRawEvent rawEvent = eventHub.takeRawEvent(); //从eventHub中读取数据
@@ -61,14 +60,13 @@ public class EventHubReader implements Callable<Void> {
             MonitorEvent monitorEvent = readAndMapping();
             if (monitorEvent != null) {//
                 Log.d(TAG, "mapping:" + monitorEvent);
-//                inputDispatcher.dispatchEvent(monitorEvent);
                 mMappedEvent.add(monitorEvent);
             } else {
                 Log.d(TAG, "mapping null .. exit!!");
                 break;
             }
         }
-        Log.d(TAG,"run finish");
+        Log.d(TAG, "run finish");
         return null;
     }
 

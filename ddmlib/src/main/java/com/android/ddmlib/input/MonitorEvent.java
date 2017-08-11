@@ -7,6 +7,8 @@ import javafx.beans.property.SimpleStringProperty;
 
 /**
  * Created by majipeng on 2017/6/21.
+ *
+ * 解析后的事件,与Raw相对应
  */
 public interface MonitorEvent {
 
@@ -33,7 +35,7 @@ public interface MonitorEvent {
 
     SimpleStringProperty inputDeviceProperty();
 
-    TouchEvent.Type getEventType();
+//    TouchEvent.Type getEventType();
 
     long beginTime();
 

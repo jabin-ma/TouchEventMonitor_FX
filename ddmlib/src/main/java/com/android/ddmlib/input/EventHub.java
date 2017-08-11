@@ -23,7 +23,7 @@ class EventHub {
 
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
-    private BlockingQueue<PlainTextRawEvent> rawEvents = new LinkedBlockingQueue<>();
+    private BlockingQueue<PlainTextRawEvent> rawEventPool = new LinkedBlockingQueue<>();
 
     private HashMap<String, Future> futureHashMap = new HashMap<>();
 
@@ -87,7 +87,7 @@ class EventHub {
                             @Override
                             public void processNewLines(String line) {
                                 PlainTextRawEvent rawEvent = new PlainTextRawEvent(line, tempDev.getDevFile());
-                                rawEvents.add(rawEvent);
+                                rawEventPool.add(rawEvent);
                             }
                         }, -1, Command.GETEVENT_WHATCH_TEXT_EVENT, tempDev.getDevFile());
 
@@ -98,7 +98,6 @@ class EventHub {
                     Log.d(TAG, "stop :" + tempDev.getDevFile());
                     return null;
                 }
-
         );
         futureHashMap.put(tempDev.getDevFile(), submitFuture);
     }
@@ -109,7 +108,7 @@ class EventHub {
             return null;
         }
         try {
-            return rawEvents.take();
+            return rawEventPool.take();
         } catch (InterruptedException e) {
             Log.d(TAG, "takeRawEvent error  will return null");
         }
@@ -122,7 +121,7 @@ class EventHub {
 
     public void quit() {
         executorService.shutdownNow();
-        rawEvents.clear();
+        rawEventPool.clear();
         Log.d(TAG, "quit.." + executorService);
     }
 }

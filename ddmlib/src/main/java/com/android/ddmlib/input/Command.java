@@ -7,8 +7,8 @@ public enum Command {
 
 //    SENDEVENT("发送输入时间", "sendevent"),
 
-    INPUT("发送指令", "input"), INPUT_TAP("点击", "input tap"), INPUT_LTAP("长按", "intput swipe"), INPUT_SWIPE("滑动",
-            "intput swipe");
+    INPUT("发送指令", "input"), INPUT_TAP("点击", "input tap"), INPUT_LTAP("长按", "input swipe"), INPUT_SWIPE("滑动",
+            "input swipe");
 
     String cmd;
     String[] args;

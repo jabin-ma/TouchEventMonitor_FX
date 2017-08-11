@@ -50,10 +50,6 @@ public class KnownEventList {
         }
     }
 
-    public boolean need(PlainTextRawEvent e) {
-        return false;
-    }
-
     public HandleType queryHandleType(PlainTextRawEvent in) {
         for (PlainTextRawEvent def : needwhatch) {
             if (def.equals(in)) {

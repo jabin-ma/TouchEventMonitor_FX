@@ -12,10 +12,6 @@ public class When {
         ms = Long.parseLong(sms[0] + sms[1].substring(0, 3));
     }
 
-    public long math(When other) {
-        return 0;
-    }
-
     @Override
     public String toString() {
         return ms + "ms";

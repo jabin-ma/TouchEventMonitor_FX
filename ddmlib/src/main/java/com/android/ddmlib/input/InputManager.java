@@ -15,10 +15,9 @@ public class InputManager {
     private EventHub eventHub;
     //将原始事件转换为本地事件
     private EventHubReader eventHubReader;
-
     //驱动event pool
     private MappedEventDispatcher mappedEventDispatcher;
-    ExecutorService mThreads = Executors.newCachedThreadPool();
+    private ExecutorService mThreads = Executors.newCachedThreadPool();
 
     public InputManager(IDevice mAndroidDevice) {
         this.mAndroidDevice = mAndroidDevice;
