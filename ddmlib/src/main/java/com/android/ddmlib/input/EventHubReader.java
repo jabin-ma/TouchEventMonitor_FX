@@ -12,13 +12,13 @@ import java.util.concurrent.LinkedBlockingQueue;
  * 负责将从Eventhub中读到的原始数据解析封装成本地数据
  */
 public class EventHubReader implements Callable<Void> {
-
+    //每个设备的映射器(dev/input/*),有几个输入设备就会存在几个映射器
     private HashMap<String, EventMapper> mappers = new HashMap<>();
-
+    //映射规则,映射器将根据该文件描述生成对应的MonitorEvent
     private KnownEventList knownEventList = new KnownEventList();
-
+    //事件总线,所有事件都可以从这里读取到,起一个汇总的作用
     private EventHub eventHub;
-
+    //映射完后的事件将会保存在这里,需要时 调用@takeMappedEvent()方法获取映射完成的事件
     private BlockingQueue<MonitorEvent> mMappedEvent = new LinkedBlockingQueue<>(1024);
 
 
@@ -70,7 +70,11 @@ public class EventHubReader implements Callable<Void> {
         return null;
     }
 
-
+    /**
+     * 获取一个已经映射完成的事件
+     * @return 映射完成的事件,不为空
+     * @throws InterruptedException
+     */
     public MonitorEvent takeMappedEvent() throws InterruptedException {
         return mMappedEvent.take();
     }

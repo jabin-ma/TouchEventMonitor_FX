@@ -1,6 +1,8 @@
 package com.android.ddmlib.input;
 
-
+/**
+ * 原始事件的时间
+ */
 public class When {
     long ms;
 

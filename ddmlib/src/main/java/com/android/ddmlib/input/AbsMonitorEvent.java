@@ -9,6 +9,7 @@ import javafx.beans.value.ObservableValue;
 
 /**
  * Created by majipeng on 2017/6/30.
+ * 定义基本属性,抽象类
  */
 public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Boolean> {
     private int dispatchCount = 0;

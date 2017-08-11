@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 
 /**
  * Created by majipeng on 2017/6/19.
+ * 将映射完成的本地事件进行分发
  */
 public class MappedEventDispatcher implements Callable<Void> {
     private final EventHubReader eventPool;

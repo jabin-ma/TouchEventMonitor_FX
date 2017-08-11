@@ -2,6 +2,9 @@ package com.android.ddmlib.input;
 
 import java.util.List;
 
+/**
+ * dev/input/*
+ */
 public class InputDevice {
 
     public static final boolean EVENT_RAW_MODE = true;

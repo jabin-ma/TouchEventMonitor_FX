@@ -5,6 +5,7 @@ import com.android.ddmlib.utils.d
 
 /**
  * Created by majipeng on 2017/6/22.
+ * 实现映射器接口,按照给定的映射规则生成本地事件
  */
 class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper {
 

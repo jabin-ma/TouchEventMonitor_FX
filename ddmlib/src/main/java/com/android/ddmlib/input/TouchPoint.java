@@ -1,5 +1,8 @@
 package com.android.ddmlib.input;
 
+/**
+ * 触摸点
+ */
 public class TouchPoint {
 
     private int x = Integer.MIN_VALUE, y = Integer.MIN_VALUE;

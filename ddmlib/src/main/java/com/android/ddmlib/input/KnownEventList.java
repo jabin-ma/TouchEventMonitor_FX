@@ -4,6 +4,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 映射规则
+ */
 public class KnownEventList {
 
     public List<PlainTextRawEvent> needwhatch = new ArrayList<PlainTextRawEvent>();
