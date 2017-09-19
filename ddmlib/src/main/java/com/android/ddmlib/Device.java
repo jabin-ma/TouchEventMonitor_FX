@@ -24,7 +24,6 @@ import com.android.ddmlib.controller.IRemoteController;
 import com.android.ddmlib.controller.Type;
 import com.android.ddmlib.input.Command;
 import com.android.ddmlib.input.InputManager;
-import com.android.ddmlib.log.LogReceiver;
 import com.android.ddmlib.monkey.MonkeyTransport;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
@@ -642,17 +641,7 @@ final class Device implements IDevice {
         executeShellCommand(receiver, maxTimeToOutputResponse, maxTimeUnits, command.getCmd(), command.getArgs(args));
     }
 
-    @Override
-    public void runEventLogService(LogReceiver receiver)
-            throws TimeoutException, AdbCommandRejectedException, IOException {
-        AdbHelper.runEventLogService(AndroidDebugBridge.getSocketAddress(), this, receiver);
-    }
 
-    @Override
-    public void runLogService(String logname, LogReceiver receiver)
-            throws TimeoutException, AdbCommandRejectedException, IOException {
-        AdbHelper.runLogService(AndroidDebugBridge.getSocketAddress(), this, logname, receiver);
-    }
 
     @Override
     public void createForward(int localPort, int remotePort)
