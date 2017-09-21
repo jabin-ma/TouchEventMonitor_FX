@@ -1,8 +1,8 @@
 package com.android.ddmlib.monkey
 
-import com.android.ddmlib.AdbHelper
-import com.android.ddmlib.IDevice
-import com.android.ddmlib.ShellCommandUnresponsiveException
+import com.android.ddmlib.adb.AdbHelper
+import com.android.ddmlib.adb.IDevice
+import com.android.ddmlib.adb.ShellCommandUnresponsiveException
 import com.android.ddmlib.controller.KeyCode
 import com.android.ddmlib.controller.SimpleRemoteController
 import com.android.ddmlib.utils.d

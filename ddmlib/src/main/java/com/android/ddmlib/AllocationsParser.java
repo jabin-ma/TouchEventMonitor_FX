@@ -16,6 +16,7 @@
 package com.android.ddmlib;
 
 import com.android.annotations.NonNull;
+import com.android.ddmlib.utils.ByteBufferUtil;
 
 import java.nio.ByteBuffer;
 

@@ -1,6 +1,6 @@
 package com.android.ddmlib.input;
 
-import com.android.ddmlib.IDevice;
+import com.android.ddmlib.adb.IDevice;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;

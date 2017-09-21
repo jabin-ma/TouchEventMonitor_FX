@@ -1,7 +1,10 @@
 package com.android.ddmlib.input;
 
-import com.android.ddmlib.*;
-import com.android.ddmlib.TimeoutException;
+import com.android.ddmlib.adb.ShellCommandUnresponsiveException;
+import com.android.ddmlib.adb.TimeoutException;
+import com.android.ddmlib.adb.AdbCommandRejectedException;
+import com.android.ddmlib.adb.SingleLineReceiver;
+import com.android.ddmlib.utils.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;

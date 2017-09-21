@@ -1,7 +1,7 @@
 //package com.android.ddmlib.monkey;
 //
 //import com.android.ddmlib.*;
-//import com.android.ddmlib.TimeoutException;
+//import com.android.ddmlib.adb.TimeoutException;
 //
 //import java.io.IOException;
 //import java.net.InetSocketAddress;

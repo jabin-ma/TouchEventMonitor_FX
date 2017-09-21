@@ -1,6 +1,6 @@
 package com.android.ddmlib.input;
 
-import com.android.ddmlib.Log;
+import com.android.ddmlib.utils.Log;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;

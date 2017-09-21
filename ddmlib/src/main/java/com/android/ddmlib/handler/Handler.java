@@ -16,7 +16,7 @@
 
 package com.android.ddmlib.handler;
 
-import com.android.ddmlib.Log;
+import com.android.ddmlib.utils.Log;
 
 import java.lang.reflect.Modifier;
 

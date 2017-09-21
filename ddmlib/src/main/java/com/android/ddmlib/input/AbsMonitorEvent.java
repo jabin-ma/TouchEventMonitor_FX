@@ -1,6 +1,6 @@
 package com.android.ddmlib.input;
 
-import com.android.ddmlib.Log;
+import com.android.ddmlib.utils.Log;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
