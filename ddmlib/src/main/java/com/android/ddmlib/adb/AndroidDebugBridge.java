@@ -141,7 +141,6 @@ public final class AndroidDebugBridge {
          * @param changeMask the mask describing what changed. It can contain any of
          *                   the following values: {@link IDevice#CHANGE_BUILD_INFO},
          *                   {@link IDevice#CHANGE_STATE},
-         *                   {@link IDevice#CHANGE_CLIENT_LIST}
          */
         void deviceChanged(IDevice device, int changeMask);
     }

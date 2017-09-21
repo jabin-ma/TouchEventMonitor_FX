@@ -468,8 +468,6 @@ public final class FileListingService {
         /**
          * Create an ls receiver/parser.
          *
-         * @param currentChildren The list of current children. To prevent
-         *                        collapse during update, reusing the same FileEntry objects for
          *                        files that were already there is paramount.
          * @param entryList       the list of new children to be filled by the
          *                        receiver.

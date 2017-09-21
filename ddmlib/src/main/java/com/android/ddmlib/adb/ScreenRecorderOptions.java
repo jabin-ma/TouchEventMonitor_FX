@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.ddmlib;
+package com.android.ddmlib.adb;
 
 import java.util.concurrent.TimeUnit;
 
