@@ -548,7 +548,7 @@ final class Device implements IDevice {
     public void startScreenRecorder(String remoteFilePath, ScreenRecorderOptions options,
                                     IShellOutputReceiver receiver) throws TimeoutException, AdbCommandRejectedException,
             IOException, ShellCommandUnresponsiveException {
-        executeShellCommand(receiver, 0, null, getScreenRecorderCommand(remoteFilePath, options), null);
+        executeShellCommand(receiver, 0, null, getScreenRecorderCommand(remoteFilePath, options), new String[]{});
     }
 
     @VisibleForTesting(visibility = VisibleForTesting.Visibility.PRIVATE)
@@ -1122,7 +1122,6 @@ final class Device implements IDevice {
         }
     }
 
-    @NonNull
     @Override
     public Future<Integer> getBattery() {
         return getBattery(5, TimeUnit.MINUTES);
