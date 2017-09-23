@@ -22,91 +22,36 @@ class EventHub {
 
     private static final int TIMEOUT_SEC = 2;
 
+    private static final int OFFER_TIMEOUT=10 ;//10s
+
     private InputManager mContext;
 
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
-    private BlockingQueue<PlainTextRawEvent> rawEventPool = new LinkedBlockingQueue<>();
+    private BlockingQueue<IRawEvent> rawEventPool = new LinkedBlockingQueue<>();
 
     private HashMap<String, Future> futureHashMap = new HashMap<>();
 
-    private HashMap<String, InputDevice> mDevices = new HashMap<>();
-
-    public EventHub(InputManager inputManager) {
+    public EventHub(InputManager inputManager,List<InputDevice> obDevices) {
         mContext = inputManager;
-        scanDevice(true);
-    }
-
-    void scanDevice(boolean force) {
-        if (force || mDevices.isEmpty()) {
-            try {
-                mContext.getAndroidDevice().executeShellCommand(new SingleLineReceiver() {
-                    ArrayList<String> sb = new ArrayList<>();
-
-                    @Override
-                    public void processNewLines(String line) {
-                        if (DEBUG) Log.d(getClass().getName(), line);
-                        if (line.startsWith("add device")) {
-                            if (sb.size() > 0) {
-                                putDevice(sb);
-                                sb.clear();
-                            }
-                        }
-                        sb.add(line.trim());
-                    }
-
-                    @Override
-                    public void done() {
-                        putDevice(sb);
-                        sb.clear();
-                    }
-                }, TIMEOUT_SEC, TimeUnit.SECONDS, Command.GETEVENT_GETDEVICE);
-            } catch (IOException | TimeoutException | ShellCommandUnresponsiveException | AdbCommandRejectedException e) {
-                e.printStackTrace();
-            } finally {
-
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    void putDevice(ArrayList<String> sb) {
-        InputDevice tempDev = new InputDevice((List<String>) sb.clone());
-        if (!mDevices.containsKey(tempDev.getDevFile())) {
-            mDevices.put(tempDev.getDevFile(), tempDev);
-            addDevice(tempDev);
-        }
-    }
-
-    void addDevice(InputDevice tempDev) {
-        if (futureHashMap.containsKey(tempDev.getDevFile())) {
-            if (!futureHashMap.get(tempDev.getDevFile()).isDone()) {
-                return;
-            }
-        }
-        Future<Void> submitFuture = executorService.submit(() -> {
-                    try {
-                        mContext.getAndroidDevice().executeShellCommand(new SingleLineReceiver() {
-                            @Override
-                            public void processNewLines(String line) {
-                                PlainTextRawEvent rawEvent = new PlainTextRawEvent(line, tempDev.getDevFile());
-                                rawEventPool.add(rawEvent);
-                            }
-                        }, -1, Command.GETEVENT_WHATCH_TEXT_EVENT, tempDev.getDevFile());
-
-                    } catch (TimeoutException | AdbCommandRejectedException | ShellCommandUnresponsiveException
-                            | IOException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d(TAG, "stop :" + tempDev.getDevFile());
-                    return null;
+        for (InputDevice obDevice : obDevices) {
+            if (futureHashMap.containsKey(obDevice.getDevFile())) {
+                if (!futureHashMap.get(obDevice.getDevFile()).isDone()) {
+                    continue;
                 }
-        );
-        futureHashMap.put(tempDev.getDevFile(), submitFuture);
+            }
+            Future<Void> submitFuture = executorService.submit(new EventHubTask(obDevice));
+            futureHashMap.put(obDevice.getDevFile(), submitFuture);
+        }
+    }
+
+    public EventHub(InputManager inputManager){
+        this(inputManager,inputManager.getDevices());
     }
 
 
-    PlainTextRawEvent takeRawEvent() {
+
+    IRawEvent takeRawEvent() {
         if (executorService.isShutdown()) {
             return null;
         }
@@ -118,13 +63,46 @@ class EventHub {
         return null;
     }
 
-    public ArrayList<InputDevice> getDevices() {
-        return new ArrayList<>(mDevices.values());
+    private void offerRawEvent(IRawEvent rawEvent)
+    {
+        try {
+            rawEventPool.offer(rawEvent,OFFER_TIMEOUT,TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Log.e(TAG,"offerRawEvent is timeout!!");
+        }
     }
 
     public void quit() {
         executorService.shutdownNow();
         rawEventPool.clear();
         Log.d(TAG, "quit.." + executorService);
+    }
+
+    class EventHubTask implements Callable<Void>{
+        private InputDevice inputDevice;
+
+        public EventHubTask(InputDevice inputDevice) {
+            this.inputDevice = inputDevice;
+        }
+
+        @Override
+        public Void call() throws Exception {
+            try {
+                mContext.getRemoteDevice().executeShellCommand(new SingleLineReceiver() {
+                    @Override
+                    public void processNewLines(String line) {
+                        IRawEvent rawEvent = new PlainTextRawEvent(line, inputDevice.getDevFile());
+                        offerRawEvent(rawEvent);
+                    }
+                }, -1, Command.GETEVENT_WHATCH_TEXT_EVENT, inputDevice.getDevFile());
+
+            } catch (TimeoutException | AdbCommandRejectedException | ShellCommandUnresponsiveException
+                    | IOException e) {
+                e.printStackTrace();
+            }
+            Log.d(TAG, "stop :" + inputDevice.getDevFile());
+            return null;
+        }
     }
 }

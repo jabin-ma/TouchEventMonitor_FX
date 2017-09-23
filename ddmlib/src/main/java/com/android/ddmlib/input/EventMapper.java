@@ -5,5 +5,5 @@ package com.android.ddmlib.input;
  * 事件映射器,将rawevent准确映射为本地事件
  */
 public interface EventMapper {
-    MonitorEvent mappingEvent(PlainTextRawEvent rawEvent);
+    MonitorEvent mappingEvent(IRawEvent rawEvent);
 }

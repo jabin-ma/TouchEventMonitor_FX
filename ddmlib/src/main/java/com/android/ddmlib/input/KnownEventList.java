@@ -53,7 +53,7 @@ public class KnownEventList {
         }
     }
 
-    public HandleType queryHandleType(PlainTextRawEvent in) {
+    public HandleType queryHandleType(IRawEvent in) {
         for (PlainTextRawEvent def : needwhatch) {
             if (def.equals(in)) {
                 return def.getHandleType();
@@ -63,7 +63,7 @@ public class KnownEventList {
     }
 
 
-    public String queryEventClass(PlainTextRawEvent in) {
+    public String queryEventClass(IRawEvent in) {
         for (PlainTextRawEvent def : needwhatch) {
             if (def.equals(in)) {
                 return def.getEventClass();

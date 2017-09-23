@@ -15,7 +15,7 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
     /**
      * 处理rawevent，当完整记录一次事件时，将返回该完整的事件,单次驱动!
      */
-    override fun mappingEvent(rawEvent: PlainTextRawEvent): MonitorEvent? {
+    override fun mappingEvent(rawEvent: IRawEvent): MonitorEvent? {
         val handleType = knownEventList.queryHandleType(rawEvent)
         rawEvent.handleType = handleType
         rawEvent.eventClass = knownEventList.queryEventClass(rawEvent)
@@ -23,11 +23,11 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
             KnownEventList.HandleType.EVENT_CREATE -> {
                 monitorEvent = Class.forName(rawEvent.eventClass).newInstance() as MonitorEvent?;
                 if (monitorEvent == null) {
-                    if (DEBUG) d("create obj failed--${rawEvent.devFile}")
-                    return null;
+                    if (DEBUG) d("create obj failed--${rawEvent.owner}")
+                    return null
                 }
 
-                monitorEvent?.inputDeviceProperty()?.value = rawEvent.devFile
+                monitorEvent?.inputDeviceProperty()?.value = rawEvent.owner
                 monitorEvent?.onCreate(rawEvent)
             }
             KnownEventList.HandleType.EVENT_ARG_X, KnownEventList.HandleType.EVENT_ARG_Y -> {
@@ -55,6 +55,4 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
         private val TAG = "EventMapperImpl"
         private val DEBUG = false
     }
-
-
 }

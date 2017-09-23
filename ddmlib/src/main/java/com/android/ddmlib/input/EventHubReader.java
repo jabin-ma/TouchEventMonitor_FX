@@ -36,15 +36,15 @@ public class EventHubReader implements Callable<Void> {
     private MonitorEvent readAndMapping() {
         MonitorEvent result = null;
         while (!Thread.interrupted()) {
-            PlainTextRawEvent rawEvent = eventHub.takeRawEvent(); //从eventHub中读取数据
+            IRawEvent rawEvent = eventHub.takeRawEvent(); //从eventHub中读取数据
             if (rawEvent == null) {//如果是空,那么表示eventHub出现问题(如device退出)
                 Log.d(TAG, "eventhub mapping rawevent null!!");
                 break;//跳出此次事件解析 直接返回
             }
-            EventMapper mapper = mappers.get(rawEvent.getDevFile());
+            EventMapper mapper = mappers.get(rawEvent.getOwner());
             if (mapper == null) {
                 mapper = new EventMapperImpl(knownEventList);
-                mappers.put(rawEvent.getDevFile(), mapper);
+                mappers.put(rawEvent.getOwner(), mapper);
             }
             result = mapper.mappingEvent(rawEvent);
             if (result == null) continue;

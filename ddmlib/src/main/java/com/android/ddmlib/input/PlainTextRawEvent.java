@@ -45,7 +45,7 @@ public class PlainTextRawEvent implements IRawEvent {
         }
     }
 
-    public String getDevFile() {
+    public String getOwner() {
         return devFile;
     }
 

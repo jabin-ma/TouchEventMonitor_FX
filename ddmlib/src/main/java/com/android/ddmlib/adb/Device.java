@@ -49,6 +49,8 @@ import java.util.regex.Pattern;
  * A Device. It can be a physical device or an emulator.
  */
 final class Device implements IDevice {
+
+    private static final String TAG="Device";
     /**
      * Emulator Serial Number regexp.
      */
@@ -1185,7 +1187,12 @@ final class Device implements IDevice {
 
     public InputManager getInputManager() {
         if (inputManager == null) {
-            inputManager = new InputManager(this);
+            try {
+                inputManager = new InputManager(this);
+            } catch (ExecutionException|InterruptedException e) {
+                e.printStackTrace();
+                Log.e(TAG,"Create inputManager error");
+            }
         }
         return inputManager;
     }

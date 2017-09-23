@@ -5,7 +5,7 @@ package com.android.ddmlib.input;
  */
 public enum Command {
 
-    GETEVENT("设备输入设备", "getevent"), GETEVENT_GETDEVICE("获取输入设备", GETEVENT, "-p"), GETEVENT_WHATCH_TEXT_EVENT("监听输入",
+    GETEVENT("设备输入设备", "getevent"), GETEVENT_GETDEVICE("获取输入设备", GETEVENT, "-lp"), GETEVENT_WHATCH_TEXT_EVENT("监听输入",
             GETEVENT, "-lt"), GETEVENT_WHATCH_RAW_EVENT("监听输入", GETEVENT, "-t"),
 
 //    SENDEVENT("发送输入时间", "sendevent"),
