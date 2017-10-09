@@ -11,7 +11,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
@@ -29,8 +31,7 @@ public class MonitorController implements Initializable, AndroidDebugBridge.IDev
     @FXML
     TableView<MonitorEvent> tableview_events;
     @FXML
-    Pane root;
-
+    SplitPane root;
 
     private IDevice curDev;
 
