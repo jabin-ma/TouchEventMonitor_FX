@@ -2,6 +2,8 @@ package com.android.ddmlib.controller
 
 /**
  * Created by majipeng on 2017/7/2.
+ *
+ * 远程控制接口,所有远程控制实体均实现该接口
  */
 interface IRemoteController {
     fun create()

@@ -7,7 +7,6 @@ import com.android.ddmlib.adb.SingleLineReceiver;
 import com.android.ddmlib.utils.Log;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.*;
@@ -40,7 +39,7 @@ class EventHub {
                     continue;
                 }
             }
-            Future<Void> submitFuture = executorService.submit(new EventHubTask(obDevice));
+            Future<Void> submitFuture = executorService.submit(new InputDeviceObserver(obDevice));
             futureHashMap.put(obDevice.getDevFile(), submitFuture);
         }
     }
@@ -50,7 +49,10 @@ class EventHub {
     }
 
 
-
+    /**
+     * 获取一个原始事件进行消费,若当前没有可以消费的事件,那么该函数将会block
+     * @return 返回null表示出错,否则将会返回待消费的事件
+     */
     IRawEvent takeRawEvent() {
         if (executorService.isShutdown()) {
             return null;
@@ -63,6 +65,7 @@ class EventHub {
         return null;
     }
 
+
     private void offerRawEvent(IRawEvent rawEvent)
     {
         try {
@@ -73,16 +76,22 @@ class EventHub {
         }
     }
 
+    /**
+     * 关闭eventhub,通常在设备断线时调用
+     */
     public void quit() {
         executorService.shutdownNow();
         rawEventPool.clear();
         Log.d(TAG, "quit.." + executorService);
     }
 
-    class EventHubTask implements Callable<Void>{
+    /**
+     * 读取底层事件
+     */
+    class InputDeviceObserver implements Callable<Void>{
         private InputDevice inputDevice;
 
-        public EventHubTask(InputDevice inputDevice) {
+        public InputDeviceObserver(InputDevice inputDevice) {
             this.inputDevice = inputDevice;
         }
 
