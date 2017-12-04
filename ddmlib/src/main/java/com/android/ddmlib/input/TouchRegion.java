@@ -14,7 +14,7 @@ public class TouchRegion {
         max_x = Math.max(tp.getX(), max_x);
         max_y = Math.max(tp.getY(), max_y);
         min_x = Math.min(tp.getX(), min_x);
-        min_y = Math.min(tp.getY(), max_y);
+        min_y = Math.min(tp.getY(), min_y);
     }
 
     public int offsetX() {
