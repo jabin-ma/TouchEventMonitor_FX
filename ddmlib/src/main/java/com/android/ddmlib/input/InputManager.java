@@ -49,7 +49,7 @@ public class InputManager {
     /**
      * 初始化manager
      */
-    public void init(EventHub eventHub){
+    void init(EventHub eventHub){
         this.eventHub = eventHub;
         eventHubReader = new EventHubReader(this.eventHub);
         mappedEventDispatcher = new MappedEventDispatcher(eventHubReader);
@@ -58,25 +58,43 @@ public class InputManager {
     }
 
 
-
+    /**
+     * 远程设备,即手机
+     * @return
+     */
     public IDevice getRemoteDevice() {
         return mRemoteDevice;
     }
 
+    /**
+     * 获取所有输入设备
+     * @return 设备集合
+     */
     public ArrayList<InputDevice> getDevices() {
         return new ArrayList<>(mDevices.values());
     }
 
-
+    /**
+     * 设置监听器，当事件被解析完成时，会调用该监听器
+     * @param listener
+     * @return 添加是否成功
+     */
     public boolean addOnTouchEventListener(OnTouchEventListener listener) {
         return mappedEventDispatcher.addOnTouchEventListener(listener);
     }
 
-
+    /**
+     * 解除注册
+     * @param listener
+     * @return 解除是否成功
+     */
     public boolean unregisterTouchEventListener(OnTouchEventListener listener) {
         return mappedEventDispatcher.unregisterTouchEventListener(listener);
     }
 
+    /**
+     * 不建议手动调用
+     */
     public void onShutDown() {
         eventHub.quit();
         mThreads.shutdownNow();
@@ -87,6 +105,9 @@ public class InputManager {
         mappedEventDispatcher=null;
     }
 
+    /**
+     * 扫描输入设备
+     */
     class ScanDeviceTask implements Callable<List<InputDevice>> {
         @Override
         public List<InputDevice>  call() throws Exception {

@@ -12,13 +12,13 @@ public interface IRawEvent {
 
      /**
       * event时间
-      * @return
+      * @return 事件发生时间
       */
      When getWhen();
 
      /**
       * 事件类型
-      * @return
+      * @return 事件类型
       */
      String getType();
 

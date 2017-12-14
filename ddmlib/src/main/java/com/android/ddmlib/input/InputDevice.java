@@ -8,9 +8,13 @@ import java.util.List;
  * dev/input/*
  */
 public class InputDevice {
-
-    public static final boolean EVENT_RAW_MODE = true;
-
+    /**
+     * 标识该设备是否以rawmode运行，默认为false
+     */
+    public static final boolean EVENT_RAW_MODE = false;
+    /**
+     * 设备文件，设备名
+     */
     private String devFile, name;
 
     private static final String TAG="InputDevice";

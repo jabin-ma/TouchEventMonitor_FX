@@ -22,13 +22,21 @@ class EventHub {
     private static final int TIMEOUT_SEC = 2;
 
     private static final int OFFER_TIMEOUT=10 ;//10s
-
+    /**
+     *
+     */
     private InputManager mContext;
-
+    /**
+     * 线程池，用于统一驱动管理Observer
+     */
     private ExecutorService executorService = Executors.newCachedThreadPool();
-
+    /**
+     * 原始事件的队列
+     */
     private BlockingQueue<IRawEvent> rawEventPool = new LinkedBlockingQueue<>();
-
+    /**
+     * 每个设备任务的句柄
+     */
     private HashMap<String, Future> futureHashMap = new HashMap<>();
 
     public EventHub(InputManager inputManager,List<InputDevice> obDevices) {

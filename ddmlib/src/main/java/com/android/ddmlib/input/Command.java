@@ -9,7 +9,7 @@ public enum Command {
             GETEVENT, "-lt"), GETEVENT_WHATCH_RAW_EVENT("监听输入", GETEVENT, "-t"),
 
 //    SENDEVENT("发送输入时间", "sendevent"),
-
+    //已经失效，不稳定，已弃用
     INPUT("发送指令", "input"), INPUT_TAP("点击", "input tap"), INPUT_LTAP("长按", "input swipe"), INPUT_SWIPE("滑动",
             "input swipe");
 

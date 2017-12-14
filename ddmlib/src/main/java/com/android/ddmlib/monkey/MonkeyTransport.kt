@@ -14,6 +14,9 @@ import java.nio.channels.Selector
 import java.nio.channels.SocketChannel
 import java.util.concurrent.*
 
+/**
+ * monkey通道,v0.1,待进一步优化调用机制
+ */
 class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : SimpleRemoteController() {
     override fun quit() {
         connect!!.writeSync("quit")

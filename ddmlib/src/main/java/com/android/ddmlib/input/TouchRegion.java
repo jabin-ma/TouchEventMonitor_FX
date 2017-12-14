@@ -2,7 +2,7 @@ package com.android.ddmlib.input;
 
 /**
  * Created by majipeng on 2017/7/4.
- * 点击事件活动区域,用来判断当前事件移动的距离
+ * 点击事件活动区域,用来简单判断当前事件移动的距离
  */
 public class TouchRegion {
     private int max_x = Integer.MIN_VALUE, max_y = Integer.MIN_VALUE;
