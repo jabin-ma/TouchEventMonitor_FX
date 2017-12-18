@@ -18,11 +18,11 @@ package com.android.ddmlib.adb;
 
 import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
-import com.android.ddmlib.utils.Log;
 import com.android.ddmlib.adb.AdbHelper.AdbResponse;
 import com.android.ddmlib.adb.FileListingService.FileEntry;
 import com.android.ddmlib.adb.SyncException.SyncError;
 import com.android.ddmlib.utils.ArrayHelper;
+import com.android.ddmlib.utils.Log;
 
 import java.io.*;
 import java.net.InetSocketAddress;

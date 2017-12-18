@@ -1,7 +1,7 @@
 package com.android.ddmlib.input;
 
-import com.android.ddmlib.utils.Log;
 import com.android.ddmlib.controller.IRemoteController;
+import com.android.ddmlib.utils.Log;
 
 import java.util.LinkedList;
 import java.util.ListIterator;

@@ -17,7 +17,6 @@
 package com.android.ddmlib.adb;
 
 import com.android.annotations.NonNull;
-import com.android.ddmlib.input.Command;
 
 import java.io.IOException;
 import java.util.concurrent.Future;
@@ -66,10 +65,10 @@ public interface IShellEnabledDevice {
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException;
 
-    void executeShellCommand(IShellOutputReceiver receiver,
-                             long maxTimeToOutputResponse, TimeUnit maxTimeUnits, Command command, String... args)
-            throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
-            IOException;
+//    void executeShellCommand(IShellOutputReceiver receiver,
+//                             long maxTimeToOutputResponse, TimeUnit maxTimeUnits, Command command, String... args)
+//            throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
+//            IOException;
 
     /**
      * Do a potential asynchronous query for a system property.

@@ -16,8 +16,6 @@
 package com.android.ddmlib.adb;
 
 import com.android.annotations.NonNull;
-import com.android.ddmlib.adb.IDevice;
-import com.android.ddmlib.adb.MultiLineReceiver;
 import com.android.ddmlib.utils.Log;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;

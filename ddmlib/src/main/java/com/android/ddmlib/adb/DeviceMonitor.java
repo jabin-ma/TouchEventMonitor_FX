@@ -23,22 +23,18 @@ import com.android.ddmlib.adb.AdbHelper.AdbResponse;
 import com.android.ddmlib.adb.DeviceMonitor.DeviceListMonitorTask.State;
 import com.android.ddmlib.adb.IDevice.DeviceState;
 import com.android.ddmlib.utils.Log;
-import com.android.utils.Pair;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.Uninterruptibles;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousCloseException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-import java.util.*;
-import java.util.concurrent.BlockingQueue;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**

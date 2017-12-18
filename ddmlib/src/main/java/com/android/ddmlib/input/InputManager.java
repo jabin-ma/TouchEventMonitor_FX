@@ -1,15 +1,10 @@
 package com.android.ddmlib.input;
 
-import com.android.ddmlib.adb.*;
-import com.android.ddmlib.adb.TimeoutException;
-import com.android.ddmlib.utils.Log;
+import com.android.ddmlib.adb.IDevice;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListResourceBundle;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by majipeng on 2017/6/19.

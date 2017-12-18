@@ -19,11 +19,8 @@ package com.android.ddmlib.adb;
 import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
 import com.android.annotations.VisibleForTesting;
-import com.android.annotations.concurrency.GuardedBy;
-import com.android.ddmlib.*;
 import com.android.ddmlib.controller.IRemoteController;
 import com.android.ddmlib.controller.Type;
-import com.android.ddmlib.input.Command;
 import com.android.ddmlib.input.InputManager;
 import com.android.ddmlib.monkey.MonkeyTransport;
 import com.android.ddmlib.utils.Log;
@@ -37,9 +34,11 @@ import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.Atomics;
 
 import java.io.*;
-import java.nio.channels.SocketChannel;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -598,11 +597,6 @@ final class Device implements IDevice {
                 receiver, DdmPreferences.getTimeOut(), command, args);
     }
 
-    @Override
-    public void executeShellCommand(IShellOutputReceiver receiver, Command command, String... args) throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException, IOException {
-        executeShellCommand(receiver, command.getCmd(), command.getArgs(args));
-    }
-
 
     @Override
     public void executeShellCommand(IShellOutputReceiver receiver,
@@ -614,11 +608,6 @@ final class Device implements IDevice {
     }
 
     @Override
-    public void executeShellCommand(IShellOutputReceiver receiver, int maxTimeToOutputResponse, Command command, String... args) throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException, IOException {
-        executeShellCommand(receiver, maxTimeToOutputResponse, command.getCmd(), command.getArgs(args));
-    }
-
-    @Override
     public void executeShellCommand(IShellOutputReceiver receiver,
                                     long maxTimeToOutputResponse, TimeUnit maxTimeUnits, String command, String... args)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
@@ -626,12 +615,6 @@ final class Device implements IDevice {
         AdbHelper.executeRemoteCommand(AndroidDebugBridge.getSocketAddress(), this,
                 receiver, maxTimeToOutputResponse, maxTimeUnits, command, args);
     }
-
-    @Override
-    public void executeShellCommand(IShellOutputReceiver receiver, long maxTimeToOutputResponse, TimeUnit maxTimeUnits, Command command, String... args) throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException, IOException {
-        executeShellCommand(receiver, maxTimeToOutputResponse, maxTimeUnits, command.getCmd(), command.getArgs(args));
-    }
-
 
 
     @Override

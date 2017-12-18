@@ -16,8 +16,6 @@
 
 package com.android.ddmlib.adb;
 
-import com.android.ddmlib.adb.MultiLineReceiver;
-
 /**
  * Classes which implement this interface provide methods that deal with out from a remote shell
  * command on a device/emulator.

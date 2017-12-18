@@ -17,7 +17,6 @@
 package com.android.ddmlib.adb;
 
 import com.android.annotations.NonNull;
-import com.android.ddmlib.*;
 import com.android.ddmlib.utils.Log;
 import com.android.ddmlib.utils.Log.LogLevel;
 import com.google.common.base.Joiner;
@@ -29,7 +28,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.Thread.State;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;

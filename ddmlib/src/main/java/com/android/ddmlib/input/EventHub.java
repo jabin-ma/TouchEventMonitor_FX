@@ -1,14 +1,10 @@
 package com.android.ddmlib.input;
 
-import com.android.ddmlib.adb.ShellCommandUnresponsiveException;
+import com.android.ddmlib.adb.*;
 import com.android.ddmlib.adb.TimeoutException;
-import com.android.ddmlib.adb.AdbCommandRejectedException;
-import com.android.ddmlib.adb.SingleLineReceiver;
 import com.android.ddmlib.utils.Log;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.*;
 
 /**
@@ -18,7 +14,7 @@ class EventHub {
 
     private static final String TAG = "EventHub";
     private static final boolean DEBUG = false;
-    private static final int OFFER_TIMEOUT=10 ;//10s
+    private static final int OFFER_TIMEOUT = 10;//10s
     /**
      *
      */
@@ -39,7 +35,8 @@ class EventHub {
 
     /**
      * 获取一个原始事件进行消费,若当前没有可以消费的事件,那么该函数将会block
-     * @return 返回null表示出错,否则将会返回待消费的事件
+     *
+     * @return 返回null表示出错, 否则将会返回待消费的事件
      */
     IRawEvent takeRawEvent() {
         if (executorService.isShutdown()) {
@@ -54,13 +51,12 @@ class EventHub {
     }
 
 
-    private void offerRawEvent(IRawEvent rawEvent)
-    {
+    private void offerRawEvent(IRawEvent rawEvent) {
         try {
-            rawEventPool.offer(rawEvent,OFFER_TIMEOUT,TimeUnit.SECONDS);
+            rawEventPool.offer(rawEvent, OFFER_TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            Log.e(TAG,"offerRawEvent is timeout!!");
+            Log.e(TAG, "offerRawEvent is timeout!!");
         }
     }
 
@@ -76,7 +72,7 @@ class EventHub {
     /**
      * 读取底层事件
      */
-    class InputDeviceObserver implements Callable<Void>{
+    class InputDeviceObserver implements Callable<Void> {
         private InputDevice inputDevice;
 
         public InputDeviceObserver(InputDevice inputDevice) {
@@ -84,15 +80,17 @@ class EventHub {
         }
 
         @Override
-        public Void call(){
+        public Void call() {
             try {
+                EventCommand command = new EventCommand();
+                command.addFlags(EventCommand.FLAG_SHOW_LABEL | EventCommand.FLAG_QUIET | EventCommand.FLAG_SHOW_TIMESTAMP);
                 mContext.getRemoteDevice().executeShellCommand(new SingleLineReceiver() {
                     @Override
                     public void processNewLines(String line) {
-                        IRawEvent rawEvent = new PlainTextRawEvent(line,null);
+                        IRawEvent rawEvent = new PlainTextRawEvent(line, null);
                         offerRawEvent(rawEvent);
                     }
-                }, -1, Command.GETEVENT_WHATCH_TEXT_EVENT,inputDevice==null? "" : inputDevice.getDevFile());
+                }, IDevice.NO_TIMEOUT,command.toString(), inputDevice == null ? "" : inputDevice.getDevFile());
 
             } catch (TimeoutException | AdbCommandRejectedException | ShellCommandUnresponsiveException
                     | IOException e) {

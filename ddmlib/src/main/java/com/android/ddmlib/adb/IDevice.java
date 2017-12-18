@@ -18,10 +18,8 @@ package com.android.ddmlib.adb;
 
 import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
-import com.android.ddmlib.*;
 import com.android.ddmlib.controller.IRemoteController;
 import com.android.ddmlib.controller.Type;
-import com.android.ddmlib.input.Command;
 import com.android.ddmlib.input.InputManager;
 
 import java.io.IOException;
@@ -53,6 +51,7 @@ public interface IDevice extends IShellEnabledDevice {
 
     String PROP_DEBUGGABLE = "ro.debuggable";
 
+    int NO_TIMEOUT=-1;
     /**
      * Serial number of the first connected emulator.
      */
@@ -331,17 +330,9 @@ public interface IDevice extends IShellEnabledDevice {
             TimeoutException, AdbCommandRejectedException, IOException,
             ShellCommandUnresponsiveException;
 
-    /**
-     * @deprecated Use {@link #executeShellCommand(IShellOutputReceiver, long, java.util.concurrent.TimeUnit, String, String...)}.
-     */
-    @Deprecated
-    void executeShellCommand(IShellOutputReceiver receiver,
-                             int maxTimeToOutputResponse, String command, String... args)
-            throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
-            IOException;
 
     void executeShellCommand(IShellOutputReceiver receiver,
-                             int maxTimeToOutputResponse, Command command, String... args)
+                             int maxTimeToOutputResponse, String command, String... args)
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException;
 
@@ -365,9 +356,9 @@ public interface IDevice extends IShellEnabledDevice {
             throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
             IOException;
 
-    void executeShellCommand(IShellOutputReceiver receiver, Command command, String... args)
-            throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
-            IOException;
+//    void executeShellCommand(IShellOutputReceiver receiver, Command command, String... args)
+//            throws TimeoutException, AdbCommandRejectedException, ShellCommandUnresponsiveException,
+//            IOException;
 
     /**
      * Creates a port forwarding between a local and a remote port.
