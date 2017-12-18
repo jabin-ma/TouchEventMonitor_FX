@@ -13,11 +13,11 @@ public class PlainTextRawEvent implements IRawEvent {
 
 
     public PlainTextRawEvent(String str, String devFile) {
-        String[] args = str.replaceAll("[\\[\\]]", "").replaceAll(" +", " ").trim().split(" ");
+        setDevFile(devFile);
+        String[] args = str.replaceAll("[\\[\\]]", "").replace(":"," ").replaceAll(" +", " ").trim().split(" ");
         for (int i = 0; i < args.length; i++) {
             set(i, args[i]);
         }
-        setDevFile(devFile);
     }
 
     public void set(int index, String value) {
@@ -26,19 +26,22 @@ public class PlainTextRawEvent implements IRawEvent {
                 setWhen(new When(value));
                 break;
             case 1:
-                setType(value);
+                setDevFile(value);
                 break;
             case 2:
-                setCode(value);
+                setType(value);
                 break;
             case 3:
+                setCode(value);
+                break;
+            case 4:
                 this.value = value;
                 setValue(this.value);
                 break;
-            case 4:
+            case 5:
                 setHandleType(KnownEventList.HandleType.valueOf(value));
                 break;
-            case 5:
+            case 6:
                 setEventClass(value);
             default:
                 break;

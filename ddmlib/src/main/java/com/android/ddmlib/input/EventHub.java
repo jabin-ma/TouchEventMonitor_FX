@@ -18,9 +18,6 @@ class EventHub {
 
     private static final String TAG = "EventHub";
     private static final boolean DEBUG = false;
-
-    private static final int TIMEOUT_SEC = 2;
-
     private static final int OFFER_TIMEOUT=10 ;//10s
     /**
      *
@@ -34,28 +31,11 @@ class EventHub {
      * 原始事件的队列
      */
     private BlockingQueue<IRawEvent> rawEventPool = new LinkedBlockingQueue<>();
-    /**
-     * 每个设备任务的句柄
-     */
-    private HashMap<String, Future> futureHashMap = new HashMap<>();
 
-    public EventHub(InputManager inputManager,List<InputDevice> obDevices) {
+    public EventHub(InputManager inputManager) {
         mContext = inputManager;
-        for (InputDevice obDevice : obDevices) {
-            if (futureHashMap.containsKey(obDevice.getDevFile())) {
-                if (!futureHashMap.get(obDevice.getDevFile()).isDone()) {
-                    continue;
-                }
-            }
-            Future<Void> submitFuture = executorService.submit(new InputDeviceObserver(obDevice));
-            futureHashMap.put(obDevice.getDevFile(), submitFuture);
-        }
+        executorService.submit(new InputDeviceObserver(null));
     }
-
-    public EventHub(InputManager inputManager){
-        this(inputManager,inputManager.getDevices());
-    }
-
 
     /**
      * 获取一个原始事件进行消费,若当前没有可以消费的事件,那么该函数将会block
@@ -104,15 +84,15 @@ class EventHub {
         }
 
         @Override
-        public Void call() throws Exception {
+        public Void call(){
             try {
                 mContext.getRemoteDevice().executeShellCommand(new SingleLineReceiver() {
                     @Override
                     public void processNewLines(String line) {
-                        IRawEvent rawEvent = new PlainTextRawEvent(line, inputDevice.getDevFile());
+                        IRawEvent rawEvent = new PlainTextRawEvent(line,null);
                         offerRawEvent(rawEvent);
                     }
-                }, -1, Command.GETEVENT_WHATCH_TEXT_EVENT, inputDevice.getDevFile());
+                }, -1, Command.GETEVENT_WHATCH_TEXT_EVENT,inputDevice==null? "" : inputDevice.getDevFile());
 
             } catch (TimeoutException | AdbCommandRejectedException | ShellCommandUnresponsiveException
                     | IOException e) {

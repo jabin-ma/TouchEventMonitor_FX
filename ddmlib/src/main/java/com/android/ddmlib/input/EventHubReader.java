@@ -53,7 +53,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
     @Override
-    public Void call() throws Exception {
+    public Void call() {
         while (!Thread.interrupted()) {
             MonitorEvent monitorEvent = readAndMapping();
             if (monitorEvent != null) {//
