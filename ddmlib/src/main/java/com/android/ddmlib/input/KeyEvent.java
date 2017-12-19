@@ -23,7 +23,7 @@ public class KeyEvent extends AbsMonitorEvent {
     @Override
     public void onPublish(IRawEvent rawEvent) {
         super.onPublish(rawEvent);
-        closedProperty().setValue(true);
+        publishProperty().setValue(true);
     }
 
     @Override

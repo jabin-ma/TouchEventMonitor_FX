@@ -17,16 +17,17 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
     private final SimpleStringProperty eventDesc = new SimpleStringProperty();
     private final SimpleLongProperty eventDur = new SimpleLongProperty();
     private final SimpleStringProperty inputDevice = new SimpleStringProperty();
-    private final SimpleBooleanProperty closed = new SimpleBooleanProperty();
+    private final SimpleStringProperty status = new SimpleStringProperty();
+    private final SimpleBooleanProperty publish = new SimpleBooleanProperty();
     private IRawEvent begin, end;
 
-    
-    private static final String TAG="AbsMonitorEvent";
-    
+
+    private static final String TAG = "AbsMonitorEvent";
+
     @Override
     public void onCreate(IRawEvent rawEvent) {
         begin = rawEvent;
-        closed.addListener(this);
+        publish.addListener(this);
         Log.d(TAG, "create:" + begin.getWhen().ms);
     }
 
@@ -38,9 +39,9 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
 
     @Override
     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-        //closed
-        Log.d(TAG, "close change:" + (end.getWhen().ms - begin.getWhen().ms));
-        closed.removeListener(this);
+        //publish
+        Log.d(TAG, "Publish:" + (end.getWhen().ms - begin.getWhen().ms));
+        publish.removeListener(this);
         eventDur.setValue((end.getWhen().ms - begin.getWhen().ms));
     }
 
@@ -63,14 +64,17 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
         return eventDur;
     }
 
-    public SimpleBooleanProperty closedProperty() {
-        return closed;
+    public SimpleBooleanProperty publishProperty() {
+        return publish;
     }
 
     @Override
     public SimpleStringProperty inputDeviceProperty() {
         return inputDevice;
     }
+
+    @Override
+    public SimpleStringProperty statusProperty() {return status; }
 
     @Override
     public void setDispatched() {

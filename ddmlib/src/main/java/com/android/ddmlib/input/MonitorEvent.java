@@ -37,6 +37,7 @@ public interface MonitorEvent {
 
     /**
      * 是否被分发过
+     * @TODO 该接口需要移除！！
      */
     void setDispatched();
 
@@ -47,7 +48,7 @@ public interface MonitorEvent {
     int dispatchCount();
 
 
-    SimpleBooleanProperty closedProperty();
+    SimpleBooleanProperty publishProperty();
 
     SimpleStringProperty eventTypeProperty();
 
@@ -56,7 +57,8 @@ public interface MonitorEvent {
     SimpleLongProperty eventDurProperty();
 
     SimpleStringProperty inputDeviceProperty();
-
+    
+    SimpleStringProperty statusProperty();
 //    TouchEvent.Type getEventType();
 
     long beginTime();

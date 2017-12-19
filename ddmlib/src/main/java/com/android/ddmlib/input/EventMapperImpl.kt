@@ -35,8 +35,8 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
             }
             KnownEventList.HandleType.EVENT_SYNC -> {
                 monitorEvent?.onSync(rawEvent)
-                if (monitorEvent != null && monitorEvent!!.closedProperty().value && monitorEvent!!.dispatchCount() == 0) {
-                    return monitorEvent;
+                if (monitorEvent != null && monitorEvent!!.publishProperty().value && monitorEvent!!.dispatchCount() == 0) {
+                    return monitorEvent
                 }
             }
             KnownEventList.HandleType.EVENT_PUBLISH -> {

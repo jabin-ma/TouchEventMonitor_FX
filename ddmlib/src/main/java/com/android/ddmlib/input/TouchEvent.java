@@ -8,6 +8,8 @@ import java.util.ListIterator;
 
 /**
  * 触摸事件
+ *
+ *  @TODO close机制存在问题，需要修复
  */
 public class TouchEvent extends AbsMonitorEvent {
     private static final String TAG = "MonitorEventItem";
@@ -37,6 +39,7 @@ public class TouchEvent extends AbsMonitorEvent {
                 if (!touchPoint.isClose() && !mTouchEventPath.isEmpty()) {
                     touchPoint.close(mTouchEventPath.getLast());
                 }
+                if(!touchPoint.isClose())Log.w(TAG,"point is not closed!!");
                 region.update(touchPoint);
                 mTouchEventPath.add(touchPoint);
                 touchPoint = null;
@@ -46,7 +49,7 @@ public class TouchEvent extends AbsMonitorEvent {
                 break;
             case STATE_PUB:
                 if (DEBUG) Log.d(TAG, "onSync-->close");
-                closedProperty().setValue(true);
+                publishProperty().setValue(true);
                 eventDescProperty().setValue(mTouchEventPath.getFirst() + "->" + mTouchEventPath.getLast());
                 analyzeEventType();
                 break;
@@ -84,6 +87,7 @@ public class TouchEvent extends AbsMonitorEvent {
         ListIterator<TouchPoint> listIterator = mTouchEventPath.listIterator(0);
         TouchPoint tp = listIterator.next();
         controller.touchDown(tp.getX(), tp.getY());
+        statusProperty().setValue(String.format("回放中...."));
         while (listIterator.hasNext()) {
             tp = listIterator.next();
             controller.touchMove(tp.getX(), tp.getY());
@@ -95,6 +99,7 @@ public class TouchEvent extends AbsMonitorEvent {
         }
         tp = listIterator.hasPrevious() ? listIterator.previous() : tp;
         controller.touchUp(tp.getX(), tp.getY());
+        statusProperty().setValue(String.format("回放完成"));
     }
 
     public void analyzeEventType() {
