@@ -22,6 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
     private BlockingQueue<MonitorEvent> mMappedEvent = new LinkedBlockingQueue<>(1024);
 
     private static final String TAG = "EventHubReader";
+    private static final boolean DEBUG=false;
 
     public EventHubReader(EventHub eventHub) {
         this.eventHub = eventHub;
@@ -57,10 +58,10 @@ import java.util.concurrent.LinkedBlockingQueue;
         while (!Thread.interrupted()) {
             MonitorEvent monitorEvent = readAndMapping();
             if (monitorEvent != null) {//
-                Log.d(TAG, "mapping:" + monitorEvent);
+                if(DEBUG)Log.d(TAG, "mapping:" + monitorEvent);
                 mMappedEvent.add(monitorEvent);
             } else {
-                Log.d(TAG, "mapping null .. exit!!");
+                Log.e(TAG, "mapping null .. exit!!");
                 break;
             }
         }

@@ -41,4 +41,8 @@ public class KeyEvent extends AbsMonitorEvent {
         }
     }
 
+    @Override
+    public boolean fixEvent(MonitorEvent monitorEvent) {
+        return true;
+    }
 }

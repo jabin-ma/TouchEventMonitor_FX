@@ -11,6 +11,7 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
 
 
     private var monitorEvent: MonitorEvent? = null
+    private var prevEvent: MonitorEvent? = null
 
     /**
      * 处理rawevent，当完整记录一次事件时，将返回该完整的事件,单次驱动!
@@ -21,12 +22,12 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
         rawEvent.eventClass = knownEventList.queryEventClass(rawEvent)
         when (handleType) {
             KnownEventList.HandleType.EVENT_CREATE -> {
-                monitorEvent = Class.forName(rawEvent.eventClass).newInstance() as MonitorEvent?;
+                prevEvent=monitorEvent
+                monitorEvent = Class.forName(rawEvent.eventClass).newInstance() as MonitorEvent?
                 if (monitorEvent == null) {
                     if (DEBUG) d("create obj failed--${rawEvent.owner}")
                     return null
                 }
-
                 monitorEvent?.inputDeviceProperty()?.value = rawEvent.owner
                 monitorEvent?.onCreate(rawEvent)
             }
@@ -36,6 +37,10 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
             KnownEventList.HandleType.EVENT_SYNC -> {
                 monitorEvent?.onSync(rawEvent)
                 if (monitorEvent != null && monitorEvent!!.publishProperty().value && monitorEvent!!.dispatchCount() == 0) {
+                    if(monitorEvent!!.hasFlags(TouchEvent.FLAG_NEED_FIX))
+                    {
+                      monitorEvent!!.fixEvent(prevEvent)
+                    }
                     return monitorEvent
                 }
             }

@@ -9,15 +9,23 @@ import java.util.ListIterator;
 /**
  * 触摸事件
  *
- *  @TODO close机制存在问题，需要修复
  */
 public class TouchEvent extends AbsMonitorEvent {
     private static final String TAG = "MonitorEventItem";
     private static final boolean DEBUG = false;
-    private int mCurState = 0;
-    private static final int STATE_CREATE = 1;
-    private static final int STATE_PUB = 2;
-    private static final int STATE_ARG = 3;
+    //等待CREATE的同步事件
+    private static final int FLAG_WAIT_SYNC_CREATE = 1;
+    //等待Publish
+    private static final int FLAG_WAIT_SYNC_PUBLISH = 1<<1;
+
+    //数据同步
+    private static final int FLAG_WAIT_SYNC_ARG = 1<<4;
+    private static final int FLAG_WAIT_SYNC_ARG_X = 1<<2;
+    private static final int FLAG_WAIT_SYNC_ARG_Y = 1<<3;
+    /**
+     * 需要基于上个Event进行修复
+     */
+    public static final int FLAG_NEED_FIX = 1<<5;
     private LinkedList<TouchPoint> mTouchEventPath = new LinkedList<TouchPoint>();
     private TouchPoint touchPoint;
     private TouchRegion region = new TouchRegion();
@@ -26,57 +34,71 @@ public class TouchEvent extends AbsMonitorEvent {
     public void onCreate(IRawEvent rawEvent) {
         super.onCreate(rawEvent);
         if (DEBUG) Log.d(TAG, "Create-->" + rawEvent);
-        mCurState = STATE_CREATE;
+        addFlags(FLAG_WAIT_SYNC_CREATE);
     }
 
     @Override
     public void onSync(IRawEvent rawEvent) {
         if (DEBUG) Log.d(TAG, "onSync-->" + rawEvent);
-        switch (mCurState) {
-            case STATE_ARG:
-                if (DEBUG) Log.d(TAG, "onSync-->setarg");
-                touchPoint.setTimestamp(rawEvent.getWhen().ms);
-                if (!touchPoint.isClose() && !mTouchEventPath.isEmpty()) {
-                    touchPoint.close(mTouchEventPath.getLast());
+        if(hasFlags(FLAG_WAIT_SYNC_ARG))
+        {
+            if (DEBUG) Log.d(TAG, "onSync-->SetArg");
+            touchPoint.setTimestamp(rawEvent.getWhen().ms);
+            if(!hasFlags(FLAG_WAIT_SYNC_ARG_X | FLAG_WAIT_SYNC_ARG_Y)){// X & Y is not set
+                //we need fix it!
+                if(hasFlags(FLAG_WAIT_SYNC_CREATE)){//first, we cannot fix it
+                    addFlags(FLAG_NEED_FIX);
+                }else{//we can fix it
+                    if(!hasFlags(FLAG_WAIT_SYNC_ARG_X)){
+                        if(DEBUG)Log.d(TAG,"fix X");
+                        touchPoint.setX(mTouchEventPath.getLast().getX());}
+                    else{
+                        if(DEBUG)Log.d(TAG,"fix Y");
+                        touchPoint.setY(mTouchEventPath.getLast().getY());
+                    }
                 }
-                if(!touchPoint.isClose())Log.w(TAG,"point is not closed!!");
-                region.update(touchPoint);
-                mTouchEventPath.add(touchPoint);
-                touchPoint = null;
-                break;
-            case STATE_CREATE:
-                if (DEBUG) Log.d(TAG, "onSync-->create");
-                break;
-            case STATE_PUB:
-                if (DEBUG) Log.d(TAG, "onSync-->close");
-                publishProperty().setValue(true);
-                eventDescProperty().setValue(mTouchEventPath.getFirst() + "->" + mTouchEventPath.getLast());
-                analyzeEventType();
-                break;
+            }else{
+                //its ok
+            }
+            region.update(touchPoint);
+            mTouchEventPath.add(touchPoint);
+            touchPoint = null;
+            removeFlags(FLAG_WAIT_SYNC_CREATE | FLAG_WAIT_SYNC_ARG_Y | FLAG_WAIT_SYNC_ARG_X | FLAG_WAIT_SYNC_ARG);
         }
-        mCurState = 0;
+        if(hasFlags(FLAG_WAIT_SYNC_PUBLISH))
+        {
+            removeFlags(FLAG_WAIT_SYNC_PUBLISH);
+            if (DEBUG) Log.d(TAG, "onSync-->Publish");
+            publishSync();
+        }
+    }
+
+    private void publishSync() {
+        publishProperty().setValue(true);
+        eventDescProperty().setValue(mTouchEventPath.getFirst() + "->" + mTouchEventPath.getLast());
+        analyzeEventType();
     }
 
     @Override
     public void onPublish(IRawEvent rawEvent) {
         super.onPublish(rawEvent);
         if (DEBUG) Log.d(TAG, "onPublish-->" + rawEvent);
-        if (mCurState == STATE_CREATE) {
-        }
-        mCurState = STATE_PUB;
+        addFlags(FLAG_WAIT_SYNC_PUBLISH);
     }
 
 
     @Override
     public void onArgs(IRawEvent rawEvent) {
         if (DEBUG) Log.d(TAG, "onArgs-->" + rawEvent);
-        mCurState = STATE_ARG;
         if (touchPoint == null) touchPoint = new TouchPoint();
+        addFlags(FLAG_WAIT_SYNC_ARG);
         switch (rawEvent.getHandleType()) {
             case EVENT_ARG_X:
+                addFlags(FLAG_WAIT_SYNC_ARG_X);
                 touchPoint.setX(Integer.valueOf(rawEvent.getValue(), 16));
                 break;
             case EVENT_ARG_Y:
+                addFlags(FLAG_WAIT_SYNC_ARG_Y);
                 touchPoint.setY(Integer.valueOf(rawEvent.getValue(), 16));
                 break;
         }
@@ -101,6 +123,7 @@ public class TouchEvent extends AbsMonitorEvent {
         controller.touchUp(tp.getX(), tp.getY());
         statusProperty().setValue(String.format("回放完成"));
     }
+
 
     public void analyzeEventType() {
         if (region.offsetX() > 100 || region.offsetY() > 100) {
@@ -131,5 +154,16 @@ public class TouchEvent extends AbsMonitorEvent {
         public String toString() {
             return desc;
         }
+    }
+
+    @Override
+    public boolean fixEvent(MonitorEvent monitorEvent) {
+        Log.d(TAG,monitorEvent.eventDescProperty().getValue()+" for fix :"+this.eventDescProperty().getValue());
+        if(!(monitorEvent instanceof TouchEvent))return false;//fix fail
+        for (TouchPoint point : mTouchEventPath) {
+            point.fixPoint(((TouchEvent) monitorEvent).mTouchEventPath.getLast());
+        }
+        publishSync();
+        return true;
     }
 }

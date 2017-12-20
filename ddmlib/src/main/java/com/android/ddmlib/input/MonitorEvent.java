@@ -66,4 +66,13 @@ public interface MonitorEvent {
     long endTime();
 
     void processController(IRemoteController controller);
+
+    boolean hasFlags(int flag);
+
+    /**
+     * 修复该event
+     * @param monitorEvent 基准数据
+     * @return 修复是否成功
+     */
+    boolean fixEvent(MonitorEvent monitorEvent);
 }

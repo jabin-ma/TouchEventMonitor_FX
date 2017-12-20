@@ -4,38 +4,23 @@ package com.android.ddmlib.input;
  * @TODO close自动补全不完善，待修补
  * 触摸点
  */
-public class TouchPoint {
+final class TouchPoint {
 
     private int x = Integer.MIN_VALUE, y = Integer.MIN_VALUE;
-
     private long timestamp = Integer.MIN_VALUE;
+    private int mFlags = 0;
 
-    private boolean close;
-
-    boolean close(TouchPoint previous) {
-        setX(previous.x);
-        setY(previous.y);
-        return isClose();
-    }
-
-    private void close() {
-        if (isClose(x) && isClose(y) && isClose(timestamp))
-            close = true;
-    }
-
-    public boolean isClose() {
-        return close;
-    }
+    static final int FLAG_X_SET = 1;
+    static final int FLAG_Y_SET = 1 << 1;
+    static final int FLAG_TIME_SET = 1 << 2;
 
     public int getX() {
         return x;
     }
 
     void setX(int x) {
-        if (isClose(this.x))
-            return;
         this.x = x;
-        close();
+        addFlags(FLAG_X_SET);
     }
 
     public int getY() {
@@ -43,13 +28,8 @@ public class TouchPoint {
     }
 
     void setY(int y) {
-        if (isClose(this.y)) return;
         this.y = y;
-        close();
-    }
-
-    boolean isClose(long i) {
-        return i != Integer.MIN_VALUE;
+        addFlags(FLAG_Y_SET);
     }
 
     @Override
@@ -57,18 +37,36 @@ public class TouchPoint {
         return x + " " + y;
     }
 
-
     public long getTimestamp() {
         return timestamp;
     }
 
     void setTimestamp(long timestamp) {
-        if (isClose(this.timestamp)) return;
         this.timestamp = timestamp;
-        close();
+        addFlags(FLAG_TIME_SET);
+    }
+
+    final void addFlags(int flags) {
+        this.mFlags |= flags;
+    }
+
+    boolean hasFlags(int flag) {
+        return (mFlags & flag) == flag;
     }
 
     public String toArgs() {
         return x + " " + y;
+    }
+
+    /**
+     * @param touchPoint
+     */
+    void fixPoint(TouchPoint touchPoint) {
+        if (hasFlags(FLAG_X_SET | FLAG_Y_SET)) return;
+        if (!hasFlags(FLAG_X_SET)) {
+            setX(touchPoint.x);
+        } else {
+            setY(touchPoint.y);
+        }
     }
 }
