@@ -1,7 +1,6 @@
 package com.android.ddmlib.input;
 
 /**
- * @TODO close自动补全不完善，待修补
  * 触摸点
  */
 final class TouchPoint {

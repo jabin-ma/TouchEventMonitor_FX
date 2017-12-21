@@ -35,8 +35,9 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
                 monitorEvent?.onArgs(rawEvent)
             }
             KnownEventList.HandleType.EVENT_SYNC -> {
+                var prev=monitorEvent?.publishProperty()?.value;
                 monitorEvent?.onSync(rawEvent)
-                if (monitorEvent != null && monitorEvent!!.publishProperty().value && monitorEvent!!.dispatchCount() == 0) {
+                if (monitorEvent != null && monitorEvent!!.publishProperty().value && prev!= monitorEvent!!.publishProperty().value ) {
                     if(monitorEvent!!.hasFlags(TouchEvent.FLAG_NEED_FIX))
                     {
                       monitorEvent!!.fixEvent(prevEvent)
@@ -51,7 +52,6 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
                 if (DEBUG) Log.d(TAG, "UnKnown event..$rawEvent")
             }
         }
-
         return null;
     }
 

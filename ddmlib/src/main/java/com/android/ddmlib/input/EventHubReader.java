@@ -45,6 +45,7 @@ import java.util.concurrent.LinkedBlockingQueue;
                 mapper = new EventMapperImpl(knownEventList);
                 mappers.put(rawEvent.getOwner(), mapper);
             }
+            //@TODO 需要使用多线程以保证每个输入设备之间不会相互影响
             result = mapper.mappingEvent(rawEvent);
             if (result == null) continue;
             else break;//不是一次完整的事件,继续读取

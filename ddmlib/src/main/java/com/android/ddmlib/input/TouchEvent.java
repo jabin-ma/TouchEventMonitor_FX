@@ -13,19 +13,6 @@ import java.util.ListIterator;
 public class TouchEvent extends AbsMonitorEvent {
     private static final String TAG = "MonitorEventItem";
     private static final boolean DEBUG = false;
-    //等待CREATE的同步事件
-    private static final int FLAG_WAIT_SYNC_CREATE = 1;
-    //等待Publish
-    private static final int FLAG_WAIT_SYNC_PUBLISH = 1<<1;
-
-    //数据同步
-    private static final int FLAG_WAIT_SYNC_ARG = 1<<4;
-    private static final int FLAG_WAIT_SYNC_ARG_X = 1<<2;
-    private static final int FLAG_WAIT_SYNC_ARG_Y = 1<<3;
-    /**
-     * 需要基于上个Event进行修复
-     */
-    public static final int FLAG_NEED_FIX = 1<<5;
     private LinkedList<TouchPoint> mTouchEventPath = new LinkedList<TouchPoint>();
     private TouchPoint touchPoint;
     private TouchRegion region = new TouchRegion();

@@ -73,17 +73,6 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
     public SimpleStringProperty statusProperty() {return status; }
 
     @Override
-    public void setDispatched() {
-        dispatchCount++;
-    }
-
-    @Override
-    public int dispatchCount() {
-        return dispatchCount;
-    }
-
-
-    @Override
     public long beginTime() {
         return begin.getWhen().ms;
     }
@@ -93,7 +82,7 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
         return end.getWhen().ms;
     }
     private int stateFlags = 0;
-     final void addFlags(int flags) {
+    final void addFlags(int flags) {
         this.stateFlags |= flags;
     }
 

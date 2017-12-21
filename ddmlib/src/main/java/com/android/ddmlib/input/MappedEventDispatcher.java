@@ -37,7 +37,6 @@ public class MappedEventDispatcher implements Callable<Void> {
                 MonitorEvent event = eventPool.takeMappedEvent();
                 if (event == null) continue;
                 if(DEBUG)Log.d("dispatch", event.inputDeviceProperty() + "---->" + event);
-                event.setDispatched();
                 for (OnTouchEventListener listener : listeners) {
                     listener.onTouchEvent(event);
                 }

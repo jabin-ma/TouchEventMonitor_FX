@@ -53,6 +53,7 @@ class EventHub {
 
     private void offerRawEvent(IRawEvent rawEvent) {
         try {
+            Log.d(TAG,"offerRawEvent:"+rawEvent);
             rawEventPool.offer(rawEvent, OFFER_TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();

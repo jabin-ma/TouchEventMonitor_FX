@@ -11,6 +11,20 @@ import javafx.beans.property.SimpleStringProperty;
  * 解析后的事件,与Raw相对应
  */
 public interface MonitorEvent {
+
+    //等待CREATE的同步事件
+     static final int FLAG_WAIT_SYNC_CREATE = 1;
+    //等待Publish
+     static final int FLAG_WAIT_SYNC_PUBLISH = 1<<1;
+
+    //数据同步
+     static final int FLAG_WAIT_SYNC_ARG = 1<<4;
+     static final int FLAG_WAIT_SYNC_ARG_X = 1<<2;
+     static final int FLAG_WAIT_SYNC_ARG_Y = 1<<3;
+    /**
+     * 需要基于上个Event进行修复
+     */
+     static final int FLAG_NEED_FIX = 1<<5;
     /**
      * 对应事件类型 EVENT_CREATE
      * @param rawEvent
@@ -35,19 +49,6 @@ public interface MonitorEvent {
      */
     void onArgs(IRawEvent rawEvent);
 
-    /**
-     * 是否被分发过
-     * @TODO 该接口需要移除！！
-     */
-    void setDispatched();
-
-    /**
-     * 分发次数
-     * @return
-     */
-    int dispatchCount();
-
-
     SimpleBooleanProperty publishProperty();
 
     SimpleStringProperty eventTypeProperty();
@@ -67,6 +68,11 @@ public interface MonitorEvent {
 
     void processController(IRemoteController controller);
 
+    /**
+     * 是否包含flag
+     * @param flag
+     * @return
+     */
     boolean hasFlags(int flag);
 
     /**
