@@ -145,6 +145,7 @@ public final class AndroidDebugBridge {
 
     /**
      * Initialized the library only if needed.
+     *
      * @see #init()
      */
     public static synchronized void initIfNeeded() {
@@ -178,6 +179,7 @@ public final class AndroidDebugBridge {
      * whatever default values were changed from the default values.
      * <p/>
      * When the application quits, {@link #terminate()} should be called.
+     *
      * @see AndroidDebugBridge#createBridge(String, boolean)
      * @see DdmPreferences
      */
@@ -461,6 +463,7 @@ public final class AndroidDebugBridge {
 
         return false;
     }
+
     /**
      * Returns whether the {@link AndroidDebugBridge} object is still connected
      * to the adb daemon.
@@ -823,6 +826,7 @@ public final class AndroidDebugBridge {
             }
         }
     }
+
     /**
      * Returns the {@link DeviceMonitor} object.
      */

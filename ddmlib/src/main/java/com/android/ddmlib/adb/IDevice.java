@@ -51,7 +51,7 @@ public interface IDevice extends IShellEnabledDevice {
 
     String PROP_DEBUGGABLE = "ro.debuggable";
 
-    int NO_TIMEOUT=-1;
+    int NO_TIMEOUT = -1;
     /**
      * Serial number of the first connected emulator.
      */

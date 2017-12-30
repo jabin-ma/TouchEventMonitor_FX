@@ -1,7 +1,5 @@
 package com.android.ddmlib.input;
 
-import com.android.ddmlib.utils.Log;
-
 /**
  * 触摸点
  */
@@ -67,8 +65,7 @@ final class TouchPoint {
         if (!hasFlags(FLAG_X_SET)) {
             setX(touchPoint.x);
         }
-        if(!hasFlags(FLAG_Y_SET))
-        {
+        if (!hasFlags(FLAG_Y_SET)) {
             setY(touchPoint.y);
         }
     }

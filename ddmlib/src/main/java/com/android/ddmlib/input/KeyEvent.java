@@ -19,14 +19,14 @@ public class KeyEvent extends AbsMonitorEvent {
 
     @Override
     public void onSync(IRawEvent rawEvent) {
-        Log.d("KEY","onSync");
-          if(hasFlags(FLAG_WAIT_SYNC_CREATE)){
-              removeFlags(FLAG_WAIT_SYNC_CREATE);
-          }
-          if(hasFlags(FLAG_WAIT_SYNC_PUBLISH)){
-              removeFlags(FLAG_WAIT_SYNC_PUBLISH);
-              publishProperty().setValue(true);
-          }
+        Log.d("KEY", "onSync");
+        if (hasFlags(FLAG_WAIT_SYNC_CREATE)) {
+            removeFlags(FLAG_WAIT_SYNC_CREATE);
+        }
+        if (hasFlags(FLAG_WAIT_SYNC_PUBLISH)) {
+            removeFlags(FLAG_WAIT_SYNC_PUBLISH);
+            publishProperty().setValue(true);
+        }
     }
 
     @Override

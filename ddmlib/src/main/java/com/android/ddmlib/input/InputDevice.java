@@ -17,13 +17,13 @@ public class InputDevice {
      */
     private String devFile, name;
 
-    private static final String TAG="InputDevice";
+    private static final String TAG = "InputDevice";
 
     InputDevice(List<String> str) {
         super();
         for (int i = 0; i < str.size(); i++) {
             String s = str.get(i);
-            Log.d(TAG,"new Instance:"+s);
+            Log.d(TAG, "new Instance:" + s);
             if (s.contains(":")) {
                 String[] split = s.split(":");
                 String name = split[0].trim();

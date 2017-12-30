@@ -4,45 +4,48 @@ package com.android.ddmlib.input;
  * 原始数据event,即getevent返回的数据
  */
 public interface IRawEvent {
-     /**
-      * 获取当前事件的Owner
-      * @return 设备
-      */
-     String getOwner();
+    /**
+     * 获取当前事件的Owner
+     *
+     * @return 设备
+     */
+    String getOwner();
 
-     /**
-      * event时间
-      * @return 事件发生时间
-      */
-     When getWhen();
+    /**
+     * event时间
+     *
+     * @return 事件发生时间
+     */
+    When getWhen();
 
-     /**
-      * 事件类型
-      * @return 事件类型
-      */
-     String getType();
-
-
-     void setType(String type);
-
-
-     String getCode();
+    /**
+     * 事件类型
+     *
+     * @return 事件类型
+     */
+    String getType();
 
 
-     void setCode(String code);
+    void setType(String type);
 
 
-     String getValue();
+    String getCode();
 
 
-     void setValue(String value);
+    void setCode(String code);
 
 
-     KnownEventList.HandleType getHandleType();
+    String getValue();
 
-     void setHandleType(KnownEventList.HandleType type);
 
-     String getEventClass();
+    void setValue(String value);
 
-     void setEventClass(String ec);
+
+    KnownEventList.HandleType getHandleType();
+
+    void setHandleType(KnownEventList.HandleType type);
+
+    String getEventClass();
+
+    void setEventClass(String ec);
 }

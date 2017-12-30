@@ -8,7 +8,6 @@ import java.util.ListIterator;
 
 /**
  * 触摸事件
- *
  */
 public class TouchEvent extends AbsMonitorEvent {
     private static final String TAG = "MonitorEventItem";
@@ -27,24 +26,23 @@ public class TouchEvent extends AbsMonitorEvent {
     @Override
     public void onSync(IRawEvent rawEvent) {
         if (DEBUG) Log.d(TAG, "onSync-->" + rawEvent);
-        if(hasFlags(FLAG_WAIT_SYNC_ARG))
-        {
+        if (hasFlags(FLAG_WAIT_SYNC_ARG)) {
             if (DEBUG) Log.d(TAG, "onSync-->SetArg");
             touchPoint.setTimestamp(rawEvent.getWhen().ms);
-            if(!hasFlags(FLAG_WAIT_SYNC_ARG_X | FLAG_WAIT_SYNC_ARG_Y)){// X & Y is not set
+            if (!hasFlags(FLAG_WAIT_SYNC_ARG_X | FLAG_WAIT_SYNC_ARG_Y)) {// X & Y is not set
                 //we need fix it!
-                if(hasFlags(FLAG_WAIT_SYNC_CREATE)){//first, we cannot fix it
+                if (hasFlags(FLAG_WAIT_SYNC_CREATE)) {//first, we cannot fix it
                     addFlags(FLAG_NEED_FIX);
-                }else{//we can fix it
-                    if(!hasFlags(FLAG_WAIT_SYNC_ARG_X)){
-                        if(DEBUG)Log.d(TAG,"fix X");
-                        touchPoint.setX(mTouchEventPath.getLast().getX());}
-                    else{
-                        if(DEBUG)Log.d(TAG,"fix Y");
+                } else {//we can fix it
+                    if (!hasFlags(FLAG_WAIT_SYNC_ARG_X)) {
+                        if (DEBUG) Log.d(TAG, "fix X");
+                        touchPoint.setX(mTouchEventPath.getLast().getX());
+                    } else {
+                        if (DEBUG) Log.d(TAG, "fix Y");
                         touchPoint.setY(mTouchEventPath.getLast().getY());
                     }
                 }
-            }else{
+            } else {
                 //its ok
             }
             region.update(touchPoint);
@@ -52,14 +50,13 @@ public class TouchEvent extends AbsMonitorEvent {
             touchPoint = null;
             removeFlags(FLAG_WAIT_SYNC_CREATE | FLAG_WAIT_SYNC_ARG_Y | FLAG_WAIT_SYNC_ARG_X | FLAG_WAIT_SYNC_ARG);
         }
-        if(hasFlags(FLAG_WAIT_SYNC_PUBLISH))
-        {
+        if (hasFlags(FLAG_WAIT_SYNC_PUBLISH)) {
             if (DEBUG) Log.d(TAG, "onSync-->Publish");
-            if(hasFlags(FLAG_WAIT_SYNC_CREATE)){//args is not set!
-                Log.d(TAG,"ARGS IS NOT SET!!");
+            if (hasFlags(FLAG_WAIT_SYNC_CREATE)) {//args is not set!
+                Log.d(TAG, "ARGS IS NOT SET!!");
                 mTouchEventPath.add(new TouchPoint());
-               addFlags(FLAG_NEED_FIX);//we need fix
-               removeFlags(FLAG_WAIT_SYNC_CREATE);
+                addFlags(FLAG_NEED_FIX);//we need fix
+                removeFlags(FLAG_WAIT_SYNC_CREATE);
             }
             publishSync();
             removeFlags(FLAG_WAIT_SYNC_PUBLISH);
@@ -68,7 +65,7 @@ public class TouchEvent extends AbsMonitorEvent {
 
     private void publishSync() {
         publishProperty().setValue(true);
-        if(hasFlags(FLAG_NEED_FIX))return;
+        if (hasFlags(FLAG_NEED_FIX)) return;
         eventDescProperty().setValue(mTouchEventPath.getFirst() + "->" + mTouchEventPath.getLast());
         analyzeEventType();
     }
@@ -152,15 +149,15 @@ public class TouchEvent extends AbsMonitorEvent {
 
     @Override
     public boolean fixEvent(MonitorEvent monitorEvent) {
-        Log.d(TAG,monitorEvent.eventDescProperty().getValue()+" for fix after :"+this.eventDescProperty().getValue());
+        Log.d(TAG, monitorEvent.eventDescProperty().getValue() + " for fix after :" + this.eventDescProperty().getValue());
         removeFlags(FLAG_NEED_FIX);
-        if(!(monitorEvent instanceof TouchEvent))return false;//fix fail
-        TouchPoint lastTp=((TouchEvent) monitorEvent).mTouchEventPath.getLast();
-            for (TouchPoint point : mTouchEventPath) {
-                point.fixPoint(lastTp);
-            }
+        if (!(monitorEvent instanceof TouchEvent)) return false;//fix fail
+        TouchPoint lastTp = ((TouchEvent) monitorEvent).mTouchEventPath.getLast();
+        for (TouchPoint point : mTouchEventPath) {
+            point.fixPoint(lastTp);
+        }
         publishSync();
-        Log.d(TAG,monitorEvent.eventDescProperty().getValue()+" for fix  before:"+this.eventDescProperty().getValue());
+        Log.d(TAG, monitorEvent.eventDescProperty().getValue() + " for fix  before:" + this.eventDescProperty().getValue());
         return true;
     }
 }

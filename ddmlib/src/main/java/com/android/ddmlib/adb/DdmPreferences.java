@@ -56,8 +56,6 @@ public final class DdmPreferences {
     private static String sAdbHostValue = DEFAULT_ADBHOST_VALUE;
 
 
-
-
     /**
      * Returns the minimum {@link LogLevel} being displayed.
      */

@@ -59,6 +59,7 @@ final class DeviceMonitor {
     private final AndroidDebugBridge mServer;
     private DeviceListMonitorTask mDeviceListMonitorTask;
     private final List<Device> mDevices = Lists.newCopyOnWriteArrayList();
+
     /**
      * Creates a new {@link DeviceMonitor} object and links it to the running
      * {@link AndroidDebugBridge} object.
@@ -191,9 +192,6 @@ final class DeviceMonitor {
             console.close();
         }
     }
-
-
-
 
 
     /**

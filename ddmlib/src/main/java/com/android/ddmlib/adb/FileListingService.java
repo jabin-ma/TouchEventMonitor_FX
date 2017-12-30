@@ -467,12 +467,13 @@ public final class FileListingService {
 
         /**
          * Create an ls receiver/parser.
+         * <p>
+         * files that were already there is paramount.
          *
-         *                        files that were already there is paramount.
-         * @param entryList       the list of new children to be filled by the
-         *                        receiver.
-         * @param linkList        the list of link path to compute post ls, to figure
-         *                        out if the link pointed to a file or to a directory.
+         * @param entryList the list of new children to be filled by the
+         *                  receiver.
+         * @param linkList  the list of link path to compute post ls, to figure
+         *                  out if the link pointed to a file or to a directory.
          */
         public LsReceiver(FileEntry parentEntry, ArrayList<FileEntry> entryList,
                           ArrayList<String> linkList) {

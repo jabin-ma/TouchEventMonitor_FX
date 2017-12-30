@@ -84,7 +84,7 @@ public class EventCommand {
         stringBuilder.append(" ");
         stringBuilder.append("-");
         for (int i : SUPPORTED) {
-            if(hasFlags(i)){
+            if (hasFlags(i)) {
                 stringBuilder.append(flagToStr(i));
             }
         }

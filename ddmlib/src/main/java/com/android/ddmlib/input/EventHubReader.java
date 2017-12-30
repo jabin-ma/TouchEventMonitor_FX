@@ -11,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Created by majipeng on 2017/6/19.
  * 负责将从Eventhub中读到的原始数据解析封装成本地数据
  */
- class EventHubReader implements Callable<Void> {
+class EventHubReader implements Callable<Void> {
     //每个设备的映射器(dev/input/*),有几个输入设备就会存在几个映射器
     private HashMap<String, EventMapper> mappers = new HashMap<>();
     //映射规则,映射器将根据该文件描述生成对应的MonitorEvent
@@ -22,7 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
     private BlockingQueue<MonitorEvent> mMappedEvent = new LinkedBlockingQueue<>(1024);
 
     private static final String TAG = "EventHubReader";
-    private static final boolean DEBUG=false;
+    private static final boolean DEBUG = false;
 
     public EventHubReader(EventHub eventHub) {
         this.eventHub = eventHub;
@@ -30,6 +30,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
     /**
      * 同步方法,从若干RawEvent中映射一个本地事件,调用此方法将会从eventhub中读取原始数据,直到出现一次完整本地事件
+     *
      * @return null eventHub出现问题  !null 解析到一次完整事件,返回
      */
     private MonitorEvent readAndMapping() {
@@ -56,20 +57,20 @@ import java.util.concurrent.LinkedBlockingQueue;
 
     @Override
     public Void call() {
-        try{
+        try {
             while (!Thread.interrupted()) {
                 MonitorEvent monitorEvent = readAndMapping();
                 if (monitorEvent != null) {//
-                    if(DEBUG)Log.d(TAG, "mapping:" + monitorEvent);
+                    if (DEBUG) Log.d(TAG, "mapping:" + monitorEvent);
                     mMappedEvent.add(monitorEvent);
                 } else {
                     Log.e(TAG, "mapping null .. exit!!");
                     break;
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 //            e.printStackTrace();
-        }finally {
+        } finally {
             Log.d(TAG, "run finish");
         }
         return null;
@@ -77,7 +78,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
     /**
      * 获取一个已经映射完成的事件
-     * @return 映射完成的事件,不为空
+     *
+     * @return 映射完成的事件, 不为空
      * @throws InterruptedException
      */
     public MonitorEvent takeMappedEvent() throws InterruptedException {

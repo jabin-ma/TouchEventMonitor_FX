@@ -1,6 +1,5 @@
 package com.android.ddmlib.input
 
-import com.android.ddmlib.utils.Log
 import com.android.ddmlib.utils.d
 
 /**
@@ -22,8 +21,8 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
         rawEvent.eventClass = knownEventList.queryEventClass(rawEvent)
         when (handleType) {
             KnownEventList.HandleType.EVENT_CREATE -> {
-                if(DEBUG)d("Mapping CREATE:"+rawEvent)
-                prevEvent=monitorEvent
+                if (DEBUG) d("Mapping CREATE:" + rawEvent)
+                prevEvent = monitorEvent
                 monitorEvent = Class.forName(rawEvent.eventClass).newInstance() as MonitorEvent?
                 if (monitorEvent == null) {
                     if (DEBUG) d("create obj failed--${rawEvent.owner}")
@@ -33,23 +32,22 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
                 monitorEvent?.onCreate(rawEvent)
             }
             KnownEventList.HandleType.EVENT_ARG_X, KnownEventList.HandleType.EVENT_ARG_Y -> {
-                 if(DEBUG)d("Mapping ARG:"+rawEvent)
+                if (DEBUG) d("Mapping ARG:" + rawEvent)
                 monitorEvent?.onArgs(rawEvent)
             }
             KnownEventList.HandleType.EVENT_SYNC -> {
-                if(DEBUG) d("Mapping SYNC:"+rawEvent)
-                var prev=monitorEvent?.publishProperty()?.value;
+                if (DEBUG) d("Mapping SYNC:" + rawEvent)
+                var prev = monitorEvent?.publishProperty()?.value;
                 monitorEvent?.onSync(rawEvent)
-                if (monitorEvent != null && monitorEvent!!.publishProperty().value && prev!= monitorEvent!!.publishProperty().value ) {
-                    if(monitorEvent!!.hasFlags(TouchEvent.FLAG_NEED_FIX))
-                    {
-                      monitorEvent!!.fixEvent(prevEvent)
+                if (monitorEvent != null && monitorEvent!!.publishProperty().value && prev != monitorEvent!!.publishProperty().value) {
+                    if (monitorEvent!!.hasFlags(TouchEvent.FLAG_NEED_FIX)) {
+                        monitorEvent!!.fixEvent(prevEvent)
                     }
                     return monitorEvent
                 }
             }
             KnownEventList.HandleType.EVENT_PUBLISH -> {
-                if(DEBUG)d("Mapping PUBLISH:"+rawEvent)
+                if (DEBUG) d("Mapping PUBLISH:" + rawEvent)
                 monitorEvent?.onPublish(rawEvent)
             }
             KnownEventList.HandleType.UNKNOWN -> {

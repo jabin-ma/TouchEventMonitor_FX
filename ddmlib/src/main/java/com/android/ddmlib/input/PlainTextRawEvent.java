@@ -14,7 +14,7 @@ public class PlainTextRawEvent implements IRawEvent {
 
     public PlainTextRawEvent(String str, String devFile) {
         setDevFile(devFile);
-        String[] args = str.replaceAll("[\\[\\]]", "").replace(":"," ").replaceAll(" +", " ").trim().split(" ");
+        String[] args = str.replaceAll("[\\[\\]]", "").replace(":", " ").replaceAll(" +", " ").trim().split(" ");
         for (int i = 0; i < args.length; i++) {
             set(i, args[i]);
         }

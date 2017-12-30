@@ -20,7 +20,7 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
     private final SimpleStringProperty status = new SimpleStringProperty();
     private final SimpleBooleanProperty publish = new SimpleBooleanProperty();
     private IRawEvent begin, end;
-    private static final boolean DEBUG=false;
+    private static final boolean DEBUG = false;
 
 
     private static final String TAG = "AbsMonitorEvent";
@@ -29,18 +29,18 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
     public void onCreate(IRawEvent rawEvent) {
         begin = rawEvent;
         publish.addListener(this);
-        if(DEBUG)Log.d(TAG, "create:" + begin.getWhen().ms);
+        if (DEBUG) Log.d(TAG, "create:" + begin.getWhen().ms);
     }
 
     @Override
     public void onPublish(IRawEvent rawEvent) {
         end = rawEvent;
-        if(DEBUG)Log.d(TAG, "onPublish:" + end.getWhen().ms);
+        if (DEBUG) Log.d(TAG, "onPublish:" + end.getWhen().ms);
     }
 
     @Override
     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-        if(DEBUG)Log.d(TAG, "Publish:" + (end.getWhen().ms - begin.getWhen().ms));
+        if (DEBUG) Log.d(TAG, "Publish:" + (end.getWhen().ms - begin.getWhen().ms));
         publish.removeListener(this);
         eventDur.setValue((end.getWhen().ms - begin.getWhen().ms));
     }
@@ -70,7 +70,9 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
     }
 
     @Override
-    public SimpleStringProperty statusProperty() {return status; }
+    public SimpleStringProperty statusProperty() {
+        return status;
+    }
 
     @Override
     public long beginTime() {
@@ -81,7 +83,9 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
     public long endTime() {
         return end.getWhen().ms;
     }
+
     private int stateFlags = 0;
+
     final void addFlags(int flags) {
         this.stateFlags |= flags;
     }
@@ -90,5 +94,7 @@ public abstract class AbsMonitorEvent implements MonitorEvent, ChangeListener<Bo
         this.stateFlags &= ~flags;
     }
 
-    public boolean hasFlags(int flag) {return (stateFlags & flag) == flag; }
+    public boolean hasFlags(int flag) {
+        return (stateFlags & flag) == flag;
+    }
 }

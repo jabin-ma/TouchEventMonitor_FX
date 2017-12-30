@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
 public class MappedEventDispatcher implements Callable<Void> {
     private final EventHubReader eventPool;
     private ArrayList<OnTouchEventListener> listeners = new ArrayList<>();
-    private static final boolean DEBUG=false;
+    private static final boolean DEBUG = false;
     private static final String TAG = "MappedEventDispatcher";
 
     public MappedEventDispatcher(EventHubReader eventPool) {
@@ -36,7 +36,7 @@ public class MappedEventDispatcher implements Callable<Void> {
             try {
                 MonitorEvent event = eventPool.takeMappedEvent();
                 if (event == null) continue;
-                if(DEBUG)Log.d("dispatch", event.inputDeviceProperty() + "---->" + event);
+                if (DEBUG) Log.d("dispatch", event.inputDeviceProperty() + "---->" + event);
                 for (OnTouchEventListener listener : listeners) {
                     listener.onTouchEvent(event);
                 }
@@ -44,7 +44,7 @@ public class MappedEventDispatcher implements Callable<Void> {
                 break;
             }
         }
-        Log.d(TAG,"run finish");
+        Log.d(TAG, "run finish");
         return null;
     }
 }

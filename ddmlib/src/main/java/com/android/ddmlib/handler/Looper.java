@@ -15,6 +15,7 @@
  */
 
 package com.android.ddmlib.handler;
+
 @SuppressWarnings("unchecked")
 public final class Looper {
 

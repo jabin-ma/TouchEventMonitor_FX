@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
  */
 final class Device implements IDevice {
 
-    private static final String TAG="Device";
+    private static final String TAG = "Device";
     /**
      * Emulator Serial Number regexp.
      */
@@ -1172,9 +1172,9 @@ final class Device implements IDevice {
         if (inputManager == null) {
             try {
                 inputManager = new InputManager(this);
-            } catch (ExecutionException|InterruptedException e) {
+            } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
-                Log.e(TAG,"Create inputManager error");
+                Log.e(TAG, "Create inputManager error");
             }
         }
         return inputManager;

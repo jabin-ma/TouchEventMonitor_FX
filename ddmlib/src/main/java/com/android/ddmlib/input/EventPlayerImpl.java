@@ -13,9 +13,9 @@ public class EventPlayerImpl implements EventPlayer, Runnable {
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     private PlayerListener listener;
 
-    public EventPlayerImpl(IRemoteController mIrc,PlayerListener listener) {
+    public EventPlayerImpl(IRemoteController mIrc, PlayerListener listener) {
         this.mIrc = mIrc;
-        this.listener=listener;
+        this.listener = listener;
     }
 
     @Override

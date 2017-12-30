@@ -53,7 +53,7 @@ class EventHub {
 
     private void offerRawEvent(IRawEvent rawEvent) {
         try {
-            if(DEBUG)Log.d(TAG,"offerRawEvent:"+rawEvent);
+            if (DEBUG) Log.d(TAG, "offerRawEvent:" + rawEvent);
             rawEventPool.offer(rawEvent, OFFER_TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -91,7 +91,7 @@ class EventHub {
                         IRawEvent rawEvent = new PlainTextRawEvent(line, null);
                         offerRawEvent(rawEvent);
                     }
-                }, IDevice.NO_TIMEOUT,command.toString(), inputDevice == null ? "" : inputDevice.getDevFile());
+                }, IDevice.NO_TIMEOUT, command.toString(), inputDevice == null ? "" : inputDevice.getDevFile());
 
             } catch (TimeoutException | AdbCommandRejectedException | ShellCommandUnresponsiveException
                     | IOException e) {
