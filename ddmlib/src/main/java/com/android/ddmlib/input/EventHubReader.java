@@ -56,17 +56,22 @@ import java.util.concurrent.LinkedBlockingQueue;
 
     @Override
     public Void call() {
-        while (!Thread.interrupted()) {
-            MonitorEvent monitorEvent = readAndMapping();
-            if (monitorEvent != null) {//
-                if(DEBUG)Log.d(TAG, "mapping:" + monitorEvent);
-                mMappedEvent.add(monitorEvent);
-            } else {
-                Log.e(TAG, "mapping null .. exit!!");
-                break;
+        try{
+            while (!Thread.interrupted()) {
+                MonitorEvent monitorEvent = readAndMapping();
+                if (monitorEvent != null) {//
+                    if(DEBUG)Log.d(TAG, "mapping:" + monitorEvent);
+                    mMappedEvent.add(monitorEvent);
+                } else {
+                    Log.e(TAG, "mapping null .. exit!!");
+                    break;
+                }
             }
+        }catch (Exception e){
+//            e.printStackTrace();
+        }finally {
+            Log.d(TAG, "run finish");
         }
-        Log.d(TAG, "run finish");
         return null;
     }
 

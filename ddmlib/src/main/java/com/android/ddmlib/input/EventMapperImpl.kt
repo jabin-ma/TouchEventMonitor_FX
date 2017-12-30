@@ -22,6 +22,7 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
         rawEvent.eventClass = knownEventList.queryEventClass(rawEvent)
         when (handleType) {
             KnownEventList.HandleType.EVENT_CREATE -> {
+                if(DEBUG)d("Mapping CREATE:"+rawEvent)
                 prevEvent=monitorEvent
                 monitorEvent = Class.forName(rawEvent.eventClass).newInstance() as MonitorEvent?
                 if (monitorEvent == null) {
@@ -32,9 +33,11 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
                 monitorEvent?.onCreate(rawEvent)
             }
             KnownEventList.HandleType.EVENT_ARG_X, KnownEventList.HandleType.EVENT_ARG_Y -> {
+                 if(DEBUG)d("Mapping ARG:"+rawEvent)
                 monitorEvent?.onArgs(rawEvent)
             }
             KnownEventList.HandleType.EVENT_SYNC -> {
+                if(DEBUG) d("Mapping SYNC:"+rawEvent)
                 var prev=monitorEvent?.publishProperty()?.value;
                 monitorEvent?.onSync(rawEvent)
                 if (monitorEvent != null && monitorEvent!!.publishProperty().value && prev!= monitorEvent!!.publishProperty().value ) {
@@ -46,10 +49,11 @@ class EventMapperImpl(private val knownEventList: KnownEventList) : EventMapper 
                 }
             }
             KnownEventList.HandleType.EVENT_PUBLISH -> {
+                if(DEBUG)d("Mapping PUBLISH:"+rawEvent)
                 monitorEvent?.onPublish(rawEvent)
             }
             KnownEventList.HandleType.UNKNOWN -> {
-                if (DEBUG) Log.d(TAG, "UnKnown event..$rawEvent")
+                //if (DEBUG) Log.d(TAG, "UnKnown event..$rawEvent")
             }
         }
         return null;
