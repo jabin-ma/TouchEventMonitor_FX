@@ -161,7 +161,7 @@ class MonkeyTransport(var port: Int = 1080, var androidDevice: IDevice) : Simple
             if ((!buff || flush) && !mEventBuffer.isEmpty()) {
                 AdbHelper.write(socketChannel, mEventBuffer.toString().toByteArray())
                 var line = mEventBuffer.count { it == '\n' }
-                if (DEBUG) d("write ${mEventBuffer.toString()}-----> waiting response count $line")
+                if (DEBUG) d("flush buffer: ${mEventBuffer.toString()}-----> waiting response count $line")
                 mEventBuffer.delete(0, mEventBuffer.length)
                 for (i in 0 until line) {
                     if (DEBUG) d("handle response $i")

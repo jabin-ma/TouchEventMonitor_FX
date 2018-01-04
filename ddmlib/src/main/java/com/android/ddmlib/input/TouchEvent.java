@@ -98,20 +98,20 @@ public class TouchEvent extends AbsMonitorEvent {
 
     public void processController(IRemoteController controller) {
         ListIterator<TouchPoint> listIterator = mTouchEventPath.listIterator(0);
-        TouchPoint tp = listIterator.next();
-        controller.touchDown(tp.getX(), tp.getY());
+        TouchPoint first = listIterator.next();
+        TouchPoint prev=null,next=null,last=null;
+        controller.touchDown(first.getX(), first.getY());
         statusProperty().setValue(String.format("回放中...."));
+        next=last=first;
         while (listIterator.hasNext()) {
-            tp = listIterator.next();
-            controller.touchMove(tp.getX(), tp.getY());
-            if (listIterator.hasNext()) {
-                TouchPoint next = listIterator.next();
-                controller.sleep(next.getTimestamp() - tp.getTimestamp());
-                listIterator.previous();
-            }
+            prev=next;
+            next = listIterator.next();
+            controller.sleep(next.getTimestamp()-prev.getTimestamp());
+            controller.touchMove(next.getX(), next.getY());
+            last=next;
         }
-        tp = listIterator.hasPrevious() ? listIterator.previous() : tp;
-        controller.touchUp(tp.getX(), tp.getY());
+        if(last==first)controller.sleep(endTime()-beginTime());
+        controller.touchUp(last.getX(), last.getY());
         statusProperty().setValue(String.format("回放完成"));
     }
 
